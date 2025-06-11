@@ -1,0 +1,40 @@
+{
+  "name": "nexcart-admin-fe",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "vite --port 4000",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^5.0.1",
+    "@mui/icons-material": "^7.0.0",
+    "@mui/material": "^7.0.0",
+    "prop-types": "^15.8.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.56.0",
+    "react-medium-image-zoom": "^5.2.14",
+    "react-router-dom": "^7.4.0",
+    "react-slick": "^0.30.3",
+    "recharts": "^2.15.1",
+    "slick-carousel": "^1.8.1",
+    "zod": "^3.24.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@originjs/vite-plugin-federation": "^1.4.0",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.2.0"
+  }
+}

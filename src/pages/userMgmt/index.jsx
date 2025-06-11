@@ -1,0 +1,154 @@
+import React, { useReducer, useState } from "react";
+import { Button, Card, Chip } from "@mui/material";
+
+// // static import
+import {
+  DataTable,
+  PageHeader,
+  TableAction,
+  TableActionHeader,
+} from "../../sharedComponents";
+import { demoUserList } from "../../data/userMgmt";
+import { tableColumns, droDownOptions } from "../../constant";
+import { CustomAlertDialog } from "../../sharedComponents/dialog";
+import FilterModal from "./components/FilterModal";
+import { useUserMgmtConfirmationAlert } from "./hooks";
+import AddEditUserModal from "./components/AddEditUserModal";
+
+function UserManagement() {
+  // local hooks
+  const {
+    confirmAlert,
+    setConfirmAlert,
+    getDialogContent,
+    handleAction,
+    handleConfirm,
+  } = useUserMgmtConfirmationAlert();
+
+  // local State
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("");
+  const [addEditUserModal, setAddEditUserModal] = useState({
+    open: false,
+    selectedUser: null,
+    action: "",
+  });
+
+  const [filters, setFilters] = useReducer(
+    (prev, next) => ({ ...prev, ...next }),
+    { status: "", order: "", dateInterval: "", fromDate: "", toDate: "" }
+  );
+
+  const statusColor = {
+    Active: "success",
+    Blocked: "error",
+    Pending: "warning",
+  };
+
+  // insert data
+  let rows = [];
+  rows = demoUserList?.map((item, index) => {
+    const actions = (
+      <TableAction
+        view={`/user-management/${item.id}`}
+        block={
+          item.status === "Active" ? () => handleAction("block", item) : null
+        }
+        unBlock={
+          item.status === "Blocked" ? () => handleAction("unblock", item) : null
+        }
+        remove={() => handleAction("delete", item)}
+        edit={
+          item.createdBy === "admin"
+            ? () =>
+                setAddEditUserModal({
+                  open: true,
+                  selectedUser: item,
+                  action: "EDIT",
+                })
+            : null
+        }
+        isBlocked={item.status === "Blocked"}
+      />
+    );
+    const sr_no = index + 1 + page * rowsPerPage;
+    const name = `${item.firstName} ${item.lastName}`;
+    const status = (
+      <Chip
+        label={item.status}
+        color={statusColor[item.status] || "default"}
+        variant="contained"
+        size="small"
+      />
+    );
+    return { ...item, actions, sr_no, name, status };
+  });
+
+  const handleChangePage = (_, newPage) => setPage(newPage);
+  const handleChangeRowsPerPage = (event) =>
+    setRowsPerPage(parseInt(event.target.value, 10));
+
+  const dialogContent = getDialogContent(
+    confirmAlert.action,
+    confirmAlert.selectedUser
+  );
+
+  return (
+    <>
+      <PageHeader pageTitle="User Management">
+        <Button
+          variant="contained"
+          onClick={() =>
+            setAddEditUserModal({
+              open: true,
+              selectedUser: null,
+              action: "ADD",
+            })
+          }
+        >
+          Add User
+        </Button>
+      </PageHeader>
+      <Card>
+        <TableActionHeader
+          searchPlaceholder="Search users..."
+          setSearch={setSearch}
+          sortLabel="Sort By"
+          setSort={setSort}
+          sortList={droDownOptions.userMgmt.sort}
+        >
+          <FilterModal filters={filters} setFilters={setFilters} />
+        </TableActionHeader>
+        <DataTable
+          columns={tableColumns.userMgmt}
+          rows={rows}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          handleChangePage={handleChangePage}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          totalItem={rows.length}
+        />
+      </Card>
+
+      <CustomAlertDialog
+        open={confirmAlert.open}
+        onClose={() =>
+          setConfirmAlert({ open: false, action: null, selectedUser: null })
+        }
+        handleConfirm={handleConfirm}
+        title={dialogContent.title}
+        description={dialogContent.description}
+        confirmLabel={dialogContent.confirmLabel}
+      />
+
+      <AddEditUserModal
+        addEditUserModal={addEditUserModal}
+        setAddEditUserModal={setAddEditUserModal}
+      />
+    </>
+  );
+}
+
+export default UserManagement;

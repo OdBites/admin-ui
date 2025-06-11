@@ -1,0 +1,190 @@
+import React, { memo } from "react";
+import {
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import PropTypes from "prop-types";
+import { FilterWrapper } from "nexCartMfUI/sharedComp";
+import { droDownOptions } from "../../../constant";
+
+function FilterModal({ filters, setFilters }) {
+  const {
+    status = "",
+    category = "",
+    subCategory = "",
+    dateInterval = "",
+    fromDate = "",
+    toDate = "",
+  } = filters;
+
+  const handleChange = (field, value) => {
+    if (field === "dateInterval") {
+      setFilters({
+        ...filters,
+        dateInterval: value,
+        fromDate: "",
+        toDate: "",
+      });
+      return;
+    }
+    if (field === "fromDate" || field === "toDate") {
+      setFilters({
+        ...filters,
+        [field]: value,
+        dateInterval: "",
+      });
+      return;
+    }
+    if (field === "category") {
+      setFilters({
+        ...filters,
+        category: value,
+        subCategory: "",
+      });
+      return;
+    }
+    setFilters({
+      ...filters,
+      [field]: value,
+    });
+  };
+
+  const subCategories = droDownOptions.productMgmt.subCategory[category] || [];
+
+  return (
+    <FilterWrapper>
+      <Grid
+        container
+        spacing={2}
+        fullWidth
+        sx={{
+          minWidth: {
+            xs: "calc(100vw - 60px)",
+            md: "calc(100vw - (270px + 60px))",
+          },
+        }}
+      >
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel id="status-select-label">Status</InputLabel>
+            <Select
+              value={status}
+              labelId="status-select-label"
+              label="Status"
+              onChange={(e) => handleChange("status", e.target.value)}
+            >
+              {droDownOptions.productMgmt.status.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel id="category-select-label">Category</InputLabel>
+            <Select
+              value={category}
+              labelId="category-select-label"
+              label="Category"
+              onChange={(e) => handleChange("category", e.target.value)}
+            >
+              {droDownOptions.productMgmt.category.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <FormControl fullWidth disabled={!category}>
+            <InputLabel id="subcategory-select-label">Sub Category</InputLabel>
+            <Select
+              value={subCategory}
+              labelId="subcategory-select-label"
+              label="Sub Category"
+              onChange={(e) => handleChange("subCategory", e.target.value)}
+            >
+              {subCategories.length > 0 ? (
+                subCategories.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No Sub Categories</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel id="date-interval-label">
+              Created Date Interval
+            </InputLabel>
+            <Select
+              value={dateInterval}
+              labelId="date-interval-label"
+              label="Created Date Interval"
+              onChange={(e) => handleChange("dateInterval", e.target.value)}
+              disabled={Boolean(fromDate || toDate)}
+            >
+              {droDownOptions.productMgmt.dateInterval.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <TextField
+            fullWidth
+            label="From Date"
+            type="date"
+            value={fromDate}
+            onChange={(e) => handleChange("fromDate", e.target.value)}
+            disabled={Boolean(dateInterval)}
+            slotProps={{ inputLabel: { shrink: true } }}
+          />
+        </Grid>
+
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <TextField
+            fullWidth
+            label="To Date"
+            type="date"
+            value={toDate}
+            onChange={(e) => handleChange("toDate", e.target.value)}
+            disabled={Boolean(dateInterval)}
+            slotProps={{ inputLabel: { shrink: true } }}
+          />
+        </Grid>
+      </Grid>
+    </FilterWrapper>
+  );
+}
+
+FilterModal.propTypes = {
+  filters: PropTypes.shape({
+    status: PropTypes.string,
+    category: PropTypes.string,
+    subCategory: PropTypes.string,
+    dateInterval: PropTypes.string,
+    fromDate: PropTypes.string,
+    toDate: PropTypes.string,
+  }),
+  setFilters: PropTypes.func.isRequired,
+};
+
+export default memo(FilterModal);

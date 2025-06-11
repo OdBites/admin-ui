@@ -1,0 +1,81 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import federation from "@originjs/vite-plugin-federation";
+
+export default defineConfig({
+  base: "/",
+
+  plugins: [
+    react(),
+    federation({
+      name: "nexCartUserFE",
+      remotes: {
+        nexCartMfUI: "http://localhost:5000/assets/remoteEntry.js",
+      },
+      shared: {
+        react: {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^19.0.0",
+        },
+        "react-dom": {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^19.0.0",
+        },
+        "@mui/material": {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^7.0.0",
+        },
+        "@emotion/react": {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^11.14.0",
+        },
+        "@emotion/styled": {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^11.14.0",
+        },
+        "react-router-dom": { singleton: true, strictVersion: true },
+        "prop-types": { singleton: true, strictVersion: true },
+        "react-hook-form": {
+          singleton: true,
+          strictVersion: true,
+          requiredVersion: "^7.56.0",
+        },
+        "@hookform/resolvers": { singleton: true, strictVersion: true },
+        zod: { singleton: true, strictVersion: true },
+      },
+    }),
+    {
+      name: "vite-plugin-reload-endpoint",
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === "/__fullReload") {
+            server.hot.send({ type: "full-reload" });
+
+            res.end("Full reload triggered");
+          } else {
+            next();
+          }
+        });
+      },
+    },
+  ],
+  server: {
+    hmr: true,
+    cors: true,
+    proxy: {
+      "/remoteEntry.js": "http://localhost:5000",
+    },
+  },
+
+  build: {
+    modulePreload: false,
+    target: "esnext",
+    minify: false,
+    cssCodeSplit: false,
+  },
+});
