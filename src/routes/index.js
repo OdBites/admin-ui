@@ -1,5 +1,5 @@
 import React from "react";
-import { RestrictedToGuests } from "nexCartMfUI/hoc";
+import { RestrictedToGuests } from "SpiseBowlMfUI/hoc";
 
 export const userRoutes = [
   {

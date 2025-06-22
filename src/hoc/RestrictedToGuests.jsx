@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useCookies } from "nexCartMfUI/hooks";
+import { useCookies } from "SpiseBowlMfUI/hooks";
 
 const RestrictedToGuests = (Component) => {
   const Wrapped = (props) => {

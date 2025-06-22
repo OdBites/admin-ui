@@ -3,8 +3,8 @@ import { Outlet } from "react-router-dom";
 import packageJson from "../../package.json";
 
 // // mf import
-import { AdminLayout } from "nexCartMfUI/layouts";
-import { useCookies } from "nexCartMfUI/hooks";
+import { AdminLayout } from "SpiseBowlMfUI/layouts";
+import { useCookies } from "SpiseBowlMfUI/hooks";
 
 import LogoutModal from "../pages/profile/components/LogoutModal";
 import SignIn from "../pages/auth/SignIn";

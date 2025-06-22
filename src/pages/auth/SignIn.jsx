@@ -4,8 +4,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
 
-import { FormInput } from "nexCartMfUI/sharedComp";
-import { useCookies } from "nexCartMfUI/hooks";
+import { FormInput } from "SpiseBowlMfUI/sharedComp";
+import { useCookies } from "SpiseBowlMfUI/hooks";
 
 import { useFormWithReinitialize } from "../../lib/hooks";
 

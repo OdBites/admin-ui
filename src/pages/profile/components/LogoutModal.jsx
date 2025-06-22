@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 
-import { useCookies } from "nexCartMfUI/hooks";
+import { useCookies } from "SpiseBowlMfUI/hooks";
 
 import CustomAlertDialog from "../../../sharedComponents/dialog/CustomAlertDialog";
 

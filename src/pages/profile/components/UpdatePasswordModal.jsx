@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Typography } from "@mui/material";
 import { useWatch } from "react-hook-form";
 
-import { FormInput } from "nexCartMfUI/sharedComp";
+import { FormInput } from "SpiseBowlMfUI/sharedComp";
 import { CustomDialog } from "../../../sharedComponents/dialog";
 import { useFormWithReinitialize } from "../../../lib/hooks";
 import { passwordSchema } from "../validation";

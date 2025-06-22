@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Clear, Search } from "@mui/icons-material";
-import { RenderIf } from "nexCartMfUI/helpers";
+import { RenderIf } from "SpiseBowlMfUI/helpers";
 
 function TableActionHeader({
   searchLabel = "Search...",

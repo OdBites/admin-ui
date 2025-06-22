@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // // MfUI components
-import { FormInput } from "nexCartMfUI/sharedComp";
+import { FormInput } from "SpiseBowlMfUI/sharedComp";
 
 // // Custom components or static import
 import { CustomDialog } from "../../../sharedComponents/dialog";

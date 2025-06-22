@@ -8,9 +8,9 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: "nexCartUserFE",
+      name: "SpiseBowlUserFE",
       remotes: {
-        nexCartMfUI: "http://localhost:5000/assets/remoteEntry.js",
+        SpiseBowlMfUI: "http://localhost:5000/assets/remoteEntry.js",
       },
       shared: {
         react: {

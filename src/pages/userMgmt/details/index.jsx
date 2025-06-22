@@ -12,7 +12,7 @@ import {
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 
-import { AvatarUpload } from "nexCartMfUI/sharedComp";
+import { AvatarUpload } from "SpiseBowlMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import { useGetDataById } from "../../../lib/hooks";

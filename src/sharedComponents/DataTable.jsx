@@ -12,7 +12,7 @@ import {
   Skeleton,
   useTheme,
 } from "@mui/material";
-import { RenderIf, NoData } from "nexCartMfUI/helpers";
+import { RenderIf, NoData } from "SpiseBowlMfUI/helpers";
 
 const DataTable = ({
   columns = [],

@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FormInput, AvatarUpload } from "nexCartMfUI/sharedComp";
+import { FormInput, AvatarUpload } from "SpiseBowlMfUI/sharedComp";
 
 import { PageHeader } from "../../sharedComponents";
 import { useFormWithReinitialize } from "../../lib/hooks";

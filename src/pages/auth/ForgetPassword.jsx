@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
 
-import { FormInput } from "nexCartMfUI/sharedComp";
+import { FormInput } from "SpiseBowlMfUI/sharedComp";
 import { useFormWithReinitialize } from "../../lib/hooks";
 
 const forgotPasswordSchema = z.object({

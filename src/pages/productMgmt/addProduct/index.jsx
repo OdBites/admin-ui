@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { RenderIf } from "nexCartMfUI/helpers";
-import { FormInput } from "nexCartMfUI/sharedComp";
+import { RenderIf } from "SpiseBowlMfUI/helpers";
+import { FormInput } from "SpiseBowlMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import {
