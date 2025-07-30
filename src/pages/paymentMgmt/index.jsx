@@ -9,7 +9,7 @@ import {
 } from "../../sharedComponents";
 import FilterModal from "../paymentMgmt/components/FilterModal";
 import { demoPaymentsList } from "../../data/paymentMgmt";
-import { tableColumns, droDownOptions } from "../../constant";
+import { tableColumns, dropDownOptions } from "../../constant";
 
 function PaymentManagement() {
   // local State
@@ -64,7 +64,7 @@ function PaymentManagement() {
           setSearch={setSearch}
           sortLabel="Sort By"
           setSort={setSort}
-          sortList={droDownOptions.paymentMgmt.sort}
+          sortList={dropDownOptions.paymentMgmt.sort}
         >
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>

@@ -9,7 +9,7 @@ import {
   TableActionHeader,
 } from "../../sharedComponents";
 import { demoUserList } from "../../data/userMgmt";
-import { tableColumns, droDownOptions } from "../../constant";
+import { tableColumns, dropDownOptions } from "../../constant";
 import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import FilterModal from "./components/FilterModal";
 import { useUserMgmtConfirmationAlert } from "./hooks";
@@ -117,7 +117,7 @@ function UserManagement() {
           setSearch={setSearch}
           sortLabel="Sort By"
           setSort={setSort}
-          sortList={droDownOptions.userMgmt.sort}
+          sortList={dropDownOptions.userMgmt.sort}
         >
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>

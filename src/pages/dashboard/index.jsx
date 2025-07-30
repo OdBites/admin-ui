@@ -3,8 +3,11 @@ import { Grid, Card, Typography, Button, Box, Stack } from "@mui/material";
 import {
   AddShoppingCart,
   AttachMoney,
-  People,
-  ShowChart,
+  Cancel,
+  HourglassEmpty,
+  Inventory,
+  LocalShipping,
+  Warning,
 } from "@mui/icons-material";
 
 import { ChartVisualizer, DataTable, PageHeader } from "../../sharedComponents";
@@ -24,26 +27,42 @@ function Dashboard() {
 
   const metrics = [
     {
-      title: "Total Sales",
-      value: "$25,000",
-      icon: <ShowChart sx={{ fontSize: 40, color: "#1976D2" }} />,
-    },
-    {
-      title: "Orders",
-      value: "1,200",
-      icon: <AddShoppingCart sx={{ fontSize: 40, color: "#D32F2F" }} />,
-    },
-    {
-      title: "Users",
-      value: "5,000",
-      icon: <People sx={{ fontSize: 40, color: "#388E3C" }} />,
+      title: "Total Orders",
+      value: 120,
+      icon: <AddShoppingCart sx={{ fontSize: 40, color: "#1976D2" }} />,
     },
     {
       title: "Revenue",
-      value: "$8,500",
-      icon: <AttachMoney sx={{ fontSize: 40, color: "#FFA000" }} />,
+      value: "₹45,830.75",
+      icon: <AttachMoney sx={{ fontSize: 40, color: "#43A047" }} />,
+    },
+    {
+      title: "Pending Orders",
+      value: 12,
+      icon: <HourglassEmpty sx={{ fontSize: 40, color: "#FB8C00" }} />,
+    },
+    {
+      title: "Delivered Orders",
+      value: 85,
+      icon: <LocalShipping sx={{ fontSize: 40, color: "#388E3C" }} />,
+    },
+    {
+      title: "Cancelled Orders",
+      value: 10,
+      icon: <Cancel sx={{ fontSize: 40, color: "#E53935" }} />,
+    },
+    {
+      title: "Total Products",
+      value: 58,
+      icon: <Inventory sx={{ fontSize: 40, color: "#5E35B1" }} />,
+    },
+    {
+      title: "Out of Stock",
+      value: 4,
+      icon: <Warning sx={{ fontSize: 40, color: "#F44336" }} />,
     },
   ];
+
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -55,7 +74,7 @@ function Dashboard() {
         {/* Top Cards */}
         <Grid container spacing={3}>
           {metrics.map((metric, index) => (
-            <Grid item size={{ xs: 12, sm: 6, md: 3 }} key={index + 1}>
+            <Grid size={{ xs: 12, sm: 6, lg: 4, xl: 3 }} key={index + 1}>
               <Card
                 sx={{
                   display: "flex",

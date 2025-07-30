@@ -46,7 +46,7 @@ export const tableColumns = {
   ],
 };
 
-export const droDownOptions = {
+export const dropDownOptions = {
   userMgmt: {
     status: [
       { value: "", label: "All Status" },
@@ -55,15 +55,15 @@ export const droDownOptions = {
     ],
     orders: [
       { value: "", label: "All" },
-      { value: "with-orders", label: "With Orders" },
-      { value: "no-orders", label: "No Orders" },
+      { value: "withOrders", label: "With Orders" },
+      { value: "noOrders", label: "No Orders" },
     ],
     dateInterval: [
       { value: "", label: "None" },
       { value: "today", label: "Today" },
-      { value: "last-7-days", label: "Last 7 Days" },
-      { value: "last-30-days", label: "Last 30 Days" },
-      { value: "last-90-days", label: "Last 90 Days" },
+      { value: "last7Days", label: "Last 7 Days" },
+      { value: "last30Days", label: "Last 30 Days" },
+      { value: "last90Days", label: "Last 90 Days" },
     ],
 
     sort: [
@@ -83,12 +83,12 @@ export const droDownOptions = {
       { value: "", label: "All Status" },
       { value: "active", label: "Active" },
       { value: "inactive", label: "Inactive" },
-      { value: "out-of-stock", label: "Out of Stock" },
+      { value: "outOfStock", label: "Out of Stock" },
       { value: "blocked", label: "Blocked" },
     ],
     category: [
       { value: "", label: "All Categories" },
-      { value: "main-course", label: "Main Course" },
+      { value: "mainCourse", label: "Main Course" },
       { value: "starters", label: "Starters" },
       { value: "beverages", label: "Beverages" },
       { value: "desserts", label: "Desserts" },
@@ -105,19 +105,19 @@ export const droDownOptions = {
       ],
       beverages: [
         { value: "mocktails", label: "Mocktails" },
-        { value: "soft-drinks", label: "Soft Drinks" },
+        { value: "softDrinks", label: "Soft Drinks" },
       ],
       desserts: [
         { value: "sweets", label: "Sweets" },
-        { value: "ice-cream", label: "Ice Cream" },
+        { value: "iceCream", label: "Ice Cream" },
       ],
     },
     dateInterval: [
       { value: "", label: "None" },
       { value: "today", label: "Today" },
-      { value: "last-7-days", label: "Last 7 Days" },
-      { value: "last-30-days", label: "Last 30 Days" },
-      { value: "last-90-days", label: "Last 90 Days" },
+      { value: "last7Days", label: "Last 7 Days" },
+      { value: "last30Days", label: "Last 30 Days" },
+      { value: "last90Days", label: "Last 90 Days" },
     ],
     sort: [
       { value: "nameA-Z", label: "Name (A-Z)" },
@@ -152,9 +152,9 @@ export const droDownOptions = {
     dateInterval: [
       { value: "", label: "None" },
       { value: "today", label: "Today" },
-      { value: "last-7-days", label: "Last 7 Days" },
-      { value: "last-30-days", label: "Last 30 Days" },
-      { value: "last-90-days", label: "Last 90 Days" },
+      { value: "last7Days", label: "Last 7 Days" },
+      { value: "last30Days", label: "Last 30 Days" },
+      { value: "last90Days", label: "Last 90 Days" },
     ],
     sort: [
       { value: "orderDateNew-Old", label: "Order Date (New - Old)" },
@@ -173,24 +173,24 @@ export const droDownOptions = {
   paymentMgmt: {
     status: [
       { value: "", label: "All Statuses" },
-      { value: "Success", label: "Success" },
-      { value: "Failed", label: "Failed" },
-      { value: "Pending", label: "Pending" },
-      { value: "Refunded", label: "Refunded" },
+      { value: "success", label: "Success" },
+      { value: "failed", label: "Failed" },
+      { value: "pending", label: "Pending" },
+      { value: "refunded", label: "Refunded" },
     ],
     paymentMethods: [
       { value: "", label: "All Payment Methods" },
-      { value: "Online", label: "Online" },
+      { value: "online", label: "Online" },
       { value: "COD", label: "Cash on Delivery" },
       { value: "UPI", label: "UPI" },
-      { value: "Wallet", label: "Wallet" },
+      { value: "wallet", label: "Wallet" },
     ],
     dateInterval: [
       { value: "", label: "None" },
       { value: "today", label: "Today" },
-      { value: "last-7-days", label: "Last 7 Days" },
-      { value: "last-30-days", label: "Last 30 Days" },
-      { value: "last-90-days", label: "Last 90 Days" },
+      { value: "last7Days", label: "Last 7 Days" },
+      { value: "last30Days", label: "Last 30 Days" },
+      { value: "last90Days", label: "Last 90 Days" },
     ],
     sort: [
       { value: "paidAtNew-Old", label: "Paid Date (New - Old)" },

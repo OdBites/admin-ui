@@ -11,7 +11,7 @@ import FilterModal from "../productMgmt/components/FilterModal";
 import { demoProductList } from "../../data/productsMgmt";
 import { useProductMgmtConfirmationAlert } from "./hooks";
 import { CustomAlertDialog } from "../../sharedComponents/dialog";
-import { droDownOptions, tableColumns } from "../../constant";
+import { dropDownOptions, tableColumns } from "../../constant";
 import { NavLink } from "react-router-dom";
 
 function ProductManagement() {
@@ -109,7 +109,7 @@ function ProductManagement() {
           setSearch={setSearch}
           sortLabel="Sort By"
           setSort={setSort}
-          sortList={droDownOptions.productMgmt.sort}
+          sortList={dropDownOptions.productMgmt.sort}
         >
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>

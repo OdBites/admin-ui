@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { FilterWrapper } from "SpiseBowlMfUI/sharedComp";
-import { droDownOptions } from "../../../constant";
+import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
   const {
@@ -42,7 +42,7 @@ function FilterModal({ filters, setFilters }) {
               label="Status"
               onChange={(e) => setFilters({ status: e.target.value })}
             >
-              {droDownOptions.orderMgmt.status.map((option) => (
+              {dropDownOptions.orderMgmt.status.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -60,7 +60,7 @@ function FilterModal({ filters, setFilters }) {
               label="Payment Method"
               onChange={(e) => setFilters({ paymentMethod: e.target.value })}
             >
-              {droDownOptions.orderMgmt.paymentMethods.map((option) => (
+              {dropDownOptions.orderMgmt.paymentMethods.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -87,7 +87,7 @@ function FilterModal({ filters, setFilters }) {
               }}
               disabled={Boolean(fromDate || toDate)}
             >
-              {droDownOptions.orderMgmt.dateInterval.map((option) => (
+              {dropDownOptions.orderMgmt.dateInterval.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import { FilterWrapper } from "SpiseBowlMfUI/sharedComp";
-import { droDownOptions } from "../../../constant";
+import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
   const {
@@ -53,7 +53,7 @@ function FilterModal({ filters, setFilters }) {
     });
   };
 
-  const subCategories = droDownOptions.productMgmt.subCategory[category] || [];
+  const subCategories = dropDownOptions.productMgmt.subCategory[category] || [];
 
   return (
     <FilterWrapper>
@@ -77,7 +77,7 @@ function FilterModal({ filters, setFilters }) {
               label="Status"
               onChange={(e) => handleChange("status", e.target.value)}
             >
-              {droDownOptions.productMgmt.status.map((option) => (
+              {dropDownOptions.productMgmt.status.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -95,7 +95,7 @@ function FilterModal({ filters, setFilters }) {
               label="Category"
               onChange={(e) => handleChange("category", e.target.value)}
             >
-              {droDownOptions.productMgmt.category.map((option) => (
+              {dropDownOptions.productMgmt.category.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -138,7 +138,7 @@ function FilterModal({ filters, setFilters }) {
               onChange={(e) => handleChange("dateInterval", e.target.value)}
               disabled={Boolean(fromDate || toDate)}
             >
-              {droDownOptions.productMgmt.dateInterval.map((option) => (
+              {dropDownOptions.productMgmt.dateInterval.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>

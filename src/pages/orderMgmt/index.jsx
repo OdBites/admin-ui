@@ -9,7 +9,7 @@ import {
 } from "../../sharedComponents";
 import FilterModal from "../orderMgmt/components/FilterModal";
 import { demoOrdersList } from "../../data/ordersMgmt";
-import { tableColumns, droDownOptions } from "../../constant";
+import { tableColumns, dropDownOptions } from "../../constant";
 
 function OrderManagement() {
   // local State
@@ -70,7 +70,7 @@ function OrderManagement() {
           setSearch={setSearch}
           sortLabel="Sort By"
           setSort={setSort}
-          sortList={droDownOptions.orderMgmt.sort}
+          sortList={dropDownOptions.orderMgmt.sort}
         >
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>

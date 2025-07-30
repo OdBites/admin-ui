@@ -10,6 +10,7 @@ export const demoUserList = [
     createdAt: "2023-05-12T10:15:30",
     updatedAt: "2024-03-10T14:22:10",
     createdBy: "self",
+    profilePicture: null,
   },
   {
     id: 1002,
@@ -22,6 +23,7 @@ export const demoUserList = [
     createdAt: "2021-08-22T09:30:00",
     updatedAt: "2024-02-25T11:40:20",
     createdBy: "admin",
+    profilePicture: null,
   },
   {
     id: 1003,
@@ -34,6 +36,7 @@ export const demoUserList = [
     createdAt: "2022-01-10T15:20:45",
     updatedAt: "2024-04-12T08:15:00",
     createdBy: "admin",
+    profilePicture: null,
   },
   {
     id: 1004,
@@ -46,5 +49,6 @@ export const demoUserList = [
     createdAt: "2024-03-01T17:45:30",
     updatedAt: "2024-03-01T17:45:30",
     createdBy: "self",
+    profilePicture: null,
   },
 ];
