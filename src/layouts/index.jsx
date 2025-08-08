@@ -6,12 +6,19 @@ import packageJson from "../../package.json";
 import { AdminLayout } from "SpiseBowlMfUI/layouts";
 import { useCookies } from "SpiseBowlMfUI/hooks";
 
-import LogoutModal from "../pages/profile/components/LogoutModal";
+import { LogoutModal } from "../pages/profile/components";
 import SignIn from "../pages/auth/SignIn";
+import { useGetProfileDetailsQuery } from "../store/rtkServices";
 
 function Layout() {
   const { getCookie } = useCookies();
   let isAuthenticated = !!getCookie("auth_token");
+  const userId = getCookie("user_id");
+
+  // // rtk query
+  const { data: profileDetails = {}, isFetching } = isAuthenticated
+    ? useGetProfileDetailsQuery(userId)
+    : { data: {} };
 
   const [logoutModal, setLogoutModal] = useState({ open: false });
   return (
@@ -21,6 +28,7 @@ function Layout() {
           <AdminLayout
             version={packageJson.version}
             openLogoutDialog={() => setLogoutModal({ open: true })}
+            profileData={profileDetails}
           >
             <Outlet />
           </AdminLayout>

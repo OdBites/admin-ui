@@ -7,6 +7,7 @@ import {
   Step,
   StepLabel,
   Stepper,
+  Typography,
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,9 +22,29 @@ import {
   fullProductSchema,
 } from "../validation";
 import { useFormWithReinitialize } from "../../../lib/hooks";
+import {
+  useCreateProductMutation,
+  useUpdateProductMutation,
+} from "../../../store/rtkServices/productsMgmt";
+import { handleMutation, toaster } from "../../../utility";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-function AddProduct() {
+function AddEditProduct() {
+  const location = useLocation();
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const { pathname = "", state = {} } = location || {};
+  const { editableProductData = {} } = state || {};
+  const isEditMode = pathname.includes("edit");
+
+  // // local state
   const [activeStep, setActiveStep] = useState(0);
+
+  // // RTK Query
+  const [createProduct, { isFetching }] = useCreateProductMutation();
+  const [updateProduct, { isFetching: isUpdating }] =
+    useUpdateProductMutation();
 
   const stepsConfig = [
     {
@@ -52,17 +73,18 @@ function AddProduct() {
   } = useFormWithReinitialize({
     resolver: zodResolver(fullProductSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      status: "active",
-      price: "",
-      stock: "",
-      sku: "",
-      category: "",
-      subCategory: "",
-      images: "",
+      name: editableProductData?.name || "",
+      description: editableProductData?.description || "",
+      status: editableProductData?.status || "active",
+      price: editableProductData?.price?.toString() || "",
+      stock: editableProductData?.stock?.toString() || "",
+      sku: editableProductData?.sku || "",
+      category: editableProductData?.category || "",
+      subCategory: editableProductData?.subCategory || "",
+      images: editableProductData?.images || "",
     },
     mode: "onChange",
+    enableReinitialize: true,
   });
 
   const onNext = async () => {
@@ -75,14 +97,62 @@ function AddProduct() {
 
   const onBack = () => setActiveStep((prev) => prev - 1);
 
-  const onSubmit = (data) => {
-    console.log("Product Created:", data);
-    // API logic here
-  };
+  const onSubmit = async (productData) => {
+    const formData = new FormData();
+    formData.append("name", productData.name);
+    formData.append("description", productData.description);
+    formData.append("status", productData.status);
+    formData.append("price", productData.price);
+    formData.append("stock", productData.stock);
+    formData.append("sku", productData.sku);
+    formData.append("category", productData.category);
+    formData.append("subCategory", productData.subCategory);
+    productData.images.forEach((file) => {
+      formData.append("images", file);
+    });
 
+    // API logic here
+    if (isEditMode) {
+      await handleMutation({
+        mutationFn: updateProduct,
+        payload: { id, formData },
+        onSuccess: (data) => {
+          toaster.success(data.message);
+          reset();
+          setActiveStep(0);
+          navigate(-1);
+        },
+      });
+    } else {
+      await handleMutation({
+        mutationFn: createProduct,
+        payload: formData,
+        onSuccess: (data) => {
+          toaster.success(data.message);
+          reset();
+          setActiveStep(0);
+        },
+      });
+    }
+  };
   return (
     <>
-      <PageHeader pageTitle="Add New Product" hideExportBtn showBackBtn />
+      <PageHeader
+        pageTitle={
+          isEditMode ? (
+            <>
+              Edit Dish -
+              <Typography variant="span" color="text.disabled" ml={2}>
+                {`#${id}`}
+              </Typography>
+            </>
+          ) : (
+            "Add New Dish"
+          )
+        }
+        hideExportBtn
+        showBackBtn
+      />
       <Stack spacing={3}>
         <Card>
           <Stepper activeStep={activeStep}>
@@ -108,7 +178,7 @@ function AddProduct() {
                   control={control}
                   options={[
                     { label: "Active", value: "active" },
-                    { label: "Inactive", value: "inactive" },
+                    { label: "Inactive", value: "inActive" },
                   ]}
                 />
               </Grid>
@@ -192,15 +262,21 @@ function AddProduct() {
             spacing={2}
             mt={4}
           >
-            <Button disabled={activeStep === 0} onClick={onBack}>
+            <Button disabled={activeStep === 0} type="button" onClick={onBack}>
               Back
             </Button>
             {activeStep === stepsConfig.length - 1 ? (
               <Button variant="contained" type="submit">
-                Create Dish
+                {isEditMode
+                  ? isSubmitting || isUpdating
+                    ? "Updating..."
+                    : "Update Dish"
+                  : isSubmitting || isFetching
+                  ? "Creating..."
+                  : "Create Dish"}
               </Button>
             ) : (
-              <Button variant="contained" onClick={onNext}>
+              <Button variant="contained" type="button" onClick={onNext}>
                 Next
               </Button>
             )}
@@ -211,4 +287,4 @@ function AddProduct() {
   );
 }
 
-export default AddProduct;
+export default AddEditProduct;

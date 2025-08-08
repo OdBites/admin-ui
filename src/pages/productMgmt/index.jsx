@@ -8,11 +8,11 @@ import {
   TableActionHeader,
 } from "../../sharedComponents";
 import FilterModal from "../productMgmt/components/FilterModal";
-import { demoProductList } from "../../data/productsMgmt";
 import { useProductMgmtConfirmationAlert } from "./hooks";
 import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import { dropDownOptions, tableColumns } from "../../constant";
 import { NavLink } from "react-router-dom";
+import { useGetProductsQuery } from "../../store/rtkServices/productsMgmt";
 
 function ProductManagement() {
   // local hooks
@@ -42,23 +42,33 @@ function ProductManagement() {
     }
   );
 
+  // // rtk query
+  const { data, isLoading } = useGetProductsQuery({
+    search,
+    sort,
+    page: page + 1,
+    limit: rowsPerPage,
+    ...filters,
+  });
+  const { data: productsData = [], total } = data || {};
+
   const statusColor = {
-    Active: "success",
+    active: "success",
     Blocked: "error",
     Pending: "warning",
   };
 
   // insert data
   let rows = [];
-  rows = demoProductList?.map((item, index) => {
+  rows = productsData?.products?.map((item, index) => {
     const actions = (
       <TableAction
-        view={`/dish-management/${item.id}`}
+        view={`/dish-management/${item._id}`}
         block={
-          item.status === "Active" ? () => handleAction("block", item) : null
+          item.status === "active" ? () => handleAction("inActive", item) : null
         }
         unBlock={
-          item.status === "Blocked" ? () => handleAction("unblock", item) : null
+          item.status === "inActive" ? () => handleAction("active", item) : null
         }
         remove={() => handleAction("delete", item)}
         // edit={
@@ -71,7 +81,7 @@ function ProductManagement() {
         //         })
         //     : null
         // }
-        isBlocked={item.status === "Blocked"}
+        isBlocked={item.status === "inActive"}
       />
     );
     const sr_no = index + 1 + page * rowsPerPage;
@@ -114,13 +124,14 @@ function ProductManagement() {
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>
         <DataTable
+          isLoading={isLoading}
           columns={tableColumns.productMgmt}
           rows={rows}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleChangePage={handleChangePage}
           page={page}
           rowsPerPage={rowsPerPage}
-          totalItem={rows.length}
+          totalItem={total}
         />
       </Card>
 

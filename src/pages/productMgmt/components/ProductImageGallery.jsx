@@ -12,7 +12,7 @@ import {
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
-const ProductImageGallery = ({ images = [] }) => {
+const ProductImageGallery = ({ images = [], dirPath = "" }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [activeIndex, setActiveIndex] = useState(0);
@@ -122,6 +122,7 @@ const ProductImageGallery = ({ images = [] }) => {
           sx={{
             width: "100%",
             maxWidth: 500,
+            maxHeight: 300,
             mx: "auto",
             mb: 2,
             borderRadius: 2,
@@ -130,7 +131,7 @@ const ProductImageGallery = ({ images = [] }) => {
         >
           <Zoom>
             <img
-              src={images[activeIndex]}
+              src={`${dirPath}${images[activeIndex]}`}
               alt={`Product ${activeIndex + 1}`}
               style={{
                 width: "100%",
@@ -146,15 +147,15 @@ const ProductImageGallery = ({ images = [] }) => {
         {images.length > 1 && (
           <Box sx={{ px: 2, position: "relative" }}>
             <Slider {...settings}>
-              {images.map((img, idx) => (
+              {images?.map((img, idx) => (
                 <Box
-                  key={idx}
+                  key={idx + 1}
                   sx={{ px: 1, cursor: "pointer" }}
                   onClick={() => setActiveIndex(idx)}
                 >
                   <Box
                     component="img"
-                    src={img}
+                    src={`${dirPath}${img}`}
                     alt={`Product thumbnail ${idx + 1}`}
                     sx={{
                       width: "100%",
@@ -183,6 +184,7 @@ const ProductImageGallery = ({ images = [] }) => {
 // // props validation
 ProductImageGallery.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string),
+  dirPath: PropTypes.string.isRequired,
 };
 
 export default ProductImageGallery;

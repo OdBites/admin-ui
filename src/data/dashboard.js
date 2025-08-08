@@ -15,9 +15,9 @@ export const productDemand = [
 // Sample Data for Recent Orders
 export const orderColumns = [
   { id: "id", label: "ID", align: "left" },
-  { id: "product", label: "Product", align: "left" },
-  { id: "customer", label: "Customer", align: "left" },
-  { id: "amount", label: "Amount", align: "right" },
+  // { id: "product", label: "Product", align: "left" },
+  { id: "customerName", label: "Customer", align: "left" },
+  { id: "totalAmount", label: "Amount", align: "right" },
 ];
 
 export const orderRows = [

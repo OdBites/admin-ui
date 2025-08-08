@@ -14,6 +14,7 @@ import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import FilterModal from "./components/FilterModal";
 import { useUserMgmtConfirmationAlert } from "./hooks";
 import AddEditUserModal from "./components/AddEditUserModal";
+import { useGetUsersQuery } from "../../store/rtkServices/userMgmt";
 
 function UserManagement() {
   // local hooks
@@ -41,6 +42,16 @@ function UserManagement() {
     { status: "", order: "", dateInterval: "", fromDate: "", toDate: "" }
   );
 
+  // // rtk query
+  const { data, isLoading } = useGetUsersQuery({
+    search,
+    sort,
+    page: page + 1,
+    limit: rowsPerPage,
+    ...filters,
+  });
+  const { data: usersData = [], total } = data || {};
+  console.log("usersData", search, sort, filters);
   const statusColor = {
     Active: "success",
     Blocked: "error",
@@ -49,7 +60,7 @@ function UserManagement() {
 
   // insert data
   let rows = [];
-  rows = demoUserList?.map((item, index) => {
+  rows = usersData?.map((item, index) => {
     const actions = (
       <TableAction
         view={`/user-management/${item.id}`}
@@ -122,13 +133,14 @@ function UserManagement() {
           <FilterModal filters={filters} setFilters={setFilters} />
         </TableActionHeader>
         <DataTable
+          isLoading={isLoading}
           columns={tableColumns.userMgmt}
           rows={rows}
           handleChangeRowsPerPage={handleChangeRowsPerPage}
           handleChangePage={handleChangePage}
           page={page}
           rowsPerPage={rowsPerPage}
-          totalItem={rows.length}
+          totalItem={total}
         />
       </Card>
 

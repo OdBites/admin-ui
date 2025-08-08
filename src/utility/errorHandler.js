@@ -1,4 +1,5 @@
 import { toaster } from "./";
+import { cookies } from "SpiseBowlMfUI/utility";
 
 function getErrorMessage(status, errorData) {
   const errorMessage =
@@ -13,8 +14,11 @@ function getErrorMessage(status, errorData) {
   switch (status) {
     case 400:
       return errorMessage || "Bad Request. Please check your input.";
-    case 401:
-      return "Unauthorized. Please login again.";
+    case 401: {
+      cookies.removeCookie("auth_token");
+      window.location.reload();
+      return errorMessage || "Unauthorized. Please login again.";
+    }
     case 403:
       return errorMessage || "Forbidden. You don’t have permission.";
     case 404:

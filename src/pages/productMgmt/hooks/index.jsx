@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { Stack, Typography } from "@mui/material";
+import {
+  useDeleteProductMutation,
+  useToggleProductStatusMutation,
+} from "../../../store/rtkServices/productsMgmt";
+import { handleMutation, toaster } from "../../../utility";
 
 export function useProductMgmtConfirmationAlert() {
   const [confirmAlert, setConfirmAlert] = useState({
@@ -7,6 +12,12 @@ export function useProductMgmtConfirmationAlert() {
     action: null,
     selectedProduct: null,
   });
+
+  // // RTK Query
+  const [activeInActiveProduct, { isFetching }] =
+    useToggleProductStatusMutation();
+  const [deleteProduct, { isFetching: isDeleting }] =
+    useDeleteProductMutation();
 
   const getDialogContent = (action, selectedProduct) => {
     const name = selectedProduct?.name || "N/A";
@@ -24,9 +35,9 @@ export function useProductMgmtConfirmationAlert() {
     );
 
     switch (action) {
-      case "block":
+      case "inActive":
         return {
-          title: "Block Dish Confirmation",
+          title: "Inactive Dish Confirmation",
           description: (
             <Stack spacing={1}>
               <Typography>
@@ -35,16 +46,16 @@ export function useProductMgmtConfirmationAlert() {
               </Typography>
               {productInfo}
               <Typography color="primary.main" fontWeight={600}>
-                Note: You can unblock the dish later to restore it to your menu.
+                Note: You can active the dish later to restore it to your menu.
               </Typography>
               <Typography>Are you sure you want to continue?</Typography>
             </Stack>
           ),
-          confirmLabel: "Block",
+          confirmLabel: "Inactive",
         };
-      case "unblock":
+      case "active":
         return {
-          title: "Unblock Dish Confirmation",
+          title: "Active Dish Confirmation",
           description: (
             <Stack spacing={1}>
               <Typography>
@@ -57,7 +68,7 @@ export function useProductMgmtConfirmationAlert() {
               <Typography>Are you sure you want to continue?</Typography>
             </Stack>
           ),
-          confirmLabel: "Unblock",
+          confirmLabel: "Active",
         };
       case "delete":
         return {
@@ -85,7 +96,24 @@ export function useProductMgmtConfirmationAlert() {
     setConfirmAlert({ open: true, action, selectedProduct });
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    if (confirmAlert.action === "delete") {
+      await handleMutation({
+        mutationFn: deleteProduct,
+        payload: confirmAlert.selectedProduct?._id,
+        onSuccess: (data) => {
+          toaster.success(data.message);
+        },
+      });
+    } else {
+      await handleMutation({
+        mutationFn: activeInActiveProduct,
+        payload: confirmAlert.selectedProduct?._id,
+        onSuccess: (data) => {
+          toaster.success(data.message);
+        },
+      });
+    }
     setConfirmAlert({ open: false, action: null, selectedProduct: null });
   };
 

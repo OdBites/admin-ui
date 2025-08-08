@@ -32,7 +32,6 @@ function TableActionHeader({
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    setSearch(value);
   };
 
   const handleSortChange = (e) => {
@@ -61,9 +60,7 @@ function TableActionHeader({
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => console.log("Searching for:", searchTerm)}
-                >
+                <IconButton onClick={() => setSearch(searchTerm)}>
                   <Search />
                 </IconButton>
                 {searchTerm && (

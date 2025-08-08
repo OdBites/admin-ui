@@ -8,8 +8,8 @@ import {
   TableActionHeader,
 } from "../../sharedComponents";
 import FilterModal from "../paymentMgmt/components/FilterModal";
-import { demoPaymentsList } from "../../data/paymentMgmt";
 import { tableColumns, dropDownOptions } from "../../constant";
+import { useGetPaymentsQuery } from "../../store/rtkServices/paymentsMgmt";
 
 function PaymentManagement() {
   // local State
@@ -29,16 +29,26 @@ function PaymentManagement() {
     }
   );
 
+  // // rtk query
+  const { data, isFetching } = useGetPaymentsQuery({
+    search,
+    sort,
+    page: page + 1,
+    limit: rowsPerPage,
+    ...filters,
+  });
+  const { data: paymentsData = [], total } = data || {};
+
   const statusColor = {
-    Success: "success",
-    Failed: "error",
-    Pending: "warning",
+    success: "success",
+    failed: "error",
+    pending: "warning",
   };
 
   // insert data
   let rows = [];
-  rows = demoPaymentsList?.map((item, index) => {
-    const actions = <TableAction view={`/payment-management/${item.id}`} />;
+  rows = paymentsData?.map((item, index) => {
+    const actions = <TableAction view={`/payment-management/${item._id}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
     const status = (
       <Chip
@@ -75,7 +85,8 @@ function PaymentManagement() {
           handleChangePage={handleChangePage}
           page={page}
           rowsPerPage={rowsPerPage}
-          totalItem={rows.length}
+          totalItem={total}
+          isLoading={isFetching}
         />
       </Card>
     </>

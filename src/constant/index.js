@@ -12,9 +12,9 @@ export const tableColumns = {
     { id: "actions", label: "Actions" },
   ],
   productMgmt: [
-    { id: "id", label: "Item ID" },
+    { id: "_id", label: "Item ID" },
     { id: "name", label: "Dish Name" },
-    { id: "mainCategory", label: "Category" },
+    { id: "category", label: "Category" },
     { id: "subCategory", label: "Cuisine Type" },
     { id: "price", label: "Price (₹)" },
     { id: "discountPrice", label: "Offer Price (₹)" },
@@ -35,7 +35,7 @@ export const tableColumns = {
     { id: "actions", label: "Actions" },
   ],
   paymentMgmt: [
-    { id: "id", label: "Payment ID" },
+    { id: "_id", label: "Payment ID" },
     { id: "orderId", label: "Order ID" },
     { id: "customerName", label: "Customer Name" },
     { id: "method", label: "Payment Method" },
@@ -82,7 +82,7 @@ export const dropDownOptions = {
     status: [
       { value: "", label: "All Status" },
       { value: "active", label: "Active" },
-      { value: "inactive", label: "Inactive" },
+      { value: "inActive", label: "Inactive" },
       { value: "outOfStock", label: "Out of Stock" },
       { value: "blocked", label: "Blocked" },
     ],

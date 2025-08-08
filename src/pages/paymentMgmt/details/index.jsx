@@ -1,68 +1,62 @@
 import React from "react";
-import {
-  Box,
-  Card,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-  Chip,
-} from "@mui/material";
+import { Card, Divider, Grid, Stack, Typography, Chip } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import { PageHeader } from "../../../sharedComponents";
-import { demoPaymentDetails } from "../../../data/paymentMgmt";
-import { useGetDataById } from "../../../lib/hooks";
+import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt";
 
 function PaymentDetails() {
   const { paymentId } = useParams();
-  const payment = useGetDataById({
-    data: demoPaymentDetails,
-    targetField: "id",
-    id: paymentId,
-  });
+
+  // // rtk query
+  const { data: paymentDetailsData = {}, isFetching } =
+    useGetPaymentByIdQuery(paymentId);
 
   const statusColor = {
-    Success: "success",
-    Failed: "error",
-    Pending: "warning",
+    success: "success",
+    failed: "error",
+    pending: "warning",
   };
 
   // Flatten customer address for easy display
-  const customerAddress = payment.customer?.address
-    ? `${payment.customer.address.line1}, ${payment.customer.address.line2}, ${payment.customer.address.city}, ${payment.customer.address.state} - ${payment.customer.address.postalCode}, ${payment.customer.address.country}`
+  const customerAddress = paymentDetailsData?.customer?.address
+    ? `${paymentDetailsData?.customer.address.line1}, ${paymentDetailsData?.customer.address.line2}, ${paymentDetailsData?.customer.address.city}, ${paymentDetailsData?.customer.address.state} - ${paymentDetailsData?.customer.address.postalCode}, ${paymentDetailsData?.customer.address.country}`
     : "N/A";
 
   const visualizePaymentDetails = {
-    "Payment ID": payment.id,
-    "Order ID": payment.orderId,
+    "Payment ID": paymentDetailsData?.id,
+    "Order ID": paymentDetailsData?.orderId,
     Status: (
       <Chip
-        label={payment.status}
-        color={statusColor[payment.status] || "default"}
+        label={paymentDetailsData?.status}
+        color={statusColor[paymentDetailsData?.status] || "default"}
         variant="outlined"
         size="small"
       />
     ),
-    Amount: `₹ ${payment.amount.toFixed(2)} ${payment.currency}`,
-    "Payment Method": payment.method,
-    "Payment Gateway": payment.paymentGateway,
-    "Transaction ID": payment.transactionId,
-    "Paid At": payment.paidAt,
-    Notes: payment.notes,
+    Amount: `₹ ${paymentDetailsData?.amount?.toFixed(2)} ${
+      paymentDetailsData?.currency
+    }`,
+    "Payment Method": paymentDetailsData?.method,
+    "Payment Gateway": paymentDetailsData?.paymentGateway,
+    "Transaction ID": paymentDetailsData?.transactionId,
+    "Paid At": paymentDetailsData?.paidAt,
+    Notes: paymentDetailsData?.notes,
   };
 
   const visualizeCustomerDetails = {
-    Name: payment.customer?.name,
-    Phone: payment.customer?.phone,
-    Email: payment.customer?.email,
+    Name: paymentDetailsData?.customer?.name,
+    Phone: paymentDetailsData?.customer?.phone,
+    Email: paymentDetailsData?.customer?.email,
     Address: customerAddress,
   };
 
   const visualizeRefundDetails = {
-    "Is Refunded": payment.refund?.isRefunded ? "Yes" : "No",
-    "Refund Amount": `₹ ${payment.refund?.refundAmount.toFixed(2) || 0}`,
-    "Refunded At": payment.refund?.refundedAt,
+    "Is Refunded": paymentDetailsData?.refund?.isRefunded ? "Yes" : "No",
+    "Refund Amount": `₹ ${
+      paymentDetailsData?.refund?.refundAmount.toFixed(2) || 0
+    }`,
+    "Refunded At": paymentDetailsData?.refund?.refundedAt,
   };
 
   return (
@@ -72,7 +66,7 @@ function PaymentDetails() {
           <>
             Payment Details -
             <Typography variant="span" color="text.disabled" ml={2}>
-              {`#${payment.id}`}
+              {`#${paymentDetailsData?._id}`}
             </Typography>
           </>
         }
@@ -110,7 +104,9 @@ function PaymentDetails() {
                 <Typography variant="body2" color="text.disabled" gutterBottom>
                   {label}
                 </Typography>
-                <Typography variant="body1">{value || "N/A"}</Typography>
+                <Typography variant="body1" sx={{ wordBreak: "break-word" }}>
+                  {value || "N/A"}
+                </Typography>
               </Grid>
             ))}
           </Grid>

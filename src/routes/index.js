@@ -36,7 +36,13 @@ export const userRoutes = [
     path: "/dish-management/add-dish",
     name: "AddDish",
     exact: true,
-    component: React.lazy(() => import("../pages/productMgmt/addProduct")),
+    component: React.lazy(() => import("../pages/productMgmt/addEditProduct")),
+  },
+  {
+    path: "/dish-management/edit-dish/:id",
+    name: "EditDish",
+    exact: true,
+    component: React.lazy(() => import("../pages/productMgmt/addEditProduct")),
   },
   {
     path: "/order-management",

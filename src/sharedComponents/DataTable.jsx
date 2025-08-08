@@ -23,6 +23,7 @@ const DataTable = ({
   rowsPerPage = 10,
   totalItem = 0,
   isLoading = false,
+  hidePagination = false,
 }) => {
   const theme = useTheme();
 
@@ -92,7 +93,7 @@ const DataTable = ({
                         textTransform: col.textTransform || "none",
                       }}
                     >
-                      {row[col.id] ?? "-"}
+                      {row[col.id] || "-N/A-"}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -101,7 +102,7 @@ const DataTable = ({
       </Table>
 
       {/* Pagination */}
-      {rows.length > 0 && (
+      {rows.length > 0 && !hidePagination ? (
         <TablePagination
           sx={{
             backgroundColor: theme.palette.background.paper,
@@ -117,6 +118,8 @@ const DataTable = ({
           onRowsPerPageChange={handleChangeRowsPerPage}
           rowsPerPageOptions={[5, 15, 30, 50]}
         />
+      ) : (
+        ""
       )}
     </TableContainer>
   );
@@ -141,6 +144,7 @@ DataTable.propTypes = {
   rowsPerPage: PropTypes.number, // Number of rows per page
   totalItem: PropTypes.number, // Total number of items
   isLoading: PropTypes.bool, // Loading state
+  hidePagination: PropTypes.bool, // Whether to hide pagination
 };
 
 export default DataTable;

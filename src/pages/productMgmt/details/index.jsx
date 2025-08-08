@@ -10,20 +10,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { DriveFileRenameOutline } from "@mui/icons-material";
 
 import { PageHeader } from "../../../sharedComponents";
-import { useGetDataById } from "../../../lib/hooks";
-import { demoProductList } from "../../../data/productsMgmt";
 import ProductImageGallery from "../components/ProductImageGallery";
-import { DriveFileRenameOutline } from "@mui/icons-material";
+import { useGetProductByIdQuery } from "../../../store/rtkServices/productsMgmt";
+import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 
 function DishDetails() {
   const { id } = useParams();
-  const dish = useGetDataById({
-    data: demoProductList,
-    targetField: "id",
-    id: id,
-  });
+
+  // // rtk query
+  const { data, isLoading } = useGetProductByIdQuery(id);
+  const { product: productDetailsData = {}, folderLocation = "" } = data || {};
 
   const statusColor = {
     Active: "success",
@@ -32,23 +31,23 @@ function DishDetails() {
   };
 
   const visualizeFormatDishDetails = {
-    "Dish Code": dish.sku,
-    Category: dish.mainCategory,
-    Subcategory: dish.subCategory,
-    Price: `₹${dish.price}`,
-    Discount: `₹${dish.discountPrice}`,
-    Stock: dish.stock,
+    "Dish Code": productDetailsData?.sku,
+    Category: productDetailsData?.category,
+    Subcategory: productDetailsData?.subCategory,
+    Price: `₹${productDetailsData?.price}`,
+    Discount: `₹${productDetailsData?.discountPrice}`,
+    Stock: productDetailsData?.stock,
     Status: (
       <Chip
-        label={dish.status}
-        color={statusColor[dish.status] || "default"}
+        label={productDetailsData?.status}
+        color={statusColor[productDetailsData?.status] || "default"}
         variant="outlined"
         size="small"
       />
     ),
-    Rating: dish.rating,
-    Created: dish.createdAt,
-    Updated: dish.updatedAt,
+    Rating: productDetailsData?.rating,
+    Created: productDetailsData?.createdAt,
+    Updated: productDetailsData?.updatedAt,
   };
 
   return (
@@ -61,7 +60,7 @@ function DishDetails() {
               variant="span"
               color="text.disabled"
               ml={2}
-            >{`#${dish.id}`}</Typography>
+            >{`#${productDetailsData?._id}`}</Typography>
           </>
         }
         hideExportBtn
@@ -70,7 +69,8 @@ function DishDetails() {
         <Button
           variant="contained"
           component={NavLink}
-          to="/dish-management/add-dish"
+          to={`/dish-management/edit-dish/${id}`}
+          state={{ editableProductData: productDetailsData }}
           endIcon={<DriveFileRenameOutline />}
         >
           Edit Dish
@@ -89,20 +89,23 @@ function DishDetails() {
             <Box
               sx={{ width: { xs: "100%", lg: 400 }, order: { xs: 2, lg: 1 } }}
             >
-              <ProductImageGallery images={dish.images} />
+              <ProductImageGallery
+                images={productDetailsData?.images}
+                dirPath={`${VITE_APP_ASSETS_PATH}${folderLocation}/`}
+              />
             </Box>
 
             <Box sx={{ flex: 1, order: { xs: 1, lg: 2 } }}>
               <Typography variant="h5" fontWeight="bold">
-                {dish.name}
+                {productDetailsData?.name}
               </Typography>
               <Typography variant="body1" sx={{ mt: 1 }}>
-                {dish.description}
+                {productDetailsData?.description}
               </Typography>
               <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
                 Variants:{" "}
-                {dish.variants
-                  .map((v) => `${v.size} (Stock: ${v.stock})`)
+                {productDetailsData?.variants
+                  ?.map((v) => `${v.size} (Stock: ${v.stock})`)
                   .join(", ")}
               </Typography>
             </Box>

@@ -21,6 +21,8 @@ function CustomDialog({
   confirmLabel = "Yes",
   cancelLabel = "No",
   size = "sm",
+  isLoading = false,
+  loadingLabel = "Loading...",
   ...rest
 }) {
   const cancelRef = useRef(null);
@@ -81,9 +83,10 @@ function CustomDialog({
         <Button
           ref={confirmRef}
           onClick={handleConfirm}
+          disabled={isLoading}
           sx={{ minWidth: btnWidth }}
         >
-          {confirmLabel}
+          {isLoading ? loadingLabel : confirmLabel}
         </Button>
       </DialogActions>
     </Dialog>
@@ -101,6 +104,8 @@ CustomDialog.propTypes = {
   confirmLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
   size: PropTypes.oneOf(["xs", "sm", "md", "lg", "xl"]),
+  isLoading: PropTypes.bool,
+  loadingLabel: PropTypes.string,
 };
 
 export default CustomDialog;

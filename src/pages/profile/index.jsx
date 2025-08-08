@@ -11,17 +11,45 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { FormInput, AvatarUpload } from "SpiseBowlMfUI/sharedComp";
+import { cookies } from "SpiseBowlMfUI/utility";
 
 import { PageHeader } from "../../sharedComponents";
 import { useFormWithReinitialize } from "../../lib/hooks";
 import { profileSchema } from "./validation";
-import UpdatePasswordModal from "./components/UpdatePasswordModal";
+import { UpdatePasswordModal } from "./components";
+import {
+  useGetProfileDetailsQuery,
+  useGetProfilePhotoQuery,
+  useUpdateProfileDetailsMutation,
+  useUpdateProfilePhotoMutation,
+} from "../../store/rtkServices";
+import { handleMutation } from "../../utility";
+import { VITE_APP_ASSETS_PATH } from "../../config/env";
+// import AvatarUpload from "./AvatarUpload";
+import { Loader } from "../../assets";
 
 function Profile() {
+  const { getCookie } = cookies;
+
+  const userId = getCookie("user_id");
+
   const [isEditing, setIsEditing] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState({
     open: false,
   });
+
+  // // rtk query
+  const { data: profileDetails = {}, isFetching } =
+    useGetProfileDetailsQuery(userId);
+  const [updateProfileDetails, { isFetching: isUpdating }] =
+    useUpdateProfileDetailsMutation();
+
+  const {
+    data: { folderLocation, photo } = {},
+    isFetching: isProfilePicFetching,
+  } = useGetProfilePhotoQuery(userId);
+  const [updateProfilePhoto, { isFetching: isProfilePicUpdating }] =
+    useUpdateProfilePhotoMutation();
 
   const {
     control,
@@ -31,145 +59,173 @@ function Profile() {
   } = useFormWithReinitialize({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: "Admin",
-      lastName: "User",
-      email: "admin@nexcart.in",
-      description: "Administrator of the NexCart e-commerce platform.",
+      firstName: profileDetails?.firstName || "",
+      lastName: profileDetails?.lastName || "",
+      email: profileDetails?.email || "",
+      description: profileDetails?.description || "",
     },
     mode: "onChange",
+    enableReinitialize: true,
   });
 
-  const onSubmit = (data) => {
-    setIsEditing(false);
-    // Submit form data
-    console.log("Saving profile...", data);
+  const onSubmit = async (updatedData) => {
+    await handleMutation({
+      mutationFn: updateProfileDetails,
+      payload: { id: userId, updatedData },
+      onSuccess: (data) => {
+        setIsEditing(false);
+        toaster.success(data.message);
+        reset();
+      },
+    });
+  };
+  const handelUpdateProfilePic = async (imgData) => {
+    const formData = new FormData();
+    await handleMutation({
+      mutationFn: updateProfilePhoto,
+      payload: { id: userId, imgData: formData },
+      onSuccess: (data) => {
+        toaster.success(data.message);
+      },
+    });
   };
 
   return (
     <>
       <PageHeader pageTitle="Profile" hideExportBtn showBackBtn />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", lg: "row" },
-          gap: 4,
-          alignItems: "flex-start",
-        }}
-      >
-        <Card sx={{ width: { xs: "100%", lg: 350 } }}>
-          <Stack spacing={2} alignItems="center">
-            <AvatarUpload
-              avatar="/static/images/avatar/1.jpg"
-              alt={`${"userDetails.firstName"} ${"userDetails.lastName"}`}
-              onSave={(imgUrl) => {
-                console.log("Saved avatar:", imgUrl);
-              }}
-            />
-            <Typography variant="h5" fontWeight="bold" gutterBottom>
-              Somyaranjan Sethy
-            </Typography>
-            <Button
-              size="micro"
-              type="button"
-              onClick={() => setUpdatePasswordModal({ open: true })}
-            >
-              Update Password
-            </Button>
-            <Box>
-              <Typography variant="body2" gutterBottom={3} color="textDisabled">
-                Description
+      {isFetching || isProfilePicFetching ? (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="70vh"
+        >
+          <Box component="img" src={Loader} sx={{ width: 150 }} />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", lg: "row" },
+            gap: 4,
+            alignItems: "flex-start",
+          }}
+        >
+          <Card sx={{ width: { xs: "100%", lg: 350 } }}>
+            <Stack spacing={2} alignItems="center">
+              <AvatarUpload
+                avatar={`${VITE_APP_ASSETS_PATH}${folderLocation}/${photo}`}
+                alt={`${profileDetails.firstName} ${profileDetails.lastName}`}
+                onSave={(imgData) => {
+                  handelUpdateProfilePic(imgData);
+                }}
+              />
+              <Typography variant="h5" fontWeight="bold" gutterBottom>
+                {`${profileDetails.firstName || "N/A"} ${
+                  profileDetails.lastName || "N/A"
+                }`}
               </Typography>
-              <Typography variant="body1">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Esse
-                autem velit suscipit. Iusto exercitationem suscipit illum
-                necessitatibus quod deserunt, blanditiis iure molestiae ad non,
-                ipsam accusamus nemo sint consequatur ducimus.
-              </Typography>
-            </Box>
-          </Stack>
-        </Card>
-        <Card sx={{ flex: 1 }}>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            Account Information
-          </Typography>
-          <Divider sx={{ my: 1 }} />
-
-          <Grid
-            component="form"
-            container
-            spacing={1.5}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <Grid item size={{ xs: 12, sm: 6 }}>
-              <FormInput
-                name="firstName"
-                label="First Name"
-                control={control}
-                disabled={!isEditing}
-              />
-            </Grid>
-            <Grid item size={{ xs: 12, sm: 6 }}>
-              <FormInput
-                name="lastName"
-                label="Last Name"
-                control={control}
-                disabled={!isEditing}
-              />
-            </Grid>
-            <Grid item size={{ xs: 12, sm: 6 }}>
-              <FormInput
-                name="email"
-                label="Email"
-                control={control}
-                disabled={!isEditing}
-              />
-            </Grid>
-            <Grid item size={12}>
-              <FormInput
-                name="description"
-                label="Description"
-                inputType="textarea"
-                control={control}
-                disabled={!isEditing}
-              />
-            </Grid>
-            <Grid size={12} mt={1}>
-              {!isEditing ? (
-                <Button
-                  type="button"
-                  variant="contained"
-                  onClick={() => setIsEditing(true)}
+              <Button
+                size="micro"
+                type="button"
+                onClick={() => setUpdatePasswordModal({ open: true })}
+              >
+                Update Password
+              </Button>
+              <Box>
+                <Typography
+                  variant="body2"
+                  gutterBottom={3}
+                  color="textDisabled"
                 >
-                  Update Profile
-                </Button>
-              ) : (
-                <Stack direction="row" spacing={2}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    disabled={isSubmitting}
-                  >
-                    Save Profile
-                  </Button>
+                  Description
+                </Typography>
+                <Typography variant="body1">
+                  {profileDetails?.description || "N/A"}
+                </Typography>
+              </Box>
+            </Stack>
+          </Card>
+          <Card sx={{ flex: 1 }}>
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Account Information
+            </Typography>
+            <Divider sx={{ my: 1 }} />
+
+            <Grid
+              component="form"
+              container
+              spacing={1.5}
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <Grid item size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="firstName"
+                  label="First Name"
+                  control={control}
+                  disabled={!isEditing}
+                />
+              </Grid>
+              <Grid item size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="lastName"
+                  label="Last Name"
+                  control={control}
+                  disabled={!isEditing}
+                />
+              </Grid>
+              <Grid item size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="email"
+                  label="Email"
+                  control={control}
+                  disabled={!isEditing}
+                />
+              </Grid>
+              <Grid item size={12}>
+                <FormInput
+                  name="description"
+                  label="Description"
+                  inputType="textarea"
+                  control={control}
+                  disabled={!isEditing}
+                />
+              </Grid>
+              <Grid size={12} mt={1}>
+                {!isEditing ? (
                   <Button
                     type="button"
-                    variant="outlined"
-                    onClick={() => {
-                      setIsEditing(false);
-                      reset();
-                    }}
-                    disabled={isSubmitting}
-                    sx={{ px: 4 }}
+                    variant="contained"
+                    onClick={() => setIsEditing(true)}
                   >
-                    Cancel
+                    Update Profile
                   </Button>
-                </Stack>
-              )}
+                ) : (
+                  <Stack direction="row" spacing={2}>
+                    <Button type="submit" disabled={isSubmitting || isUpdating}>
+                      {isSubmitting || isUpdating
+                        ? "Saving..."
+                        : "Save Profile"}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outlined"
+                      onClick={() => {
+                        setIsEditing(false);
+                        reset();
+                      }}
+                      disabled={isSubmitting}
+                      sx={{ px: 4 }}
+                    >
+                      Cancel
+                    </Button>
+                  </Stack>
+                )}
+              </Grid>
             </Grid>
-          </Grid>
-        </Card>
-      </Box>
-
+          </Card>
+        </Box>
+      )}
       <UpdatePasswordModal
         updatePasswordModal={updatePasswordModal}
         setUpdatePasswordModal={setUpdatePasswordModal}

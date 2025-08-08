@@ -6,11 +6,11 @@ import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { FormInput } from "SpiseBowlMfUI/sharedComp";
-import { useCookies } from "SpiseBowlMfUI/hooks";
 
 import { useFormWithReinitialize } from "../../lib/hooks";
-import { useAdminSignInMutation } from "../../store/services/auth";
+import { useAdminSignInMutation } from "../../store/rtkServices/auth";
 import { handleMutation } from "../../utility";
+import { userSignIn } from "../../store/actions";
 
 const signInSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -19,13 +19,11 @@ const signInSchema = z.object({
 
 function SignIn() {
   // // initial state
-  const { setCookie, getCookie } = useCookies();
-  const currentTheme = getCookie("user_theme") || "dark";
 
   const dispatch = useDispatch();
 
-  // // redux state
-  const [adminSignIn] = useAdminSignInMutation();
+  // // RTK state
+  const [adminSignIn, userData] = useAdminSignInMutation();
 
   const {
     control,
@@ -40,20 +38,11 @@ function SignIn() {
   });
 
   const onSubmit = async (userData) => {
-    console.log("Signing in with:", userData);
-
     await handleMutation({
       mutationFn: adminSignIn,
       payload: userData,
       onSuccess: (data) => {
-        console.log("Sign-in successful:", data);
-        setCookie("auth_token", data.token, {
-          maxAgeHours: 1,
-          path: "/",
-          sameSite: "Lax",
-        });
-        setCookie("user_theme", currentTheme, { maxAgeDays: 1, path: "/" });
-        window.location.reload();
+        dispatch(userSignIn(data));
       },
     });
   };

@@ -9,10 +9,19 @@ export const authService = createApi({
       query: (user) => ({
         url: "/auth/login",
         method: "POST",
-        data: user,
+        body: user,
+      }),
+    }),
+
+    changePassword: builder.mutation({
+      query: (passwordData) => ({
+        url: "/auth/change-password",
+        method: "POST",
+        body: passwordData,
       }),
     }),
   }),
 });
 
-export const { useAdminSignInMutation } = authService;
+export const { useAdminSignInMutation, useChangePasswordMutation } =
+  authService;

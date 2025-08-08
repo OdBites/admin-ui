@@ -25,11 +25,12 @@ axiosMain.interceptors.request.use(
 axiosMain.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("Axios Error in axiosInstance:", error.response);
+    console.error("Axios Error in axiosInstance:", error);
     errorHandler({
       status: error.response?.status,
-      data: error.response?.data,
+      data: error.response?.data || error,
     });
+
     return Promise.reject(error);
   }
 );

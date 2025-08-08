@@ -16,9 +16,9 @@ export const basicInfoSchema = z.object({
     .max(1000, "Description must be at most 1000 characters")
     .trim(),
 
-  status: z.enum(["active", "inactive"], {
+  status: z.enum(["active", "inActive"], {
     required_error: "Status is required",
-    invalid_type_error: "Status must be active or inactive",
+    invalid_type_error: "Status must be active or inActive",
   }),
 });
 

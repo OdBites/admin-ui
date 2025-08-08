@@ -2,12 +2,12 @@ import axiosMain from "./axiosInstance";
 
 export const axiosBaseQuery =
   ({ baseURL = "" } = {}) =>
-  async ({ url, method, data, params }) => {
+  async ({ url, method, body, params }) => {
     try {
       const response = await axiosMain({
         url,
         method,
-        data,
+        data: body,
         params,
         baseURL: baseURL || undefined,
       });

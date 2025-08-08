@@ -8,6 +8,8 @@ import { FormInput } from "SpiseBowlMfUI/sharedComp";
 import { CustomDialog } from "../../../sharedComponents/dialog";
 import { useFormWithReinitialize } from "../../../lib/hooks";
 import { passwordSchema } from "../validation";
+import { useChangePasswordMutation } from "../../../store/rtkServices";
+import { handleMutation, toaster } from "../../../utility";
 
 const passwordChecks = [
   { label: "At least 8 characters", test: (p) => p.length >= 8 },
@@ -22,6 +24,9 @@ const passwordChecks = [
 
 function UpdatePasswordModal({ updatePasswordModal, setUpdatePasswordModal }) {
   const { open = false } = updatePasswordModal;
+
+  // // RTK state
+  const [changePassword, { isFetching }] = useChangePasswordMutation();
 
   const {
     control,
@@ -45,10 +50,17 @@ function UpdatePasswordModal({ updatePasswordModal, setUpdatePasswordModal }) {
     reset();
   };
 
-  const handleFormSubmit = async (data) => {
-    console.log("Password updated:", data);
+  const handleFormSubmit = async (passwordData) => {
+    console.log("Password updated:", passwordData);
     // TODO: Call API to update password
-    handleClose();
+    await handleMutation({
+      mutationFn: changePassword,
+      payload: passwordData,
+      onSuccess: (data) => {
+        toaster.success(data?.message || "Password updated successfully");
+        handleClose();
+      },
+    });
   };
 
   return (
@@ -59,7 +71,8 @@ function UpdatePasswordModal({ updatePasswordModal, setUpdatePasswordModal }) {
       handleConfirm={handleSubmit(handleFormSubmit)}
       confirmLabel="Update"
       cancelLabel="Cancel"
-      loading={isSubmitting}
+      isLoading={isSubmitting || isFetching}
+      loadingLabel="Updating..."
     >
       <FormInput
         name="currentPassword"
