@@ -4,18 +4,22 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
 
-import { FormInput } from "SpiseBowlMfUI/sharedComp";
+import { FormInput } from "OdBitesMfUI/sharedComp";
 import { useFormWithReinitialize } from "../../lib/hooks";
+import { useForgotPasswordMutation } from "../../store/rtkServices/auth";
+import { handleMutation, toaster } from "../../utility";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Enter a valid email address"),
 });
 
 function ForgotPassword() {
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useFormWithReinitialize({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -23,9 +27,14 @@ function ForgotPassword() {
     },
   });
 
-  const onSubmit = async (data) => {
-    console.log("Reset link sent to:", data.email);
-    // TODO: Call your forgot password API here
+  const onSubmit = async (payload) => {
+    await handleMutation({
+      mutationFn: forgotPassword,
+      payload,
+      onSuccess: (data) => {
+        toaster.success(data?.message || "Reset link request submitted");
+      },
+    });
   };
 
   return (
@@ -81,9 +90,9 @@ function ForgotPassword() {
                 type="submit"
                 variant="contained"
                 fullWidth
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLoading}
               >
-                {isSubmitting ? "Sending..." : "Send Reset Link"}
+                {isSubmitting || isLoading ? "Sending..." : "Send Reset Link"}
               </Button>
 
               <Box textAlign="center">

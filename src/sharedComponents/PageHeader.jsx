@@ -2,7 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 import { FileDownload, ReplyAll } from "@mui/icons-material";
-import { RenderIf } from "SpiseBowlMfUI/helpers";
+import { RenderIf } from "OdBitesMfUI/helpers";
 
 function PageHeader({
   pageTitle,

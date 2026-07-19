@@ -1,12 +1,13 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "../../../api";
+import { adminApiEndpoints } from "../../../api/adminEndpoints";
 
 export const productService = createApi({
   reducerPath: "productService",
   baseQuery: axiosBaseQuery(),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
-    // GET /products
+    // GET /api/admin/products
     getProducts: builder.query({
       query: ({
         page = 1,
@@ -32,7 +33,7 @@ export const productService = createApi({
         if (fromDate) params.append("fromDate", fromDate);
         if (toDate) params.append("toDate", toDate);
         return {
-          url: `/products?${params.toString()}`,
+          url: `${adminApiEndpoints.products}?${params.toString()}`,
           method: "GET",
         };
       },
@@ -40,22 +41,21 @@ export const productService = createApi({
       transformResponse: (response) => response,
     }),
 
-    // GET /products/:id
+    // GET /api/admin/products/:id
     getProductById: builder.query({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: adminApiEndpoints.product(id),
         method: "GET",
       }),
       transformResponse: (response) => response.data,
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),
 
-    // POST /products
+    // POST /api/admin/products
     createProduct: builder.mutation({
       query: (formData) => {
-        console.log("Creating product with payload:", formData);
         return {
-          url: `/products`,
+          url: adminApiEndpoints.products,
           method: "POST",
           body: formData,
         };
@@ -63,10 +63,10 @@ export const productService = createApi({
       invalidatesTags: ["Product"],
     }),
 
-    // PUT /products/:id
+    // PUT /api/admin/products/:id
     updateProduct: builder.mutation({
       query: ({ id, formData }) => ({
-        url: `/products/${id}`,
+        url: adminApiEndpoints.product(id),
         method: "PUT",
         body: formData,
       }),
@@ -76,19 +76,19 @@ export const productService = createApi({
       ],
     }),
 
-    // DELETE /products/:id
+    // DELETE /api/admin/products/:id
     deleteProduct: builder.mutation({
       query: (id) => ({
-        url: `/products/${id}`,
+        url: adminApiEndpoints.product(id),
         method: "DELETE",
       }),
       invalidatesTags: ["Product"],
     }),
 
-    // PATCH /products/:id/toggle-status
+    // PATCH /api/admin/products/:id/toggle-status
     toggleProductStatus: builder.mutation({
       query: (id) => ({
-        url: `/products/${id}/toggle-status`,
+        url: adminApiEndpoints.productToggleStatus(id),
         method: "PATCH",
       }),
       invalidatesTags: (result, error, id) => [

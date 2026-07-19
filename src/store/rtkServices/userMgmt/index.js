@@ -1,12 +1,12 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "../../../api";
+import { adminApiEndpoints } from "../../../api/adminEndpoints";
 
 export const userService = createApi({
   reducerPath: "userService",
   baseQuery: axiosBaseQuery(),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    // ✅ GET /api/users
     getUsers: builder.query({
       query: ({
         page = 1,
@@ -25,58 +25,76 @@ export const userService = createApi({
         if (dateInterval) params.append("dateInterval", dateInterval);
         if (sort) params.append("sort", sort);
         if (search) params.append("search", search);
+
         return {
-          url: `/users?${params.toString()}`,
+          url: `${adminApiEndpoints.users}?${params.toString()}`,
           method: "GET",
         };
       },
-
       providesTags: ["User"],
       transformResponse: (response) => response,
     }),
 
-    // ✅ GET /api/users/:id
     getUserById: builder.query({
-      query: (id) => `/users/${id}`,
+      query: (id) => ({
+        url: adminApiEndpoints.user(id),
+        method: "GET",
+      }),
+      transformResponse: (response) => response?.data ?? {},
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
 
-    // ✅ PUT /api/users/:id
+    createUser: builder.mutation({
+      query: (payload) => ({
+        url: adminApiEndpoints.users,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     updateUser: builder.mutation({
       query: ({ id, payload }) => ({
-        url: `/users/${id}`,
+        url: adminApiEndpoints.user(id),
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "User", id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "User", id }, "User"],
     }),
 
-    // ✅ PATCH /api/users/:id/status
     toggleUserStatus: builder.mutation({
       query: ({ id, status }) => ({
-        url: `/users/${id}/status`,
+        url: adminApiEndpoints.userStatus(id),
         method: "PATCH",
         body: { status },
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "User", id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "User", id }, "User"],
     }),
 
-    // ✅ PATCH /api/users/:id/profile-picture (multipart/form-data)
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: adminApiEndpoints.user(id),
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
+    }),
+
     updateProfilePicture: builder.mutation({
       query: ({ id, formData }) => ({
-        url: `/users/${id}/profile-picture`,
+        url: adminApiEndpoints.userProfilePicture(id),
         method: "PATCH",
         body: formData,
       }),
       invalidatesTags: (result, error, { id }) => [{ type: "User", id }],
     }),
 
-    // ✅ GET /api/users/:id/profile-picture (returns image)
     getProfilePicture: builder.query({
       query: (id) => ({
-        url: `/users/${id}/profile-picture`,
-        responseHandler: (response) => response.blob(),
+        url: adminApiEndpoints.userProfilePicture(id),
+        method: "GET",
       }),
+      transformResponse: (response) => response?.data ?? {},
+      providesTags: (result, error, id) => [{ type: "User", id }],
     }),
   }),
 });
@@ -84,8 +102,10 @@ export const userService = createApi({
 export const {
   useGetUsersQuery,
   useGetUserByIdQuery,
+  useCreateUserMutation,
   useUpdateUserMutation,
   useToggleUserStatusMutation,
+  useDeleteUserMutation,
   useUpdateProfilePictureMutation,
   useGetProfilePictureQuery,
 } = userService;

@@ -3,15 +3,23 @@ import PropTypes from "prop-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // // MfUI components
-import { FormInput } from "SpiseBowlMfUI/sharedComp";
+import { FormInput } from "OdBitesMfUI/sharedComp";
 
 // // Custom components or static import
 import { CustomDialog } from "../../../sharedComponents/dialog";
 import { useFormWithReinitialize } from "../../../lib/hooks";
 import { userSchemaValidation } from "../validation";
+import {
+  useCreateUserMutation,
+  useUpdateUserMutation,
+} from "../../../store/rtkServices/userMgmt";
+import { handleMutation, toaster } from "../../../utility";
 
 function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
   const { open = false, selectedUser = {}, action } = addEditUserModal;
+  const isEditMode = action === "EDIT";
+  const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const {
     control,
@@ -26,6 +34,7 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
       phone: selectedUser?.phone || "",
       email: selectedUser?.email || "",
       status: selectedUser?.status || "Active",
+      password: "",
     },
     enableReinitialize: true,
   });
@@ -36,10 +45,22 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
   };
 
   const handleFormSubmit = async (data) => {
-    console.log("Form submitted:", data);
-    // Do API call or parent callback here
+    const payload = { ...data };
+    if (!payload.password) {
+      delete payload.password;
+    }
 
-    handleClose();
+    await handleMutation({
+      mutationFn: isEditMode ? updateUser : createUser,
+      payload: isEditMode ? { id: selectedUser?.id, payload } : payload,
+      onSuccess: (response) => {
+        toaster.success(
+          response?.message ||
+            `User ${isEditMode ? "updated" : "created"} successfully`
+        );
+        handleClose();
+      },
+    });
   };
 
   return (
@@ -47,9 +68,11 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
       open={open}
       handleClose={handleClose}
       handleConfirm={handleSubmit(handleFormSubmit)}
-      confirmLabel={action === "EDIT" ? "Update" : "Create"}
+      confirmLabel={isEditMode ? "Update" : "Create"}
       cancelLabel="Cancel"
-      title={action === "EDIT" ? "Edit User" : "Add New User"}
+      title={isEditMode ? "Edit User" : "Add New User"}
+      isLoading={isSubmitting || isCreating || isUpdating}
+      loadingLabel={isEditMode ? "Updating..." : "Creating..."}
     >
       <FormInput
         name="firstName"
@@ -83,8 +106,18 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
         options={[
           { label: "Active", value: "Active" },
           { label: "Inactive", value: "Inactive" },
+          { label: "Blocked", value: "Blocked" },
+          { label: "Pending", value: "Pending" },
         ]}
       />
+      {!isEditMode && (
+        <FormInput
+          name="password"
+          control={control}
+          label="Password"
+          inputType="password"
+        />
+      )}
     </CustomDialog>
   );
 }

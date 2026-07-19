@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-import { FormInput } from "SpiseBowlMfUI/sharedComp";
+import { FormInput } from "OdBitesMfUI/sharedComp";
 
 import { useFormWithReinitialize } from "../../lib/hooks";
 import { useAdminSignInMutation } from "../../store/rtkServices/auth";

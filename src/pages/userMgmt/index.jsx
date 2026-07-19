@@ -8,7 +8,6 @@ import {
   TableAction,
   TableActionHeader,
 } from "../../sharedComponents";
-import { demoUserList } from "../../data/userMgmt";
 import { tableColumns, dropDownOptions } from "../../constant";
 import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import FilterModal from "./components/FilterModal";
@@ -39,7 +38,7 @@ function UserManagement() {
 
   const [filters, setFilters] = useReducer(
     (prev, next) => ({ ...prev, ...next }),
-    { status: "", order: "", dateInterval: "", fromDate: "", toDate: "" }
+    { status: "", orders: "", dateInterval: "", fromDate: "", toDate: "" }
   );
 
   // // rtk query

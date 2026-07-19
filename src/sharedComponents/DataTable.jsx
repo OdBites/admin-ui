@@ -12,7 +12,7 @@ import {
   Skeleton,
   useTheme,
 } from "@mui/material";
-import { RenderIf, NoData } from "SpiseBowlMfUI/helpers";
+import { RenderIf, NoData } from "OdBitesMfUI/helpers";
 
 const DataTable = ({
   columns = [],

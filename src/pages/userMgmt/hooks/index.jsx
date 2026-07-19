@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { Stack, Typography } from "@mui/material";
+import {
+  useDeleteUserMutation,
+  useToggleUserStatusMutation,
+} from "../../../store/rtkServices/userMgmt";
+import { handleMutation, toaster } from "../../../utility";
 
 export function useUserMgmtConfirmationAlert() {
   const [confirmAlert, setConfirmAlert] = useState({
@@ -7,6 +12,9 @@ export function useUserMgmtConfirmationAlert() {
     action: null,
     selectedUser: null,
   });
+
+  const [toggleUserStatus] = useToggleUserStatusMutation();
+  const [deleteUser] = useDeleteUserMutation();
 
   const getDialogContent = (action, selectedUser) => {
     const name = selectedUser?.name || "N/A";
@@ -84,7 +92,39 @@ export function useUserMgmtConfirmationAlert() {
     setConfirmAlert({ open: true, action, selectedUser });
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    const selectedUser = confirmAlert.selectedUser;
+
+    if (confirmAlert.action === "delete") {
+      await handleMutation({
+        mutationFn: deleteUser,
+        payload: selectedUser?.id,
+        onSuccess: (data) => {
+          toaster.success(data.message);
+        },
+      });
+    }
+
+    if (confirmAlert.action === "block") {
+      await handleMutation({
+        mutationFn: toggleUserStatus,
+        payload: { id: selectedUser?.id, status: "Blocked" },
+        onSuccess: (data) => {
+          toaster.success(data.message);
+        },
+      });
+    }
+
+    if (confirmAlert.action === "unblock") {
+      await handleMutation({
+        mutationFn: toggleUserStatus,
+        payload: { id: selectedUser?.id, status: "Active" },
+        onSuccess: (data) => {
+          toaster.success(data.message);
+        },
+      });
+    }
+
     setConfirmAlert({ open: false, action: null, selectedUser: null });
   };
 

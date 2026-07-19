@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FormInput, AvatarUpload } from "SpiseBowlMfUI/sharedComp";
-import { cookies } from "SpiseBowlMfUI/utility";
+import { FormInput, AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { cookies } from "OdBitesMfUI/utility";
 
 import { PageHeader } from "../../sharedComponents";
 import { useFormWithReinitialize } from "../../lib/hooks";
@@ -23,9 +23,8 @@ import {
   useUpdateProfileDetailsMutation,
   useUpdateProfilePhotoMutation,
 } from "../../store/rtkServices";
-import { handleMutation } from "../../utility";
+import { handleMutation, toaster } from "../../utility";
 import { VITE_APP_ASSETS_PATH } from "../../config/env";
-// import AvatarUpload from "./AvatarUpload";
 import { Loader } from "../../assets";
 
 function Profile() {
@@ -81,6 +80,8 @@ function Profile() {
   };
   const handelUpdateProfilePic = async (imgData) => {
     const formData = new FormData();
+    formData.append("photo", imgData);
+
     await handleMutation({
       mutationFn: updateProfilePhoto,
       payload: { id: userId, imgData: formData },
@@ -116,6 +117,7 @@ function Profile() {
               <AvatarUpload
                 avatar={`${VITE_APP_ASSETS_PATH}${folderLocation}/${photo}`}
                 alt={`${profileDetails.firstName} ${profileDetails.lastName}`}
+                loading={isProfilePicUpdating}
                 onSave={(imgData) => {
                   handelUpdateProfilePic(imgData);
                 }}

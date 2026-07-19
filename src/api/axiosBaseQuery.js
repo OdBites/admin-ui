@@ -16,8 +16,8 @@ export const axiosBaseQuery =
     } catch (error) {
       return {
         error: {
-          status: error.response?.status || 500,
-          data: error.response?.data || error.message,
+          status: error.status || error.response?.status || 500,
+          data: error.data || error.response?.data || error.message,
         },
       };
     }

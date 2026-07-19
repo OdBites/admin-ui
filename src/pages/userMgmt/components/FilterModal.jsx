@@ -6,16 +6,15 @@ import {
   MenuItem,
   Select,
   TextField,
-  Box,
 } from "@mui/material";
 import PropTypes from "prop-types";
-import { FilterWrapper } from "SpiseBowlMfUI/sharedComp";
+import { FilterWrapper } from "OdBitesMfUI/sharedComp";
 import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
   const {
     status = "",
-    order = "",
+    orders = "",
     dateInterval = "",
     fromDate = "",
     toDate = "",
@@ -54,10 +53,10 @@ function FilterModal({ filters, setFilters }) {
           <FormControl fullWidth>
             <InputLabel id="order-select-label">Orders</InputLabel>
             <Select
-              value={order}
+              value={orders}
               labelId="order-select-label"
               label="Orders"
-              onChange={(e) => setFilters({ order: e.target.value })}
+              onChange={(e) => setFilters({ orders: e.target.value })}
             >
               {dropDownOptions.userMgmt.orders.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -126,7 +125,7 @@ function FilterModal({ filters, setFilters }) {
 FilterModal.propTypes = {
   filters: PropTypes.shape({
     status: PropTypes.string,
-    order: PropTypes.string,
+    orders: PropTypes.string,
     dateInterval: PropTypes.string,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,

@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "../../../api";
+import { adminApiEndpoints } from "../../../api/adminEndpoints";
 
 export const dashboardService = createApi({
   reducerPath: "dashboardService",
@@ -7,7 +8,7 @@ export const dashboardService = createApi({
   endpoints: (builder) => ({
     fetchDashboardData: builder.query({
       query: () => ({
-        url: "/dashboard",
+        url: adminApiEndpoints.dashboard,
         method: "GET",
       }),
       transformResponse: (response) => response.data,

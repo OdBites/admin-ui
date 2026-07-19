@@ -1,5 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { axiosBaseQuery } from "../../../api";
+import { adminApiEndpoints } from "../../../api/adminEndpoints";
 
 export const profileService = createApi({
   reducerPath: "profileService",
@@ -8,7 +9,7 @@ export const profileService = createApi({
   endpoints: (builder) => ({
     getProfileDetails: builder.query({
       query: (id) => ({
-        url: `/profile/${id}`,
+        url: adminApiEndpoints.profile(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -17,7 +18,7 @@ export const profileService = createApi({
 
     updateProfileDetails: builder.mutation({
       query: ({ id, updatedData }) => ({
-        url: `/profile/${id}`,
+        url: adminApiEndpoints.profile(id),
         method: "PUT",
         body: updatedData,
       }),
@@ -31,7 +32,7 @@ export const profileService = createApi({
 
     getProfilePhoto: builder.query({
       query: (id) => ({
-        url: `/profile/${id}/photo`,
+        url: adminApiEndpoints.profilePhoto(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -40,7 +41,7 @@ export const profileService = createApi({
 
     updateProfilePhoto: builder.mutation({
       query: ({ id, imgData }) => ({
-        url: `/profile/${id}/photo`,
+        url: adminApiEndpoints.profilePhoto(id),
         method: "PUT",
         body: imgData,
       }),

@@ -10,9 +10,9 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       federation({
-        name: "SpiseBowlUserFE",
+        name: "OdBitesAdminFE",
         remotes: {
-          SpiseBowlMfUI: `${env.VITE_MF_REMOTE_URL}/assets/remoteEntry.js`,
+          OdBitesMfUI: `${env.VITE_MF_REMOTE_URL}/assets/remoteEntry.js`,
         },
         shared: {
           react: {

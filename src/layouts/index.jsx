@@ -3,8 +3,8 @@ import { Outlet } from "react-router-dom";
 import packageJson from "../../package.json";
 
 // // mf import
-import { AdminLayout } from "SpiseBowlMfUI/layouts";
-import { useCookies } from "SpiseBowlMfUI/hooks";
+import { AdminLayout } from "OdBitesMfUI/layouts";
+import { useCookies } from "OdBitesMfUI/hooks";
 
 import { LogoutModal } from "../pages/profile/components";
 import SignIn from "../pages/auth/SignIn";

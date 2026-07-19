@@ -8,8 +8,8 @@ import {
   TableActionHeader,
 } from "../../sharedComponents";
 import FilterModal from "../orderMgmt/components/FilterModal";
-import { demoOrdersList } from "../../data/ordersMgmt";
 import { tableColumns, dropDownOptions } from "../../constant";
+import { useGetOrdersQuery } from "../../store/rtkServices/ordersMgmt";
 
 function OrderManagement() {
   // local State
@@ -41,9 +41,18 @@ function OrderManagement() {
     Pending: "warning",
   };
 
-  // insert data
+  const { data, isFetching } = useGetOrdersQuery({
+    search,
+    sort,
+    page: page + 1,
+    limit: rowsPerPage,
+    ...filters,
+  });
+
+  const { data: ordersData = [], total = 0 } = data || {};
+
   let rows = [];
-  rows = demoOrdersList?.map((item, index) => {
+  rows = ordersData?.map((item, index) => {
     const actions = <TableAction view={`/order-management/${item.orderId}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
     const status = (
@@ -81,7 +90,8 @@ function OrderManagement() {
           handleChangePage={handleChangePage}
           page={page}
           rowsPerPage={rowsPerPage}
-          totalItem={rows.length}
+          totalItem={total}
+          isLoading={isFetching}
         />
       </Card>
     </>

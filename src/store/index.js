@@ -5,6 +5,7 @@ import {
   authService,
   dashboardService,
   productService,
+  ordersService,
   userService,
   paymentsService,
   profileService,
@@ -17,6 +18,7 @@ const rootReducer = {
   [dashboardService.reducerPath]: dashboardService.reducer,
   [userService.reducerPath]: userService.reducer,
   [productService.reducerPath]: productService.reducer,
+  [ordersService.reducerPath]: ordersService.reducer,
   [paymentsService.reducerPath]: paymentsService.reducer,
   [profileService.reducerPath]: profileService.reducer,
 };
@@ -30,6 +32,7 @@ const store = configureStore({
       dashboardService.middleware,
       userService.middleware,
       productService.middleware,
+      ordersService.middleware,
       paymentsService.middleware,
       profileService.middleware
     ),

@@ -12,19 +12,21 @@ import {
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 
-import { AvatarUpload } from "SpiseBowlMfUI/sharedComp";
+import { AvatarUpload } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
-import { useGetDataById } from "../../../lib/hooks";
-import { demoUserList } from "../../../data/userMgmt";
+import {
+  useGetUserByIdQuery,
+  useUpdateProfilePictureMutation,
+} from "../../../store/rtkServices/userMgmt";
+import { handleMutation, toaster } from "../../../utility";
+import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 
 function UserMgmtDetails() {
   const { id } = useParams();
-  const userDetails = useGetDataById({
-    data: demoUserList,
-    targetField: "id",
-    id: id,
-  });
+  const { data: userDetails = {}, isFetching } = useGetUserByIdQuery(id);
+  const [updateProfilePicture, { isLoading: isUpdatingPhoto }] =
+    useUpdateProfilePictureMutation();
 
   const statusColor = {
     Active: "success",
@@ -33,21 +35,38 @@ function UserMgmtDetails() {
   };
 
   const visualizeFormatUserDetails = {
-    "First Name": userDetails.firstName,
-    "Last Name": userDetails.lastName,
+    "First Name": userDetails?.firstName,
+    "Last Name": userDetails?.lastName,
     Status: (
       <Chip
-        label={userDetails.status}
-        color={statusColor[userDetails.status] || "default"}
+        label={userDetails?.status || "N/A"}
+        color={statusColor[userDetails?.status] || "default"}
         variant="outlined"
         size="small"
       />
     ),
-    "Created At": userDetails.createdAt,
-    "Updated At": userDetails.updatedAt,
-    "Created By": userDetails.createdBy,
-    "Email Address": userDetails.email,
-    "Phone Number": userDetails.phone,
+    "Created At": userDetails?.createdAt,
+    "Updated At": userDetails?.updatedAt,
+    "Created By": userDetails?.createdBy,
+    "Email Address": userDetails?.email,
+    "Phone Number": userDetails?.phone,
+  };
+
+  const avatarSrc = userDetails?.photo
+    ? `${VITE_APP_ASSETS_PATH}${userDetails?.folderLocation}/${userDetails?.photo}`
+    : "/static/images/avatar/1.jpg";
+
+  const handleProfilePictureSave = async (file) => {
+    const formData = new FormData();
+    formData.append("profilePicture", file);
+
+    await handleMutation({
+      mutationFn: updateProfilePicture,
+      payload: { id, formData },
+      onSuccess: (data) => {
+        toaster.success(data?.message || "Profile picture updated successfully");
+      },
+    });
   };
 
   return (
@@ -60,7 +79,7 @@ function UserMgmtDetails() {
               variant="span"
               color="text.disabled"
               ml={2}
-            >{`# ${userDetails.id}`}</Typography>
+            >{`# ${userDetails?.id || id}`}</Typography>
           </>
         }
         hideExportBtn
@@ -70,16 +89,23 @@ function UserMgmtDetails() {
         <Card>
           <Box sx={{ display: "flex", alignItems: "center", columnGap: 4 }}>
             <AvatarUpload
-              avatar="/static/images/avatar/1.jpg"
-              viewOnly={userDetails?.createdBy !== "admin"}
-              alt={`${userDetails.firstName} ${userDetails.lastName}`}
-              onSave={(imgUrl) => {
-                console.log("Saved avatar:", imgUrl);
-              }}
+              avatar={avatarSrc}
+              loading={isUpdatingPhoto}
+              viewOnly={
+                isFetching ||
+                isUpdatingPhoto ||
+                userDetails?.createdBy !== "admin"
+              }
+              alt={`${userDetails?.firstName || ""} ${
+                userDetails?.lastName || ""
+              }`}
+              onSave={handleProfilePictureSave}
             />
             <Box>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                {`${userDetails.firstName} ${userDetails.lastName}`}
+                {`${userDetails?.firstName || "N/A"} ${
+                  userDetails?.lastName || ""
+                }`}
                 <Typography
                   component="span"
                   color="textDisabled"
@@ -87,10 +113,10 @@ function UserMgmtDetails() {
                 >{`#${id}`}</Typography>
               </Typography>
               <Typography variant="body1" gutterBottom>
-                Total Order: {userDetails.orders || 0}
+                Total Order: {userDetails?.orders || 0}
               </Typography>
               <Typography variant="body1" gutterBottom>
-                Total Spent: {userDetails.totalSpent || 0}
+                Total Spent: {userDetails?.totalSpent || 0}
               </Typography>
             </Box>
           </Box>

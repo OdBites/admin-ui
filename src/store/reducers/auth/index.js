@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { adminSignInThunk } from "../../thunkServices/auth";
-import { cookies } from "SpiseBowlMfUI/utility";
+import { cookies } from "OdBitesMfUI/utility";
 
 const initialState = {
   user: null,
