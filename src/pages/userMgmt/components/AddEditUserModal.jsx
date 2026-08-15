@@ -105,7 +105,6 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
         inputType="select"
         options={[
           { label: "Active", value: "Active" },
-          { label: "Inactive", value: "Inactive" },
           { label: "Blocked", value: "Blocked" },
           { label: "Pending", value: "Pending" },
         ]}

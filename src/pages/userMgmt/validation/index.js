@@ -21,9 +21,12 @@ export const userSchemaValidation = z.object({
     .email("Invalid email address"),
   phone: z.string().trim().optional(),
   password: z
-    .union([z.literal(""), z.string().min(8, "Password must be at least 8 characters")])
+    .union([
+      z.literal(""),
+      z.string().min(8, "Password must be at least 8 characters"),
+    ])
     .optional(),
-  status: z.enum(["Active", "Inactive", "Blocked", "Pending"], {
+  status: z.enum(["Active", "Blocked", "Pending"], {
     required_error: "Status is required",
     invalid_type_error: "Invalid status",
   }),

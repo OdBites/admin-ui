@@ -12,7 +12,11 @@ import { useProductMgmtConfirmationAlert } from "./hooks";
 import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import { dropDownOptions, tableColumns } from "../../constant";
 import { NavLink } from "react-router-dom";
-import { useGetProductsQuery } from "../../store/rtkServices/productsMgmt";
+import {
+  useGetProductsQuery,
+  useLazyExportProductsQuery,
+} from "../../store/rtkServices/productsMgmt";
+import { downloadBlob, toaster } from "../../utility";
 
 function ProductManagement() {
   // local hooks
@@ -51,6 +55,8 @@ function ProductManagement() {
     ...filters,
   });
   const { data: productsData = [], total } = data || {};
+  const [triggerExport, { isFetching: isExporting }] =
+    useLazyExportProductsQuery();
 
   const statusColor = {
     active: "success",
@@ -100,6 +106,16 @@ function ProductManagement() {
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
 
+  const handleExport = async () => {
+    try {
+      const blob = await triggerExport({ search, sort, ...filters }).unwrap();
+      downloadBlob(blob, "dishes");
+      toaster.success("Data exported successfully!");
+    } catch (err) {
+      // Errors are handled globally
+    }
+  };
+
   const dialogContent = getDialogContent(
     confirmAlert.action,
     confirmAlert.selectedProduct
@@ -107,7 +123,11 @@ function ProductManagement() {
 
   return (
     <>
-      <PageHeader pageTitle="Dish Management">
+      <PageHeader
+        pageTitle="Dish Management"
+        onExportClick={handleExport}
+        isExporting={isExporting}
+      >
         <Button variant="contained" component={NavLink} to="add-dish">
           List New Dish
         </Button>

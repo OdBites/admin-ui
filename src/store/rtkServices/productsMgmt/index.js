@@ -96,6 +96,34 @@ export const productService = createApi({
         "Product",
       ],
     }),
+
+    exportProducts: builder.query({
+      query: ({
+        sort,
+        search,
+        status,
+        category,
+        subCategory,
+        dateInterval,
+        fromDate,
+        toDate,
+      } = {}) => {
+        const params = new URLSearchParams();
+        if (sort) params.append("sort", sort);
+        if (search) params.append("search", search);
+        if (status) params.append("status", status);
+        if (category) params.append("category", category);
+        if (subCategory) params.append("subCategory", subCategory);
+        if (dateInterval) params.append("dateInterval", dateInterval);
+        if (fromDate) params.append("fromDate", fromDate);
+        if (toDate) params.append("toDate", toDate);
+        return {
+          url: `${adminApiEndpoints.products}/export?${params.toString()}`,
+          method: "GET",
+          responseHandler: (response) => response.blob(),
+        };
+      },
+    }),
   }),
 });
 
@@ -106,4 +134,5 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
   useToggleProductStatusMutation,
+  useLazyExportProductsQuery,
 } = productService;

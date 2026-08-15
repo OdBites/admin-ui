@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useReducer, useEffect } from "react";
 import {
   FormControl,
   Grid,
@@ -12,6 +12,25 @@ import { FilterWrapper } from "OdBitesMfUI/sharedComp";
 import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
+  const [localFilters, setLocalFilters] = useReducer(
+    (prev, next) => ({ ...prev, ...next }),
+    {
+      status: "",
+      category: "",
+      subCategory: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+    }
+  );
+
+  // Sync local filters with parent filters when they change
+  useEffect(() => {
+    if (filters) {
+      setLocalFilters(filters);
+    }
+  }, [filters]);
+
   const {
     status = "",
     category = "",
@@ -19,12 +38,11 @@ function FilterModal({ filters, setFilters }) {
     dateInterval = "",
     fromDate = "",
     toDate = "",
-  } = filters;
+  } = localFilters;
 
   const handleChange = (field, value) => {
     if (field === "dateInterval") {
-      setFilters({
-        ...filters,
+      setLocalFilters({
         dateInterval: value,
         fromDate: "",
         toDate: "",
@@ -32,31 +50,45 @@ function FilterModal({ filters, setFilters }) {
       return;
     }
     if (field === "fromDate" || field === "toDate") {
-      setFilters({
-        ...filters,
+      setLocalFilters({
         [field]: value,
         dateInterval: "",
       });
       return;
     }
     if (field === "category") {
-      setFilters({
-        ...filters,
+      setLocalFilters({
         category: value,
         subCategory: "",
       });
       return;
     }
-    setFilters({
-      ...filters,
+    setLocalFilters({
       [field]: value,
     });
+  };
+
+  const handleApply = () => {
+    setFilters(localFilters);
+  };
+
+  const handleReset = () => {
+    const cleared = {
+      status: "",
+      category: "",
+      subCategory: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+    };
+    setLocalFilters(cleared);
+    setFilters(cleared);
   };
 
   const subCategories = dropDownOptions.productMgmt.subCategory[category] || [];
 
   return (
-    <FilterWrapper>
+    <FilterWrapper onApply={handleApply} onReset={handleReset}>
       <Grid
         container
         spacing={2}

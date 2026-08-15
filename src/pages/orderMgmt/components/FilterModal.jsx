@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useReducer, useEffect } from "react";
 import {
   FormControl,
   Grid,
@@ -12,16 +12,50 @@ import { FilterWrapper } from "OdBitesMfUI/sharedComp";
 import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
+  const [localFilters, setLocalFilters] = useReducer(
+    (prev, next) => ({ ...prev, ...next }),
+    {
+      status: "",
+      paymentMethod: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+    }
+  );
+
+  // Sync local filters with parent filters when they change
+  useEffect(() => {
+    if (filters) {
+      setLocalFilters(filters);
+    }
+  }, [filters]);
+
   const {
     status = "",
     paymentMethod = "",
     dateInterval = "",
     fromDate = "",
     toDate = "",
-  } = filters;
+  } = localFilters;
+
+  const handleApply = () => {
+    setFilters(localFilters);
+  };
+
+  const handleReset = () => {
+    const cleared = {
+      status: "",
+      paymentMethod: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+    };
+    setLocalFilters(cleared);
+    setFilters(cleared);
+  };
 
   return (
-    <FilterWrapper>
+    <FilterWrapper onApply={handleApply} onReset={handleReset}>
       <Grid
         container
         spacing={2}
@@ -40,7 +74,7 @@ function FilterModal({ filters, setFilters }) {
               value={status}
               labelId="status-select-label"
               label="Status"
-              onChange={(e) => setFilters({ status: e.target.value })}
+              onChange={(e) => setLocalFilters({ status: e.target.value })}
             >
               {dropDownOptions.orderMgmt.status.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -58,7 +92,9 @@ function FilterModal({ filters, setFilters }) {
               value={paymentMethod}
               labelId="payment-method-label"
               label="Payment Method"
-              onChange={(e) => setFilters({ paymentMethod: e.target.value })}
+              onChange={(e) =>
+                setLocalFilters({ paymentMethod: e.target.value })
+              }
             >
               {dropDownOptions.orderMgmt.paymentMethods.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -79,7 +115,7 @@ function FilterModal({ filters, setFilters }) {
               labelId="date-interval-label"
               label="Order Date Interval"
               onChange={(e) => {
-                setFilters({
+                setLocalFilters({
                   dateInterval: e.target.value,
                   fromDate: "",
                   toDate: "",
@@ -103,7 +139,7 @@ function FilterModal({ filters, setFilters }) {
             type="date"
             value={fromDate}
             onChange={(e) => {
-              setFilters({ fromDate: e.target.value, dateInterval: "" });
+              setLocalFilters({ fromDate: e.target.value, dateInterval: "" });
             }}
             disabled={Boolean(dateInterval)}
             slotProps={{ inputLabel: { shrink: true } }}
@@ -117,7 +153,7 @@ function FilterModal({ filters, setFilters }) {
             type="date"
             value={toDate}
             onChange={(e) => {
-              setFilters({ toDate: e.target.value, dateInterval: "" });
+              setLocalFilters({ toDate: e.target.value, dateInterval: "" });
             }}
             disabled={Boolean(dateInterval)}
             slotProps={{ inputLabel: { shrink: true } }}

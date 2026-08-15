@@ -16,6 +16,9 @@ export const userService = createApi({
         dateInterval,
         sort,
         search,
+        createdBy,
+        fromDate,
+        toDate,
       } = {}) => {
         const params = new URLSearchParams();
         if (page) params.append("page", page);
@@ -25,6 +28,9 @@ export const userService = createApi({
         if (dateInterval) params.append("dateInterval", dateInterval);
         if (sort) params.append("sort", sort);
         if (search) params.append("search", search);
+        if (createdBy) params.append("createdBy", createdBy);
+        if (fromDate) params.append("fromDate", fromDate);
+        if (toDate) params.append("toDate", toDate);
 
         return {
           url: `${adminApiEndpoints.users}?${params.toString()}`,
@@ -59,7 +65,10 @@ export const userService = createApi({
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "User", id }, "User"],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "User", id },
+        "User",
+      ],
     }),
 
     toggleUserStatus: builder.mutation({
@@ -68,7 +77,10 @@ export const userService = createApi({
         method: "PATCH",
         body: { status },
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "User", id }, "User"],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "User", id },
+        "User",
+      ],
     }),
 
     deleteUser: builder.mutation({
@@ -96,6 +108,35 @@ export const userService = createApi({
       transformResponse: (response) => response?.data ?? {},
       providesTags: (result, error, id) => [{ type: "User", id }],
     }),
+
+    exportUsers: builder.query({
+      query: ({
+        status,
+        orders,
+        dateInterval,
+        sort,
+        search,
+        createdBy,
+        fromDate,
+        toDate,
+      } = {}) => {
+        const params = new URLSearchParams();
+        if (status) params.append("status", status);
+        if (orders) params.append("orders", orders);
+        if (dateInterval) params.append("dateInterval", dateInterval);
+        if (sort) params.append("sort", sort);
+        if (search) params.append("search", search);
+        if (createdBy) params.append("createdBy", createdBy);
+        if (fromDate) params.append("fromDate", fromDate);
+        if (toDate) params.append("toDate", toDate);
+
+        return {
+          url: `${adminApiEndpoints.users}/export?${params.toString()}`,
+          method: "GET",
+          responseHandler: (response) => response.blob(),
+        };
+      },
+    }),
   }),
 });
 
@@ -108,4 +149,5 @@ export const {
   useDeleteUserMutation,
   useUpdateProfilePictureMutation,
   useGetProfilePictureQuery,
+  useLazyExportUsersQuery,
 } = userService;

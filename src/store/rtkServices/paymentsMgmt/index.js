@@ -49,7 +49,37 @@ export const paymentsService = createApi({
       }),
       transformResponse: (response) => response?.data ?? {},
     }),
+
+    exportPayments: builder.query({
+      query: ({
+        sort,
+        search,
+        status,
+        paymentMethod,
+        dateInterval,
+        fromDate,
+        toDate,
+      } = {}) => {
+        const params = new URLSearchParams();
+        if (sort) params.append("sort", sort);
+        if (search) params.append("search", search);
+        if (status) params.append("status", status);
+        if (paymentMethod) params.append("paymentMethod", paymentMethod);
+        if (dateInterval) params.append("dateInterval", dateInterval);
+        if (fromDate) params.append("fromDate", fromDate);
+        if (toDate) params.append("toDate", toDate);
+        return {
+          url: `${adminApiEndpoints.payments}/export?${params.toString()}`,
+          method: "GET",
+          responseHandler: (response) => response.blob(),
+        };
+      },
+    }),
   }),
 });
 
-export const { useGetPaymentsQuery, useGetPaymentByIdQuery } = paymentsService;
+export const {
+  useGetPaymentsQuery,
+  useGetPaymentByIdQuery,
+  useLazyExportPaymentsQuery,
+} = paymentsService;

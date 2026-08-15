@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -9,7 +9,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { DriveFileRenameOutline } from "@mui/icons-material";
+import { DriveFileRenameOutline, LocationOn } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 
 import { AvatarUpload } from "OdBitesMfUI/sharedComp";
@@ -21,12 +21,19 @@ import {
 } from "../../../store/rtkServices/userMgmt";
 import { handleMutation, toaster } from "../../../utility";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
+import AddEditUserModal from "../components/AddEditUserModal";
 
 function UserMgmtDetails() {
   const { id } = useParams();
   const { data: userDetails = {}, isFetching } = useGetUserByIdQuery(id);
   const [updateProfilePicture, { isLoading: isUpdatingPhoto }] =
     useUpdateProfilePictureMutation();
+
+  const [addEditUserModal, setAddEditUserModal] = useState({
+    open: false,
+    selectedUser: null,
+    action: "",
+  });
 
   const statusColor = {
     Active: "success",
@@ -64,7 +71,9 @@ function UserMgmtDetails() {
       mutationFn: updateProfilePicture,
       payload: { id, formData },
       onSuccess: (data) => {
-        toaster.success(data?.message || "Profile picture updated successfully");
+        toaster.success(
+          data?.message || "Profile picture updated successfully"
+        );
       },
     });
   };
@@ -136,6 +145,13 @@ function UserMgmtDetails() {
               size="micro"
               endIcon={<DriveFileRenameOutline />}
               disabled={userDetails?.createdBy !== "admin"}
+              onClick={() =>
+                setAddEditUserModal({
+                  open: true,
+                  selectedUser: userDetails,
+                  action: "EDIT",
+                })
+              }
             >
               Edit
             </Button>
@@ -159,7 +175,94 @@ function UserMgmtDetails() {
             )}
           </Grid>
         </Card>
+
+        {/* ── Saved Addresses ────────────────────────────────────────── */}
+        <Card>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Saved Addresses
+            </Typography>
+            <Chip
+              label={`${(userDetails?.addresses || []).length} address${(userDetails?.addresses || []).length !== 1 ? "es" : ""}`}
+              size="small"
+              variant="outlined"
+            />
+          </Box>
+          <Divider sx={{ my: 2 }} />
+
+          {(userDetails?.addresses || []).length === 0 ? (
+            <Box sx={{ textAlign: "center", py: 4, color: "text.disabled" }}>
+              <LocationOn sx={{ fontSize: 48, mb: 1, opacity: 0.3 }} />
+              <Typography variant="body2">No saved addresses</Typography>
+            </Box>
+          ) : (
+            <Grid container spacing={{ xs: 2, sm: 3 }}>
+              {(userDetails?.addresses || []).map((addr) => (
+                <Grid key={addr.id || addr._id} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <Box
+                    sx={(theme) => ({
+                      border: `1px solid ${addr.isDefault ? theme.palette.primary.main : theme.palette.divider}`,
+                      borderRadius: 2,
+                      p: 2,
+                      height: "100%",
+                      position: "relative",
+                      backgroundColor: addr.isDefault
+                        ? `${theme.palette.primary.main}08`
+                        : "transparent",
+                    })}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        mb: 1,
+                      }}
+                    >
+                      <LocationOn
+                        fontSize="small"
+                        color={addr.isDefault ? "primary" : "disabled"}
+                      />
+                      <Typography variant="subtitle2" fontWeight="bold">
+                        {addr.label || "Address"}
+                      </Typography>
+                      {addr.isDefault && (
+                        <Chip
+                          label="Default"
+                          size="small"
+                          color="primary"
+                          sx={{ ml: "auto" }}
+                        />
+                      )}
+                    </Box>
+                    <Typography variant="body2" color="text.secondary">
+                      {addr.line1}
+                      {addr.line2 ? `, ${addr.line2}` : ""}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {addr.city}, {addr.state} – {addr.postalCode}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {addr.country}
+                    </Typography>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </Card>
       </Stack>
+
+      <AddEditUserModal
+        addEditUserModal={addEditUserModal}
+        setAddEditUserModal={setAddEditUserModal}
+      />
     </>
   );
 }

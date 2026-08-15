@@ -57,7 +57,12 @@ function CustomAlertDialog({
         )}
       </DialogContent>
       <DialogActions sx={{ padding: "24px" }}>
-        <Button ref={cancelRef} onClick={onClose} sx={{ minWidth: btnWidth }}>
+        <Button
+          ref={cancelRef}
+          variant="outlined"
+          onClick={onClose}
+          sx={{ minWidth: btnWidth }}
+        >
           {cancelLabel}
         </Button>
         <Button

@@ -52,6 +52,7 @@ export const dropDownOptions = {
       { value: "", label: "All Status" },
       { value: "active", label: "Active" },
       { value: "blocked", label: "Blocked" },
+      { value: "pending", label: "Pending" },
     ],
     orders: [
       { value: "", label: "All" },
@@ -64,6 +65,11 @@ export const dropDownOptions = {
       { value: "last7Days", label: "Last 7 Days" },
       { value: "last30Days", label: "Last 30 Days" },
       { value: "last90Days", label: "Last 90 Days" },
+    ],
+    createdBy: [
+      { value: "", label: "All Users" },
+      { value: "admin", label: "Created By Admin" },
+      { value: "user", label: "Created By User" },
     ],
 
     sort: [
@@ -94,7 +100,7 @@ export const dropDownOptions = {
       { value: "desserts", label: "Desserts" },
     ],
     subCategory: {
-      "main-course": [
+      mainCourse: [
         { value: "biryani", label: "Biryani" },
         { value: "curry", label: "Curry" },
         { value: "rice", label: "Rice Items" },
@@ -104,6 +110,8 @@ export const dropDownOptions = {
         { value: "chinese", label: "Chinese" },
       ],
       beverages: [
+        { value: "coffee", label: "Coffee" },
+        { value: "tea", label: "Tea" },
         { value: "mocktails", label: "Mocktails" },
         { value: "softDrinks", label: "Soft Drinks" },
       ],

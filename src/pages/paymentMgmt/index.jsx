@@ -9,7 +9,11 @@ import {
 } from "../../sharedComponents";
 import FilterModal from "../paymentMgmt/components/FilterModal";
 import { tableColumns, dropDownOptions } from "../../constant";
-import { useGetPaymentsQuery } from "../../store/rtkServices/paymentsMgmt";
+import {
+  useGetPaymentsQuery,
+  useLazyExportPaymentsQuery,
+} from "../../store/rtkServices/paymentsMgmt";
+import { downloadBlob, toaster } from "../../utility";
 
 function PaymentManagement() {
   // local State
@@ -38,6 +42,8 @@ function PaymentManagement() {
     ...filters,
   });
   const { data: paymentsData = [], total } = data || {};
+  const [triggerExport, { isFetching: isExporting }] =
+    useLazyExportPaymentsQuery();
 
   const statusColor = {
     success: "success",
@@ -65,9 +71,23 @@ function PaymentManagement() {
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
 
+  const handleExport = async () => {
+    try {
+      const blob = await triggerExport({ search, sort, ...filters }).unwrap();
+      downloadBlob(blob, "payments");
+      toaster.success("Data exported successfully!");
+    } catch (err) {
+      // Errors are handled globally
+    }
+  };
+
   return (
     <>
-      <PageHeader pageTitle="Payment Management" />
+      <PageHeader
+        pageTitle="Payment Management"
+        onExportClick={handleExport}
+        isExporting={isExporting}
+      />
       <Card>
         <TableActionHeader
           searchPlaceholder="Search payment..."

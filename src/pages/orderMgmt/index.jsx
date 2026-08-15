@@ -9,7 +9,11 @@ import {
 } from "../../sharedComponents";
 import FilterModal from "../orderMgmt/components/FilterModal";
 import { tableColumns, dropDownOptions } from "../../constant";
-import { useGetOrdersQuery } from "../../store/rtkServices/ordersMgmt";
+import {
+  useGetOrdersQuery,
+  useLazyExportOrdersQuery,
+} from "../../store/rtkServices/ordersMgmt";
+import { downloadBlob, toaster } from "../../utility";
 
 function OrderManagement() {
   // local State
@@ -50,6 +54,8 @@ function OrderManagement() {
   });
 
   const { data: ordersData = [], total = 0 } = data || {};
+  const [triggerExport, { isFetching: isExporting }] =
+    useLazyExportOrdersQuery();
 
   let rows = [];
   rows = ordersData?.map((item, index) => {
@@ -70,9 +76,23 @@ function OrderManagement() {
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
 
+  const handleExport = async () => {
+    try {
+      const blob = await triggerExport({ search, sort, ...filters }).unwrap();
+      downloadBlob(blob, "orders");
+      toaster.success("Data exported successfully!");
+    } catch (err) {
+      // Errors are handled globally
+    }
+  };
+
   return (
     <>
-      <PageHeader pageTitle="Order Management" />
+      <PageHeader
+        pageTitle="Order Management"
+        onExportClick={handleExport}
+        isExporting={isExporting}
+      />
       <Card>
         <TableActionHeader
           searchPlaceholder="Search orders..."

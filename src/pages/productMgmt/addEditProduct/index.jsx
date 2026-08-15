@@ -231,7 +231,7 @@ function AddEditProduct() {
                   control={control}
                   inputType="select"
                   options={[
-                    { label: "Biryani", value: "biryani" },
+                    { label: "Main Course", value: "mainCourse" },
                     { label: "Starters", value: "starters" },
                     { label: "Desserts", value: "desserts" },
                     { label: "Beverages", value: "beverages" },
@@ -245,11 +245,17 @@ function AddEditProduct() {
                   control={control}
                   inputType="select"
                   options={[
-                    { label: "Chicken", value: "chicken" },
-                    { label: "Paneer", value: "paneer" },
-                    { label: "Mutton", value: "mutton" },
-                    { label: "Soft Drinks", value: "soft-drinks" },
+                    { label: "Biryani", value: "biryani" },
+                    { label: "Curry", value: "curry" },
+                    { label: "Rice Items", value: "rice" },
+                    { label: "Appetizer", value: "appetizer" },
+                    { label: "Chinese", value: "chinese" },
+                    { label: "Coffee", value: "coffee" },
+                    { label: "Tea", value: "tea" },
+                    { label: "Mocktails", value: "mocktails" },
+                    { label: "Soft Drinks", value: "softDrinks" },
                     { label: "Sweets", value: "sweets" },
+                    { label: "Ice Cream", value: "iceCream" },
                   ]}
                 />
               </Grid>
@@ -272,8 +278,8 @@ function AddEditProduct() {
                     ? "Updating..."
                     : "Update Dish"
                   : isSubmitting || isFetching
-                  ? "Creating..."
-                  : "Create Dish"}
+                    ? "Creating..."
+                    : "Create Dish"}
               </Button>
             ) : (
               <Button variant="contained" type="button" onClick={onNext}>

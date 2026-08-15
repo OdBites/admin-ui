@@ -13,7 +13,11 @@ import { CustomAlertDialog } from "../../sharedComponents/dialog";
 import FilterModal from "./components/FilterModal";
 import { useUserMgmtConfirmationAlert } from "./hooks";
 import AddEditUserModal from "./components/AddEditUserModal";
-import { useGetUsersQuery } from "../../store/rtkServices/userMgmt";
+import {
+  useGetUsersQuery,
+  useLazyExportUsersQuery,
+} from "../../store/rtkServices/userMgmt";
+import { downloadBlob, toaster } from "../../utility";
 
 function UserManagement() {
   // local hooks
@@ -38,7 +42,14 @@ function UserManagement() {
 
   const [filters, setFilters] = useReducer(
     (prev, next) => ({ ...prev, ...next }),
-    { status: "", orders: "", dateInterval: "", fromDate: "", toDate: "" }
+    {
+      status: "",
+      orders: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+      createdBy: "",
+    }
   );
 
   // // rtk query
@@ -50,6 +61,8 @@ function UserManagement() {
     ...filters,
   });
   const { data: usersData = [], total } = data || {};
+  const [triggerExport, { isFetching: isExporting }] =
+    useLazyExportUsersQuery();
   console.log("usersData", search, sort, filters);
   const statusColor = {
     Active: "success",
@@ -100,6 +113,16 @@ function UserManagement() {
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
 
+  const handleExport = async () => {
+    try {
+      const blob = await triggerExport({ search, sort, ...filters }).unwrap();
+      downloadBlob(blob, "users");
+      toaster.success("Data exported successfully!");
+    } catch (err) {
+      // Errors are handled globally
+    }
+  };
+
   const dialogContent = getDialogContent(
     confirmAlert.action,
     confirmAlert.selectedUser
@@ -107,7 +130,11 @@ function UserManagement() {
 
   return (
     <>
-      <PageHeader pageTitle="User Management">
+      <PageHeader
+        pageTitle="User Management"
+        onExportClick={handleExport}
+        isExporting={isExporting}
+      >
         <Button
           variant="contained"
           onClick={() =>

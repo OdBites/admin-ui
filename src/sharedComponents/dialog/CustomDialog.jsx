@@ -77,6 +77,7 @@ function CustomDialog({
           ref={cancelRef}
           onClick={handleClose}
           sx={{ minWidth: btnWidth }}
+          variant="outlined"
         >
           {cancelLabel}
         </Button>

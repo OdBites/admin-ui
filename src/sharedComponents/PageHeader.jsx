@@ -13,6 +13,7 @@ function PageHeader({
   hideExportBtn = false,
   showBackBtn = false,
   backBtnLabel = "Go Back",
+  isExporting = false,
 }) {
   return (
     <Box
@@ -35,8 +36,9 @@ function PageHeader({
             variant="contained"
             startIcon={<FileDownload />}
             onClick={onExportClick}
+            disabled={isExporting}
           >
-            {exportBtnLabel}
+            {isExporting ? "Exporting..." : exportBtnLabel}
           </Button>
         </RenderIf>
         <RenderIf render={showBackBtn}>
@@ -62,6 +64,7 @@ PageHeader.propTypes = {
   hideExportBtn: PropTypes.bool,
   showBackBtn: PropTypes.bool,
   backBtnLabel: PropTypes.string,
+  isExporting: PropTypes.bool,
 };
 
 export default PageHeader;

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useReducer, useEffect } from "react";
 import {
   FormControl,
   Grid,
@@ -12,15 +12,53 @@ import { FilterWrapper } from "OdBitesMfUI/sharedComp";
 import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {
+  const [localFilters, setLocalFilters] = useReducer(
+    (prev, next) => ({ ...prev, ...next }),
+    {
+      status: "",
+      orders: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+      createdBy: "",
+    }
+  );
+
+  // Sync local filters with parent filters when they change
+  useEffect(() => {
+    if (filters) {
+      setLocalFilters(filters);
+    }
+  }, [filters]);
+
   const {
     status = "",
     orders = "",
     dateInterval = "",
     fromDate = "",
     toDate = "",
-  } = filters;
+    createdBy = "",
+  } = localFilters;
+
+  const handleApply = () => {
+    setFilters(localFilters);
+  };
+
+  const handleReset = () => {
+    const cleared = {
+      status: "",
+      orders: "",
+      dateInterval: "",
+      fromDate: "",
+      toDate: "",
+      createdBy: "",
+    };
+    setLocalFilters(cleared);
+    setFilters(cleared);
+  };
+
   return (
-    <FilterWrapper>
+    <FilterWrapper onApply={handleApply} onReset={handleReset}>
       <Grid
         container
         spacing={2}
@@ -39,7 +77,7 @@ function FilterModal({ filters, setFilters }) {
               value={status}
               labelId="status-select-label"
               label="Status"
-              onChange={(e) => setFilters({ status: e.target.value })}
+              onChange={(e) => setLocalFilters({ status: e.target.value })}
             >
               {dropDownOptions.userMgmt.status.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -56,9 +94,26 @@ function FilterModal({ filters, setFilters }) {
               value={orders}
               labelId="order-select-label"
               label="Orders"
-              onChange={(e) => setFilters({ orders: e.target.value })}
+              onChange={(e) => setLocalFilters({ orders: e.target.value })}
             >
               {dropDownOptions.userMgmt.orders.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
+          <FormControl fullWidth>
+            <InputLabel id="created-by-select-label">Created By</InputLabel>
+            <Select
+              value={createdBy}
+              labelId="created-by-select-label"
+              label="Created By"
+              onChange={(e) => setLocalFilters({ createdBy: e.target.value })}
+            >
+              {dropDownOptions.userMgmt.createdBy.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}
                 </MenuItem>
@@ -74,7 +129,7 @@ function FilterModal({ filters, setFilters }) {
               labelId="date-interval-label"
               label="Join Date Interval"
               onChange={(e) => {
-                setFilters({
+                setLocalFilters({
                   dateInterval: e.target.value,
                   fromDate: "",
                   toDate: "",
@@ -97,7 +152,7 @@ function FilterModal({ filters, setFilters }) {
             type="date"
             value={fromDate}
             onChange={(e) => {
-              setFilters({ fromDate: e.target.value, dateInterval: "" });
+              setLocalFilters({ fromDate: e.target.value, dateInterval: "" });
             }}
             disabled={Boolean(dateInterval)}
             slotProps={{ inputLabel: { shrink: true } }}
@@ -110,7 +165,7 @@ function FilterModal({ filters, setFilters }) {
             type="date"
             value={toDate}
             onChange={(e) => {
-              setFilters({ toDate: e.target.value, dateInterval: "" });
+              setLocalFilters({ toDate: e.target.value, dateInterval: "" });
             }}
             disabled={Boolean(dateInterval)}
             slotProps={{ inputLabel: { shrink: true } }}
@@ -129,6 +184,7 @@ FilterModal.propTypes = {
     dateInterval: PropTypes.string,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
+    createdBy: PropTypes.string,
   }),
   setFilters: PropTypes.func.isRequired,
 };
