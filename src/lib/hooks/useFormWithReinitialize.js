@@ -7,13 +7,14 @@ export function useFormWithReinitialize({
   ...rest
 }) {
   const methods = useForm({ defaultValues, ...rest });
+  const defaultValuesStr = JSON.stringify(defaultValues);
 
   useEffect(() => {
     if (enableReinitialize) {
       methods.reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [enableReinitialize, ...Object.values(defaultValues)]);
+  }, [enableReinitialize, defaultValuesStr]);
 
   return methods;
 }

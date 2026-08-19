@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
 // // MfUI components
 import { FormInput } from "OdBitesMfUI/sharedComp";
@@ -8,14 +9,16 @@ import { FormInput } from "OdBitesMfUI/sharedComp";
 // // Custom components or static import
 import { CustomDialog } from "../../../sharedComponents/dialog";
 import { useFormWithReinitialize } from "../../../lib/hooks";
-import { userSchemaValidation } from "../validation";
+import { createUserSchema, editUserSchema } from "../validation";
 import {
   useCreateUserMutation,
   useUpdateUserMutation,
 } from "../../../store/rtkServices/userMgmt";
 import { handleMutation, toaster } from "../../../utility";
+import { dropDownOptions } from "../../../constant";
 
 function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
+  const navigate = useNavigate();
   const { open = false, selectedUser = {}, action } = addEditUserModal;
   const isEditMode = action === "EDIT";
   const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
@@ -27,15 +30,16 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
     reset,
     formState: { isSubmitting },
   } = useFormWithReinitialize({
-    resolver: zodResolver(userSchemaValidation),
+    resolver: zodResolver(isEditMode ? editUserSchema : createUserSchema),
     defaultValues: {
       firstName: selectedUser?.firstName || "",
       lastName: selectedUser?.lastName || "",
       phone: selectedUser?.phone || "",
       email: selectedUser?.email || "",
-      status: selectedUser?.status || "Active",
+      status: selectedUser?.status || "active",
       password: "",
     },
+    mode: "onTouched",
     enableReinitialize: true,
   });
 
@@ -50,6 +54,13 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
       delete payload.password;
     }
 
+    if (payload.phone) {
+      let cleanedPhone = payload.phone.trim();
+      if (!cleanedPhone.startsWith("+")) {
+        payload.phone = `+${cleanedPhone}`;
+      }
+    }
+
     await handleMutation({
       mutationFn: isEditMode ? updateUser : createUser,
       payload: isEditMode ? { id: selectedUser?.id, payload } : payload,
@@ -59,6 +70,11 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
             `User ${isEditMode ? "updated" : "created"} successfully`
         );
         handleClose();
+        const userId =
+          response?.data?.id || response?.data?._id || selectedUser?.id;
+        if (userId) {
+          navigate(`/user-management/${userId}`);
+        }
       },
     });
   };
@@ -103,11 +119,9 @@ function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
         control={control}
         label="Status"
         inputType="select"
-        options={[
-          { label: "Active", value: "Active" },
-          { label: "Blocked", value: "Blocked" },
-          { label: "Pending", value: "Pending" },
-        ]}
+        options={dropDownOptions.userMgmt.status.filter(
+          (opt) => opt.value !== ""
+        )}
       />
       {!isEditMode && (
         <FormInput

@@ -16,19 +16,27 @@ export const basicInfoSchema = z.object({
     .max(1000, "Description must be at most 1000 characters")
     .trim(),
 
-  status: z.enum(["active", "inActive"], {
+  status: z.enum(["active", "inActive", "outOfStock", "blocked"], {
     required_error: "Status is required",
-    invalid_type_error: "Status must be active or inActive",
+    invalid_type_error:
+      "Status must be active, inActive, outOfStock or blocked",
   }),
 });
 
 // 🎯 Step 2: Pricing & Inventory
-export const pricingSchema = z.object({
+export const pricingObject = z.object({
   price: z
     .string()
     .nonempty("Price is required")
     .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
       message: "Price must be a positive number",
+    }),
+
+  discountPrice: z
+    .string()
+    .optional()
+    .refine((val) => !val || (!isNaN(Number(val)) && Number(val) >= 0), {
+      message: "Discount price must be a non-negative number",
     }),
 
   stock: z
@@ -44,17 +52,6 @@ export const pricingSchema = z.object({
     .min(3, "Dish code must be at least 3 characters")
     .max(20, "Dish code must be at most 20 characters")
     .trim(),
-});
-
-// 🎯 Step 3: Media & Categorization
-export const mediaSchema = z.object({
-  images: z
-    .array(
-      z.instanceof(File).refine((file) => file.type.startsWith("image/"), {
-        message: "Only image files are allowed",
-      })
-    )
-    .nonempty("At least one image is required"),
 
   category: z
     .string()
@@ -63,11 +60,56 @@ export const mediaSchema = z.object({
 
   subCategory: z
     .string()
-    .nonempty("Sub-category is required")
-    .min(2, "Sub-category must be at least 2 characters"),
+    .nonempty("Cuisine Type is required")
+    .min(2, "Cuisine Type must be at least 2 characters"),
+});
+
+export const pricingSchema = pricingObject.refine(
+  (data) => {
+    if (
+      data.discountPrice &&
+      Number(data.discountPrice) >= Number(data.price)
+    ) {
+      return false;
+    }
+    return true;
+  },
+  {
+    message: "Discount price must be less than the regular price",
+    path: ["discountPrice"],
+  }
+);
+
+// 🎯 Step 3: Media & Categorization
+export const mediaSchema = z.object({
+  images: z
+    .array(
+      z.union([
+        z.instanceof(File).refine((file) => file.type.startsWith("image/"), {
+          message: "Only image files are allowed",
+        }),
+        z.string(),
+      ])
+    )
+    .nonempty("At least one image is required"),
 });
 
 // 🎯 Full Form Validation Schema (merged)
 export const fullProductSchema = basicInfoSchema
-  .merge(pricingSchema)
-  .merge(mediaSchema);
+  .merge(pricingObject)
+  .merge(mediaSchema)
+  .refine(
+    (data) => {
+      if (
+        data.discountPrice &&
+        Number(data.discountPrice) >= Number(data.price)
+      ) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Discount price must be less than the regular price",
+      path: ["discountPrice"],
+    }
+  );

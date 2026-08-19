@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Card,
-  Chip,
   Divider,
   Grid,
   Stack,
@@ -16,6 +15,8 @@ import { PageHeader } from "../../../sharedComponents";
 import ProductImageGallery from "../components/ProductImageGallery";
 import { useGetProductByIdQuery } from "../../../store/rtkServices/productsMgmt";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { dropDownOptions } from "../../../constant";
 
 function DishDetails() {
   const { id } = useParams();
@@ -24,26 +25,41 @@ function DishDetails() {
   const { data, isLoading } = useGetProductByIdQuery(id);
   const { product: productDetailsData = {}, folderLocation = "" } = data || {};
 
-  const statusColor = {
-    Active: "success",
-    Blocked: "error",
-    Pending: "warning",
+  const getCategoryLabel = (catValue) => {
+    const found = dropDownOptions.productMgmt.category.find(
+      (opt) => opt.value === catValue
+    );
+    return found ? found.label : catValue;
+  };
+
+  const getSubCategoryLabel = (catValue, subCatValue) => {
+    if (catValue && dropDownOptions.productMgmt.subCategory[catValue]) {
+      const found = dropDownOptions.productMgmt.subCategory[catValue].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    for (const cat of Object.keys(dropDownOptions.productMgmt.subCategory)) {
+      const found = dropDownOptions.productMgmt.subCategory[cat].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    return subCatValue;
   };
 
   const visualizeFormatDishDetails = {
     "Dish Code": productDetailsData?.sku,
-    Category: productDetailsData?.category,
-    Subcategory: productDetailsData?.subCategory,
+    Category: getCategoryLabel(productDetailsData?.category),
+    "Cuisine Type": getSubCategoryLabel(
+      productDetailsData?.category,
+      productDetailsData?.subCategory
+    ),
     Price: `₹${productDetailsData?.price}`,
     Discount: `₹${productDetailsData?.discountPrice}`,
     Stock: productDetailsData?.stock,
     Status: (
-      <Chip
-        label={productDetailsData?.status}
-        color={statusColor[productDetailsData?.status] || "default"}
-        variant="outlined"
-        size="small"
-      />
+      <StatusChip status={productDetailsData?.status} variant="outlined" />
     ),
     Rating: productDetailsData?.rating,
     Created: productDetailsData?.createdAt,

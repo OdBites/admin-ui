@@ -1,3 +1,4 @@
+import React from "react";
 import PropTypes from "prop-types";
 import {
   LineChart,
@@ -8,6 +9,7 @@ import {
   Area,
   PieChart,
   Pie,
+  Cell,
   RadarChart,
   Radar,
   PolarGrid,
@@ -20,7 +22,61 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { Typography, useTheme } from "@mui/material";
+import { Typography, useTheme, Box } from "@mui/material";
+
+// App-themed slice colors
+const COLORS = [
+  "#D68C5E", // Primary Terracotta
+  "#5D6345", // Sage Green
+  "#FFB703", // Warning Amber
+  "#E63946", // Error Red
+  "#2196F3", // Info Blue
+  "#6E6259", // Warm Slate Brown
+  "#A0522D", // Sienna
+  "#3A3026", // Dark Muted Brown
+];
+
+// Custom tooltip card
+const CustomPieTooltip = ({ active, payload }) => {
+  if (active && payload && payload.length) {
+    const { name, value, payload: slicePayload } = payload[0];
+    const total = slicePayload?.total || 1;
+    const pct = ((value / total) * 100).toFixed(1);
+    return (
+      <Box
+        sx={{
+          background: "rgba(30,24,18,0.97)",
+          border: "2px solid #D68C5E",
+          borderRadius: "10px",
+          px: 2,
+          py: 1.2,
+          boxShadow: "0 4px 18px rgba(214,140,94,0.18)",
+          minWidth: 140,
+        }}
+      >
+        <Typography
+          variant="body2"
+          fontWeight={700}
+          sx={{ color: "#D68C5E", mb: 0.5 }}
+        >
+          {name}
+        </Typography>
+        <Typography variant="caption" sx={{ color: "#fff" }}>
+          {value} orders&nbsp;&nbsp;
+          <Box component="span" sx={{ color: "#FFB703", fontWeight: 700 }}>
+            {pct}%
+          </Box>
+        </Typography>
+      </Box>
+    );
+  }
+  return null;
+};
+
+CustomPieTooltip.propTypes = {
+  active: PropTypes.bool,
+  payload: PropTypes.array,
+};
 
 const ChartVisualizer = ({
   type,
@@ -32,12 +88,7 @@ const ChartVisualizer = ({
 }) => {
   const theme = useTheme();
 
-  const chartProps = {
-    width,
-    height,
-    data,
-    // barSize: 30,
-  };
+  const chartProps = { width, height, data };
 
   const renderChart = () => {
     switch (type) {
@@ -98,53 +149,136 @@ const ChartVisualizer = ({
       case "area":
         return (
           <AreaChart {...chartProps}>
+            <defs>
+              <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={theme.palette.primary.main}
+                  stopOpacity={0.4}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={theme.palette.primary.main}
+                  stopOpacity={0}
+                />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke={theme.palette.divider}
             />
-            <XAxis dataKey={dataKeyX} stroke={theme.palette.text.primary} />
-            <YAxis stroke={theme.palette.text.primary} />
+            <XAxis
+              dataKey={dataKeyX}
+              stroke={theme.palette.text.secondary}
+              tickLine={false}
+            />
+            <YAxis stroke={theme.palette.text.secondary} tickLine={false} />
             <Tooltip
               contentStyle={{
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
-                borderRadius: "5px",
+                borderRadius: "12px",
                 border: "1px solid " + theme.palette.divider,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
               }}
             />
             <Legend />
             <Area
               type="monotone"
               dataKey={dataKeyY}
-              fill={theme.palette.primary.main}
-              stroke={theme.palette.primary.dark}
+              stroke={theme.palette.primary.main}
+              strokeWidth={3}
+              fill="url(#areaGradient)"
             />
           </AreaChart>
         );
 
-      case "pie":
+      case "pie": {
+        const total = data.reduce((s, d) => s + (d[dataKeyY] || 0), 0);
+        const enriched = data.map((d) => ({ ...d, total }));
+
         return (
-          <PieChart width={400} height={300}>
-            <Pie
-              data={data}
-              dataKey={dataKeyY}
-              nameKey={dataKeyX}
-              cx="50%"
-              cy="50%"
-              outerRadius={100}
-              fill={theme.palette.primary.main}
-              label
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: theme.palette.background.default,
-                color: theme.palette.text.primary,
-                borderRadius: "5px",
-                border: "1px solid " + theme.palette.divider,
-              }}
-            />
-          </PieChart>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              height: 300,
+            }}
+          >
+            {/* Left legend */}
+            <Box sx={{ flex: "0 0 auto", minWidth: 180, pr: 2 }}>
+              {enriched.map((entry, index) => (
+                <Box
+                  key={entry[dataKeyX]}
+                  display="flex"
+                  alignItems="center"
+                  mb={0.6}
+                >
+                  <Box
+                    sx={{
+                      width: 10,
+                      height: 10,
+                      borderRadius: "2px",
+                      backgroundColor: COLORS[index % COLORS.length],
+                      flexShrink: 0,
+                      mr: 1,
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "text.secondary",
+                      flex: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      maxWidth: 110,
+                    }}
+                    title={entry[dataKeyX]}
+                  >
+                    {entry[dataKeyX]}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    fontWeight={700}
+                    sx={{ color: "text.primary", ml: 1 }}
+                  >
+                    {entry[dataKeyY]}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+
+            {/* Donut */}
+            <Box sx={{ flex: 1, height: 300 }}>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={enriched}
+                    dataKey={dataKeyY}
+                    nameKey={dataKeyX}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={65}
+                    outerRadius={110}
+                    paddingAngle={3}
+                    stroke="none"
+                  >
+                    {enriched.map((_, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<CustomPieTooltip />} />
+                </PieChart>
+              </ResponsiveContainer>
+            </Box>
+          </Box>
         );
+      }
 
       case "radar":
         return (
@@ -179,21 +313,15 @@ const ChartVisualizer = ({
     }
   };
 
+  // Pie chart has its own internal layout — don't wrap in ResponsiveContainer
+  if (type === "pie") {
+    return renderChart();
+  }
+
   return (
-    // <Box
-    //   sx={{
-    //     width: "100%",
-    //     height: "100%",
-    //     backgroundColor: theme.palette.background.paper,
-    //     padding: 2,
-    //     borderRadius: 2,
-    //     boxShadow: 2,
-    //   }}
-    // >
     <ResponsiveContainer width="100%" height={300}>
       {renderChart()}
     </ResponsiveContainer>
-    //  </Box>
   );
 };
 

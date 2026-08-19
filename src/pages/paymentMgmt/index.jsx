@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import { Card, Chip } from "@mui/material";
+import { Card } from "@mui/material";
 
 import {
   DataTable,
@@ -14,6 +14,7 @@ import {
   useLazyExportPaymentsQuery,
 } from "../../store/rtkServices/paymentsMgmt";
 import { downloadBlob, toaster } from "../../utility";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 function PaymentManagement() {
   // local State
@@ -45,25 +46,12 @@ function PaymentManagement() {
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportPaymentsQuery();
 
-  const statusColor = {
-    success: "success",
-    failed: "error",
-    pending: "warning",
-  };
-
   // insert data
   let rows = [];
   rows = paymentsData?.map((item, index) => {
     const actions = <TableAction view={`/payment-management/${item._id}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
-    const status = (
-      <Chip
-        label={item.status}
-        color={statusColor[item.status] || "default"}
-        variant="contained"
-        size="small"
-      />
-    );
+    const status = <StatusChip status={item.status} />;
     return { ...item, actions, sr_no, status };
   });
 

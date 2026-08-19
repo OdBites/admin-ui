@@ -1,9 +1,10 @@
 import React from "react";
-import { Card, Divider, Grid, Stack, Typography, Chip } from "@mui/material";
+import { Card, Divider, Grid, Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import { PageHeader } from "../../../sharedComponents";
 import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 function PaymentDetails() {
   const { paymentId } = useParams();
@@ -11,12 +12,6 @@ function PaymentDetails() {
   // // rtk query
   const { data: paymentDetailsData = {}, isFetching } =
     useGetPaymentByIdQuery(paymentId);
-
-  const statusColor = {
-    success: "success",
-    failed: "error",
-    pending: "warning",
-  };
 
   // Flatten customer address for easy display
   const customerAddress = paymentDetailsData?.customer?.address
@@ -27,12 +22,7 @@ function PaymentDetails() {
     "Payment ID": paymentDetailsData?.id,
     "Order ID": paymentDetailsData?.orderId,
     Status: (
-      <Chip
-        label={paymentDetailsData?.status}
-        color={statusColor[paymentDetailsData?.status] || "default"}
-        variant="outlined"
-        size="small"
-      />
+      <StatusChip status={paymentDetailsData?.status} variant="outlined" />
     ),
     Amount: `₹ ${paymentDetailsData?.amount?.toFixed(2)} ${
       paymentDetailsData?.currency

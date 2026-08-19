@@ -14,10 +14,9 @@ export const productDemand = [
 
 // Sample Data for Recent Orders
 export const orderColumns = [
-  { id: "id", label: "ID", align: "left" },
-  // { id: "product", label: "Product", align: "left" },
-  { id: "customerName", label: "Customer", align: "left" },
-  { id: "totalAmount", label: "Amount", align: "right" },
+  { id: "id", label: "Order Id", align: "left", minWidth: 80 },
+  { id: "customerName", label: "Customer", align: "left", minWidth: 150 },
+  { id: "totalAmount", label: "Amount", align: "right", minWidth: 90 },
 ];
 
 export const orderRows = [
@@ -33,10 +32,10 @@ export const orderRows = [
 
 // Sample Data for Newly Registered Users
 export const userColumns = [
-  { id: "id", label: "ID", align: "left" },
-  { id: "name", label: "Name", align: "left" },
-  { id: "email", label: "Email", align: "left" },
-  { id: "registeredAt", label: "Registered At", align: "right" },
+  { id: "id", label: "User Id", align: "left", minWidth: 80 },
+  { id: "name", label: "Name", align: "left", minWidth: 140 },
+  { id: "email", label: "Email", align: "left", minWidth: 160 },
+  { id: "registeredAt", label: "Registered At", align: "right", minWidth: 120 },
 ];
 
 export const userRows = [

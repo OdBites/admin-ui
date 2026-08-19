@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import { Button, Card, Chip } from "@mui/material";
+import { Button, Card } from "@mui/material";
 
 // // static import
 import {
@@ -18,6 +18,7 @@ import {
   useLazyExportUsersQuery,
 } from "../../store/rtkServices/userMgmt";
 import { downloadBlob, toaster } from "../../utility";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 function UserManagement() {
   // local hooks
@@ -64,11 +65,6 @@ function UserManagement() {
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportUsersQuery();
   console.log("usersData", search, sort, filters);
-  const statusColor = {
-    Active: "success",
-    Blocked: "error",
-    Pending: "warning",
-  };
 
   // insert data
   let rows = [];
@@ -77,10 +73,10 @@ function UserManagement() {
       <TableAction
         view={`/user-management/${item.id}`}
         block={
-          item.status === "Active" ? () => handleAction("block", item) : null
+          item.status === "active" ? () => handleAction("block", item) : null
         }
         unBlock={
-          item.status === "Blocked" ? () => handleAction("unblock", item) : null
+          item.status === "blocked" ? () => handleAction("unblock", item) : null
         }
         remove={() => handleAction("delete", item)}
         edit={
@@ -93,20 +89,16 @@ function UserManagement() {
                 })
             : null
         }
-        isBlocked={item.status === "Blocked"}
+        isBlocked={item.status === "blocked"}
       />
     );
     const sr_no = index + 1 + page * rowsPerPage;
     const name = `${item.firstName} ${item.lastName}`;
-    const status = (
-      <Chip
-        label={item.status}
-        color={statusColor[item.status] || "default"}
-        variant="contained"
-        size="small"
-      />
-    );
-    return { ...item, actions, sr_no, name, status };
+    const status = <StatusChip status={item.status} />;
+    const createdBy = item.createdBy
+      ? item.createdBy.charAt(0).toUpperCase() + item.createdBy.slice(1)
+      : item.createdBy;
+    return { ...item, actions, sr_no, name, status, createdBy };
   });
 
   const handleChangePage = (_, newPage) => setPage(newPage);

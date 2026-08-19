@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+  Box,
   Button,
   Card,
   Grid,
   Stack,
   Step,
   StepLabel,
+  StepButton,
   Stepper,
   Typography,
 } from "@mui/material";
@@ -25,9 +27,11 @@ import { useFormWithReinitialize } from "../../../lib/hooks";
 import {
   useCreateProductMutation,
   useUpdateProductMutation,
+  useGetProductByIdQuery,
 } from "../../../store/rtkServices/productsMgmt";
 import { handleMutation, toaster } from "../../../utility";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { dropDownOptions } from "../../../constant";
 
 function AddEditProduct() {
   const location = useLocation();
@@ -42,6 +46,14 @@ function AddEditProduct() {
   const [activeStep, setActiveStep] = useState(0);
 
   // // RTK Query
+  const { data: fetchedData, isLoading: isFetchingProduct } =
+    useGetProductByIdQuery(id, {
+      skip: !isEditMode,
+    });
+  const productDetails = editableProductData?.name
+    ? editableProductData
+    : fetchedData?.product;
+
   const [createProduct, { isFetching }] = useCreateProductMutation();
   const [updateProduct, { isFetching: isUpdating }] =
     useUpdateProductMutation();
@@ -50,17 +62,24 @@ function AddEditProduct() {
     {
       label: "Basic Info",
       schema: basicInfoSchema,
-      fields: Object.keys(basicInfoSchema.shape),
+      fields: ["name", "description", "status"],
     },
     {
-      label: "Pricing & Inventory",
+      label: "Pricing, Inventory & Categorization",
       schema: pricingSchema,
-      fields: Object.keys(pricingSchema.shape),
+      fields: [
+        "price",
+        "discountPrice",
+        "stock",
+        "sku",
+        "category",
+        "subCategory",
+      ],
     },
     {
-      label: "Media & Categorization",
+      label: "Media",
       schema: mediaSchema,
-      fields: Object.keys(mediaSchema.shape),
+      fields: ["images"],
     },
   ];
 
@@ -68,34 +87,98 @@ function AddEditProduct() {
     control,
     handleSubmit,
     reset,
-    trigger,
+    setError,
+    clearErrors,
+    getValues,
+    watch,
+    setValue,
     formState: { isSubmitting },
   } = useFormWithReinitialize({
     resolver: zodResolver(fullProductSchema),
     defaultValues: {
-      name: editableProductData?.name || "",
-      description: editableProductData?.description || "",
-      status: editableProductData?.status || "active",
-      price: editableProductData?.price?.toString() || "",
-      stock: editableProductData?.stock?.toString() || "",
-      sku: editableProductData?.sku || "",
-      category: editableProductData?.category || "",
-      subCategory: editableProductData?.subCategory || "",
-      images: editableProductData?.images || "",
+      name: productDetails?.name || "",
+      description: productDetails?.description || "",
+      status: productDetails?.status || "active",
+      price: productDetails?.price?.toString() || "",
+      discountPrice: productDetails?.discountPrice?.toString() || "",
+      stock: productDetails?.stock?.toString() || "",
+      sku: productDetails?.sku || "",
+      category: productDetails?.category || "",
+      subCategory: productDetails?.subCategory || "",
+      images: productDetails?.images || [],
     },
-    mode: "onChange",
+    mode: "onTouched",
     enableReinitialize: true,
   });
 
+  const selectedCategory = watch("category");
+  const subCategoryOptions = selectedCategory
+    ? dropDownOptions.productMgmt.subCategory[selectedCategory] || []
+    : [];
+
+  useEffect(() => {
+    const currentSubCategory = getValues("subCategory");
+    const validOptions = selectedCategory
+      ? dropDownOptions.productMgmt.subCategory[selectedCategory] || []
+      : [];
+    const isValid = validOptions.some(
+      (opt) => opt.value === currentSubCategory
+    );
+    if (!isValid && currentSubCategory !== "") {
+      setValue("subCategory", "");
+    }
+  }, [selectedCategory, setValue, getValues]);
+
   const onNext = async () => {
-    const currentFields = stepsConfig[activeStep].fields;
-    const valid = await trigger(currentFields);
-    if (valid) {
+    const currentStep = stepsConfig[activeStep];
+    const formValues = getValues();
+    const result = currentStep.schema.safeParse(formValues);
+    if (!result.success) {
+      result.error.issues.forEach((issue) => {
+        setError(issue.path[0], {
+          type: "manual",
+          message: issue.message,
+        });
+      });
+    } else {
+      currentStep.fields.forEach((field) => clearErrors(field));
       setActiveStep(activeStep + 1);
     }
   };
 
   const onBack = () => setActiveStep((prev) => prev - 1);
+
+  const handleStepClick = async (targetStep) => {
+    if (targetStep === activeStep) return;
+
+    if (targetStep < activeStep) {
+      setActiveStep(targetStep);
+      return;
+    }
+
+    let stepToValidate = activeStep;
+    const formValues = getValues();
+
+    while (stepToValidate < targetStep) {
+      const currentStep = stepsConfig[stepToValidate];
+      const result = currentStep.schema.safeParse(formValues);
+      if (!result.success) {
+        result.error.issues.forEach((issue) => {
+          setError(issue.path[0], {
+            type: "manual",
+            message: issue.message,
+          });
+        });
+        setActiveStep(stepToValidate);
+        return;
+      } else {
+        currentStep.fields.forEach((field) => clearErrors(field));
+      }
+      stepToValidate++;
+    }
+
+    setActiveStep(targetStep);
+  };
 
   const onSubmit = async (productData) => {
     const formData = new FormData();
@@ -103,12 +186,25 @@ function AddEditProduct() {
     formData.append("description", productData.description);
     formData.append("status", productData.status);
     formData.append("price", productData.price);
+    if (
+      productData.discountPrice !== undefined &&
+      productData.discountPrice !== null &&
+      productData.discountPrice !== ""
+    ) {
+      formData.append("discountPrice", productData.discountPrice);
+    } else {
+      formData.append("discountPrice", "0");
+    }
     formData.append("stock", productData.stock);
     formData.append("sku", productData.sku);
     formData.append("category", productData.category);
     formData.append("subCategory", productData.subCategory);
     productData.images.forEach((file) => {
-      formData.append("images", file);
+      if (file instanceof File) {
+        formData.append("images", file);
+      } else if (typeof file === "string") {
+        formData.append("existingImages", file);
+      }
     });
 
     // API logic here
@@ -120,7 +216,7 @@ function AddEditProduct() {
           toaster.success(data.message);
           reset();
           setActiveStep(0);
-          navigate(-1);
+          navigate(`/dish-management/${id}`);
         },
       });
     } else {
@@ -131,10 +227,30 @@ function AddEditProduct() {
           toaster.success(data.message);
           reset();
           setActiveStep(0);
+          const newProductId =
+            data?.data?.product?.id || data?.data?.product?._id;
+          if (newProductId) {
+            navigate(`/dish-management/${newProductId}`);
+          } else {
+            navigate("/dish-management");
+          }
         },
       });
     }
   };
+  if (isEditMode && isFetchingProduct) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="400px"
+      >
+        <Typography>Loading dish details...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <>
       <PageHeader
@@ -156,9 +272,11 @@ function AddEditProduct() {
       <Stack spacing={3}>
         <Card>
           <Stepper activeStep={activeStep}>
-            {stepsConfig.map(({ label }) => (
+            {stepsConfig.map(({ label }, index) => (
               <Step key={label}>
-                <StepLabel>{label}</StepLabel>
+                <StepButton onClick={() => handleStepClick(index)}>
+                  {label}
+                </StepButton>
               </Step>
             ))}
           </Stepper>
@@ -176,10 +294,9 @@ function AddEditProduct() {
                   label="Status"
                   inputType="select"
                   control={control}
-                  options={[
-                    { label: "Active", value: "active" },
-                    { label: "Inactive", value: "inActive" },
-                  ]}
+                  options={dropDownOptions.productMgmt.status.filter(
+                    (opt) => opt.value !== ""
+                  )}
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>
@@ -199,6 +316,13 @@ function AddEditProduct() {
                 <FormInput name="price" label="Price (₹)" control={control} />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="discountPrice"
+                  label="Discount Price (₹)"
+                  control={control}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <FormInput name="stock" label="Stock" control={control} />
               </Grid>
               <Grid size={{ xs: 12, sm: 6 }}>
@@ -206,6 +330,27 @@ function AddEditProduct() {
                   name="sku"
                   label="SKU / Dish Code"
                   control={control}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="category"
+                  label="Category"
+                  control={control}
+                  inputType="select"
+                  options={dropDownOptions.productMgmt.category.filter(
+                    (opt) => opt.value !== ""
+                  )}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <FormInput
+                  name="subCategory"
+                  label="Cuisine Type"
+                  control={control}
+                  inputType="select"
+                  options={subCategoryOptions}
+                  disabled={!selectedCategory}
                 />
               </Grid>
             </Grid>
@@ -224,41 +369,6 @@ function AddEditProduct() {
                   rowHeight={4}
                 />
               </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <FormInput
-                  name="category"
-                  label="Category"
-                  control={control}
-                  inputType="select"
-                  options={[
-                    { label: "Main Course", value: "mainCourse" },
-                    { label: "Starters", value: "starters" },
-                    { label: "Desserts", value: "desserts" },
-                    { label: "Beverages", value: "beverages" },
-                  ]}
-                />
-              </Grid>
-              <Grid size={{ xs: 12, sm: 6 }}>
-                <FormInput
-                  name="subCategory"
-                  label="Sub Category"
-                  control={control}
-                  inputType="select"
-                  options={[
-                    { label: "Biryani", value: "biryani" },
-                    { label: "Curry", value: "curry" },
-                    { label: "Rice Items", value: "rice" },
-                    { label: "Appetizer", value: "appetizer" },
-                    { label: "Chinese", value: "chinese" },
-                    { label: "Coffee", value: "coffee" },
-                    { label: "Tea", value: "tea" },
-                    { label: "Mocktails", value: "mocktails" },
-                    { label: "Soft Drinks", value: "softDrinks" },
-                    { label: "Sweets", value: "sweets" },
-                    { label: "Ice Cream", value: "iceCream" },
-                  ]}
-                />
-              </Grid>
             </Grid>
           </RenderIf>
 
@@ -272,7 +382,7 @@ function AddEditProduct() {
               Back
             </Button>
             {activeStep === stepsConfig.length - 1 ? (
-              <Button variant="contained" type="submit">
+              <Button key="submit-btn" variant="contained" type="submit">
                 {isEditMode
                   ? isSubmitting || isUpdating
                     ? "Updating..."
@@ -282,7 +392,12 @@ function AddEditProduct() {
                     : "Create Dish"}
               </Button>
             ) : (
-              <Button variant="contained" type="button" onClick={onNext}>
+              <Button
+                key="next-btn"
+                variant="contained"
+                type="button"
+                onClick={onNext}
+              >
                 Next
               </Button>
             )}

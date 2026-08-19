@@ -24,6 +24,9 @@ const DataTable = ({
   totalItem = 0,
   isLoading = false,
   hidePagination = false,
+  sx = {},
+  maxHeight = "60vh",
+  minHeight = "50vh",
 }) => {
   const theme = useTheme();
 
@@ -32,16 +35,15 @@ const DataTable = ({
       component={Paper}
       sx={{
         position: "relative",
-        // height: "60vh",
         background: theme.palette.background.default,
-        // borderRadius: theme.shape.borderRadius,
         boxShadow: theme.shadows[3],
         maxWidth: {
           xs: `calc(100vw - 2rem)`,
           md: `calc(100vw - (270px + 7rem))`,
         },
-        maxHeight: "60vh",
-        minHeight: "50vh",
+        maxHeight,
+        minHeight,
+        ...sx,
       }}
     >
       <Table stickyHeader>
@@ -57,7 +59,8 @@ const DataTable = ({
                   fontWeight: column.fontWeight || "bold",
                   textTransform: "capitalize",
                   color: theme.palette.primary.contrastText,
-                  minWidth: column.minWidth || 150,
+                  minWidth:
+                    column.minWidth !== undefined ? column.minWidth : 150,
                 }}
               >
                 {column.label}
@@ -93,7 +96,9 @@ const DataTable = ({
                         textTransform: col.textTransform || "none",
                       }}
                     >
-                      {row[col.id] || "-N/A-"}
+                      {col.render
+                        ? col.render(row[col.id], row)
+                        : row[col.id] || "-N/A-"}
                     </TableCell>
                   ))}
                 </TableRow>

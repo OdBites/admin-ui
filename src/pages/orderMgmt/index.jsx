@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import { Card, Chip } from "@mui/material";
+import { Card } from "@mui/material";
 
 import {
   DataTable,
@@ -14,6 +14,7 @@ import {
   useLazyExportOrdersQuery,
 } from "../../store/rtkServices/ordersMgmt";
 import { downloadBlob, toaster } from "../../utility";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 function OrderManagement() {
   // local State
@@ -33,18 +34,6 @@ function OrderManagement() {
     }
   );
 
-  const statusColor = {
-    Ordered: "info",
-    Accepted: "primary",
-    Preparing: "warning",
-    Shipped: "warning",
-    OutForDelivery: "secondary",
-    Delivered: "success",
-    Returned: "error",
-    Cancelled: "error",
-    Pending: "warning",
-  };
-
   const { data, isFetching } = useGetOrdersQuery({
     search,
     sort,
@@ -61,14 +50,7 @@ function OrderManagement() {
   rows = ordersData?.map((item, index) => {
     const actions = <TableAction view={`/order-management/${item.orderId}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
-    const status = (
-      <Chip
-        label={item.status}
-        color={statusColor[item.status] || "default"}
-        variant="contained"
-        size="small"
-      />
-    );
+    const status = <StatusChip status={item.status} />;
     return { ...item, actions, sr_no, status };
   });
 

@@ -10,12 +10,7 @@ import {
   Avatar,
   Chip,
 } from "@mui/material";
-import {
-  LocalShipping,
-  Done,
-  Replay,
-  Cancel,
-} from "@mui/icons-material";
+import { LocalShipping, Done, Replay, Cancel } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 
 import { PageHeader } from "../../../sharedComponents";
@@ -24,23 +19,26 @@ import {
   useUpdateOrderStatusMutation,
 } from "../../../store/rtkServices/ordersMgmt";
 import { handleMutation, toaster } from "../../../utility";
+import { VITE_APP_ASSETS_PATH } from "../../../config/env";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 const getAvailableActions = (status) => {
   switch (status) {
-    case "Pending":
-    case "Ordered":
+    case "pending":
+    case "ordered":
       return ["Accept", "Cancel"];
-    case "Accepted":
+    case "accepted":
       return ["MarkPreparing", "Cancel"];
-    case "Preparing":
-      return ["MarkShipped", "Cancel"];
-    case "Shipped":
-    case "OutForDelivery":
+    case "preparing":
+      return ["MarkOutForDelivery", "Cancel"];
+    case "shipped":
+      return ["MarkOutForDelivery", "Return"];
+    case "outForDelivery":
       return ["MarkDelivered", "Return"];
-    case "Delivered":
+    case "delivered":
       return ["Return"];
-    case "Returned":
-    case "Cancelled":
+    case "returned":
+    case "cancelled":
     default:
       return [];
   }
@@ -52,55 +50,50 @@ const actionMap = {
     icon: <Done />,
     variant: "contained",
     color: "primary",
-    nextStatus: "Accepted",
+    nextStatus: "accepted",
   },
   MarkPreparing: {
     label: "Mark Preparing",
     icon: <Done />,
     variant: "contained",
     color: "primary",
-    nextStatus: "Preparing",
+    nextStatus: "preparing",
   },
   Cancel: {
     label: "Cancel Order",
     icon: <Cancel />,
-    variant: "outlined",
+    variant: "contained",
     color: "error",
-    nextStatus: "Cancelled",
+    nextStatus: "cancelled",
   },
   MarkShipped: {
     label: "Mark as Shipped",
     icon: <LocalShipping />,
     variant: "contained",
     color: "primary",
-    nextStatus: "Shipped",
+    nextStatus: "shipped",
+  },
+  MarkOutForDelivery: {
+    label: "Mark Out for Delivery",
+    icon: <LocalShipping />,
+    variant: "contained",
+    color: "primary",
+    nextStatus: "outForDelivery",
   },
   MarkDelivered: {
     label: "Mark as Delivered",
     icon: <Done />,
     variant: "contained",
     color: "success",
-    nextStatus: "Delivered",
+    nextStatus: "delivered",
   },
   Return: {
     label: "Mark as Returned",
     icon: <Replay />,
-    variant: "outlined",
+    variant: "contained",
     color: "secondary",
-    nextStatus: "Returned",
+    nextStatus: "returned",
   },
-};
-
-const statusColor = {
-  Ordered: "info",
-  Accepted: "primary",
-  Preparing: "warning",
-  Shipped: "warning",
-  OutForDelivery: "secondary",
-  Delivered: "success",
-  Returned: "error",
-  Cancelled: "error",
-  Pending: "warning",
 };
 
 const formatAmount = (value) =>
@@ -129,17 +122,18 @@ function OrderDetails() {
 
   const visualizeOrderSummary = {
     "Order ID": order?.orderId,
-    Status: (
-      <Chip
-        label={order?.status || "N/A"}
-        color={statusColor[order?.status] || "default"}
-        variant="outlined"
-        size="small"
-      />
-    ),
+    Status: <StatusChip status={order?.status} />,
     "Ordered On": order?.orderDate,
+  };
+
+  const visualizeTimeline = {
     "Placed At": order?.timeline?.placedAt,
-    "Shipped At": order?.timeline?.shippedAt,
+    "Accepted At": order?.timeline?.acceptedAt,
+    "Preparing At": order?.timeline?.preparingAt,
+    ...(order?.timeline?.shippedAt
+      ? { "Shipped At": order?.timeline?.shippedAt }
+      : {}),
+    "Out For Delivery At": order?.timeline?.outForDeliveryAt,
     "Delivered At": order?.timeline?.deliveredAt,
     "Cancelled At": order?.timeline?.cancelledAt,
     "Returned At": order?.timeline?.returnedAt,
@@ -243,6 +237,23 @@ function OrderDetails() {
 
         <Card>
           <Typography variant="h6" gutterBottom>
+            Order Timeline
+          </Typography>
+          <Divider sx={{ mb: 2 }} />
+          <Grid container spacing={2}>
+            {Object.entries(visualizeTimeline).map(([label, value]) => (
+              <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={label}>
+                <Typography variant="body2" color="text.secondary" gutterBottom>
+                  {label}
+                </Typography>
+                <Typography variant="body1">{value || "N/A"}</Typography>
+              </Grid>
+            ))}
+          </Grid>
+        </Card>
+
+        <Card>
+          <Typography variant="h6" gutterBottom>
             Order Items
           </Typography>
           <Divider sx={{ mb: 2 }} />
@@ -252,7 +263,11 @@ function OrderDetails() {
               sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
             >
               <Avatar
-                src={item.image}
+                src={
+                  item.image
+                    ? `${VITE_APP_ASSETS_PATH}/uploads/products/${item.image}`
+                    : undefined
+                }
                 variant="rounded"
                 sx={{ width: 64, height: 64 }}
               />

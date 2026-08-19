@@ -1,7 +1,7 @@
 import * as z from "zod";
 
-// 🎯 Zod validation schema
-export const userSchemaValidation = z.object({
+// 🎯 Base fields shared by both create and edit
+const baseUserFields = {
   firstName: z
     .string()
     .nonempty("First name is required")
@@ -20,14 +20,31 @@ export const userSchemaValidation = z.object({
     .nonempty("Email is required")
     .email("Invalid email address"),
   phone: z.string().trim().optional(),
+  status: z.enum(["active", "blocked", "pending"], {
+    required_error: "Status is required",
+    invalid_type_error: "Invalid status",
+  }),
+};
+
+// Create user: password is required
+export const createUserSchema = z.object({
+  ...baseUserFields,
+  password: z
+    .string()
+    .nonempty("Password is required")
+    .min(8, "Password must be at least 8 characters"),
+});
+
+// Edit user: password is optional (empty = don't change)
+export const editUserSchema = z.object({
+  ...baseUserFields,
   password: z
     .union([
       z.literal(""),
       z.string().min(8, "Password must be at least 8 characters"),
     ])
     .optional(),
-  status: z.enum(["Active", "Blocked", "Pending"], {
-    required_error: "Status is required",
-    invalid_type_error: "Invalid status",
-  }),
 });
+
+// Keep backward-compatible export (defaults to edit behavior)
+export const userSchemaValidation = editUserSchema;

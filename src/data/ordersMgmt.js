@@ -33,7 +33,7 @@ export const demoOrdersList = [
     orderId: "ORD-2004",
     customerName: "Anita Rao",
     email: "anita.rao@example.com",
-    status: "Shipped",
+    status: "OutForDelivery",
     totalAmount: 240.0,
     paymentMethod: "Online",
     paymentStatus: "Paid",
@@ -255,11 +255,11 @@ export const demoOrderDetails = [
     },
   },
 
-  // 4. Shipped
+  // 4. Out For Delivery
   {
     orderId: "ORD-2004",
     orderDate: "2025-06-06T20:00:00Z",
-    status: "Shipped",
+    status: "OutForDelivery",
     customer: {
       name: "Anita Rao",
       email: "anita@example.com",
@@ -301,13 +301,13 @@ export const demoOrderDetails = [
       instructions: "",
     },
     notes: {
-      admin: "Out for pickup",
+      admin: "Out for delivery",
       customer: "",
     },
     timeline: {
       placedAt: "2025-06-06T20:00:00Z",
       processedAt: "2025-06-06T20:10:00Z",
-      shippedAt: "2025-06-06T20:30:00Z",
+      outForDeliveryAt: "2025-06-06T20:30:00Z",
       trackingId: "BD-IND-ORD2004",
       estimatedDelivery: "2025-06-07",
       deliveredAt: null,
@@ -368,7 +368,7 @@ export const demoOrderDetails = [
     timeline: {
       placedAt: "2025-06-06T18:00:00Z",
       processedAt: "2025-06-06T18:15:00Z",
-      shippedAt: "2025-06-06T18:45:00Z",
+      outForDeliveryAt: "2025-06-06T18:45:00Z",
       deliveredAt: null,
       trackingId: "BD-IND-ORD2005",
       estimatedDelivery: "2025-06-06",
@@ -429,7 +429,7 @@ export const demoOrderDetails = [
     timeline: {
       placedAt: "2025-06-05T19:45:00Z",
       processedAt: "2025-06-05T20:00:00Z",
-      shippedAt: "2025-06-05T20:30:00Z",
+      outForDeliveryAt: "2025-06-05T20:30:00Z",
       deliveredAt: "2025-06-05T20:50:00Z",
       trackingId: "BD-IND-ORD2006",
       estimatedDelivery: "2025-06-05",
@@ -490,7 +490,7 @@ export const demoOrderDetails = [
     timeline: {
       placedAt: "2025-06-04T17:30:00Z",
       processedAt: "2025-06-04T17:45:00Z",
-      shippedAt: "2025-06-04T18:00:00Z",
+      outForDeliveryAt: "2025-06-04T18:00:00Z",
       deliveredAt: "2025-06-04T18:30:00Z",
       cancelledAt: null,
       returnedAt: "2025-06-04T20:00:00Z",

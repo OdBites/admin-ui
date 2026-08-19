@@ -108,7 +108,7 @@ export function useUserMgmtConfirmationAlert() {
     if (confirmAlert.action === "block") {
       await handleMutation({
         mutationFn: toggleUserStatus,
-        payload: { id: selectedUser?.id, status: "Blocked" },
+        payload: { id: selectedUser?.id, status: "blocked" },
         onSuccess: (data) => {
           toaster.success(data.message);
         },
@@ -118,7 +118,7 @@ export function useUserMgmtConfirmationAlert() {
     if (confirmAlert.action === "unblock") {
       await handleMutation({
         mutationFn: toggleUserStatus,
-        payload: { id: selectedUser?.id, status: "Active" },
+        payload: { id: selectedUser?.id, status: "active" },
         onSuccess: (data) => {
           toaster.success(data.message);
         },

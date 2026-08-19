@@ -12,7 +12,7 @@ import {
 import { DriveFileRenameOutline, LocationOn } from "@mui/icons-material";
 import { useParams } from "react-router-dom";
 
-import { AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { AvatarUpload, StatusChip } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import {
@@ -35,26 +35,16 @@ function UserMgmtDetails() {
     action: "",
   });
 
-  const statusColor = {
-    Active: "success",
-    Blocked: "error",
-    Pending: "warning",
-  };
-
   const visualizeFormatUserDetails = {
     "First Name": userDetails?.firstName,
     "Last Name": userDetails?.lastName,
-    Status: (
-      <Chip
-        label={userDetails?.status || "N/A"}
-        color={statusColor[userDetails?.status] || "default"}
-        variant="outlined"
-        size="small"
-      />
-    ),
+    Status: <StatusChip status={userDetails?.status} variant="outlined" />,
     "Created At": userDetails?.createdAt,
     "Updated At": userDetails?.updatedAt,
-    "Created By": userDetails?.createdBy,
+    "Created By": userDetails?.createdBy
+      ? userDetails.createdBy.charAt(0).toUpperCase() +
+        userDetails.createdBy.slice(1)
+      : userDetails?.createdBy,
     "Email Address": userDetails?.email,
     "Phone Number": userDetails?.phone,
   };

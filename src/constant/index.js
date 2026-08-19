@@ -90,7 +90,6 @@ export const dropDownOptions = {
       { value: "active", label: "Active" },
       { value: "inActive", label: "Inactive" },
       { value: "outOfStock", label: "Out of Stock" },
-      { value: "blocked", label: "Blocked" },
     ],
     category: [
       { value: "", label: "All Categories" },
@@ -98,6 +97,8 @@ export const dropDownOptions = {
       { value: "starters", label: "Starters" },
       { value: "beverages", label: "Beverages" },
       { value: "desserts", label: "Desserts" },
+      { value: "pithaCake", label: "Pitha/Cake" },
+      { value: "bread", label: "Bread" },
     ],
     subCategory: {
       mainCourse: [
@@ -107,17 +108,27 @@ export const dropDownOptions = {
       ],
       starters: [
         { value: "appetizer", label: "Appetizer" },
-        { value: "chinese", label: "Chinese" },
+        { value: "streetFood", label: "Street Food" },
       ],
       beverages: [
         { value: "coffee", label: "Coffee" },
         { value: "tea", label: "Tea" },
+        { value: "traditionalDrink", label: "Traditional Drink" },
         { value: "mocktails", label: "Mocktails" },
         { value: "softDrinks", label: "Soft Drinks" },
       ],
       desserts: [
         { value: "sweets", label: "Sweets" },
         { value: "iceCream", label: "Ice Cream" },
+      ],
+      pithaCake: [
+        { value: "fried", label: "Fried" },
+        { value: "baked", label: "Baked" },
+        { value: "steamed", label: "Steamed" },
+      ],
+      bread: [
+        { value: "flatbread", label: "Flatbread" },
+        { value: "loaf", label: "Loaf" },
       ],
     },
     dateInterval: [
@@ -144,11 +155,13 @@ export const dropDownOptions = {
   orderMgmt: {
     status: [
       { value: "", label: "All Statuses" },
-      { value: "Processing", label: "Processing" },
-      { value: "Shipped", label: "Shipped" },
-      { value: "Delivered", label: "Delivered" },
-      { value: "Cancelled", label: "Cancelled" },
-      { value: "Returned", label: "Returned" },
+      { value: "ordered", label: "Ordered" },
+      { value: "accepted", label: "Accepted" },
+      { value: "preparing", label: "Preparing" },
+      { value: "outForDelivery", label: "Out for Delivery" },
+      { value: "delivered", label: "Delivered" },
+      { value: "returned", label: "Returned" },
+      { value: "cancelled", label: "Cancelled" },
     ],
     paymentMethods: [
       { value: "", label: "All Payment Methods" },

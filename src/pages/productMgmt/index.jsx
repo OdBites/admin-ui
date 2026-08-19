@@ -1,5 +1,5 @@
 import React, { useReducer, useState } from "react";
-import { Box, Button, Card, Chip, Typography } from "@mui/material";
+import { Box, Button, Card, Typography } from "@mui/material";
 
 import {
   DataTable,
@@ -17,6 +17,7 @@ import {
   useLazyExportProductsQuery,
 } from "../../store/rtkServices/productsMgmt";
 import { downloadBlob, toaster } from "../../utility";
+import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 function ProductManagement() {
   // local hooks
@@ -58,10 +59,27 @@ function ProductManagement() {
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportProductsQuery();
 
-  const statusColor = {
-    active: "success",
-    Blocked: "error",
-    Pending: "warning",
+  const getCategoryLabel = (catValue) => {
+    const found = dropDownOptions.productMgmt.category.find(
+      (opt) => opt.value === catValue
+    );
+    return found ? found.label : catValue;
+  };
+
+  const getSubCategoryLabel = (catValue, subCatValue) => {
+    if (catValue && dropDownOptions.productMgmt.subCategory[catValue]) {
+      const found = dropDownOptions.productMgmt.subCategory[catValue].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    for (const cat of Object.keys(dropDownOptions.productMgmt.subCategory)) {
+      const found = dropDownOptions.productMgmt.subCategory[cat].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    return subCatValue;
   };
 
   // insert data
@@ -77,29 +95,14 @@ function ProductManagement() {
           item.status === "inActive" ? () => handleAction("active", item) : null
         }
         remove={() => handleAction("delete", item)}
-        // edit={
-        //   item.createdBy === "admin"
-        //     ? () =>
-        //         setAddEditUserModal({
-        //           open: true,
-        //           selectedUser: item,
-        //           action: "EDIT",
-        //         })
-        //     : null
-        // }
         isBlocked={item.status === "inActive"}
       />
     );
     const sr_no = index + 1 + page * rowsPerPage;
-    const status = (
-      <Chip
-        label={item.status}
-        color={statusColor[item.status] || "default"}
-        variant="contained"
-        size="small"
-      />
-    );
-    return { ...item, actions, sr_no, status };
+    const status = <StatusChip status={item.status} />;
+    const category = getCategoryLabel(item.category);
+    const subCategory = getSubCategoryLabel(item.category, item.subCategory);
+    return { ...item, actions, sr_no, status, category, subCategory };
   });
 
   const handleChangePage = (_, newPage) => setPage(newPage);

@@ -138,11 +138,11 @@ function FilterModal({ filters, setFilters }) {
 
         <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }}>
           <FormControl fullWidth disabled={!category}>
-            <InputLabel id="subcategory-select-label">Sub Category</InputLabel>
+            <InputLabel id="subcategory-select-label">Cuisine Type</InputLabel>
             <Select
               value={subCategory}
               labelId="subcategory-select-label"
-              label="Sub Category"
+              label="Cuisine Type"
               onChange={(e) => handleChange("subCategory", e.target.value)}
             >
               {subCategories.length > 0 ? (
@@ -152,7 +152,7 @@ function FilterModal({ filters, setFilters }) {
                   </MenuItem>
                 ))
               ) : (
-                <MenuItem value="">No Sub Categories</MenuItem>
+                <MenuItem value="">No Cuisine Types</MenuItem>
               )}
             </Select>
           </FormControl>
