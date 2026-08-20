@@ -8,7 +8,7 @@ const initialState = {
   loading: false,
   error: null,
 };
-const currentTheme = cookies.getCookie("user_theme") || "dark";
+const currentTheme = cookies.getCookie("admin_theme") || "dark";
 const authSlice = createSlice({
   name: "authSlice",
   initialState,
@@ -16,17 +16,17 @@ const authSlice = createSlice({
     userSignIn: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = true;
-      cookies.setCookie("auth_token", action.payload.token, {
+      cookies.setCookie("admin_auth_token", action.payload.token, {
         maxAgeDays: 1,
         path: "/",
         sameSite: "Lax",
       });
-      cookies.setCookie("user_id", action.payload.admin.id, {
+      cookies.setCookie("admin_id", action.payload.admin.id, {
         maxAgeDays: 1,
         path: "/",
         sameSite: "Lax",
       });
-      cookies.setCookie("user_theme", currentTheme, {
+      cookies.setCookie("admin_theme", currentTheme, {
         maxAgeDays: 1,
         path: "/",
       });

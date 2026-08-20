@@ -14,7 +14,9 @@ function LogoutModal({ logoutModal, setLogoutModal }) {
   };
 
   const handleConfirm = () => {
-    removeCookie("auth_token");
+    removeCookie("admin_auth_token");
+    removeCookie("admin_id");
+    removeCookie("admin_theme");
     handleClose();
     window.location.reload();
   };

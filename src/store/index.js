@@ -9,6 +9,7 @@ import {
   userService,
   paymentsService,
   profileService,
+  supportService,
 } from "./rtkServices";
 
 // create root reducer
@@ -21,6 +22,7 @@ const rootReducer = {
   [ordersService.reducerPath]: ordersService.reducer,
   [paymentsService.reducerPath]: paymentsService.reducer,
   [profileService.reducerPath]: profileService.reducer,
+  [supportService.reducerPath]: supportService.reducer,
 };
 
 // setup store
@@ -34,7 +36,8 @@ const store = configureStore({
       productService.middleware,
       ordersService.middleware,
       paymentsService.middleware,
-      profileService.middleware
+      profileService.middleware,
+      supportService.middleware
     ),
 });
 

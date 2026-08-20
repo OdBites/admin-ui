@@ -6,7 +6,9 @@ export default function errorHandler(error = {}) {
   const apiError = handleApiError(error, {
     notify: (message) => toaster.error(message),
     onUnauthorized: () => {
-      cookies.removeCookie("auth_token");
+      cookies.removeCookie("admin_auth_token");
+      cookies.removeCookie("admin_id");
+      cookies.removeCookie("admin_theme");
       window.location.reload();
     },
   });

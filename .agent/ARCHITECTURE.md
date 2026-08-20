@@ -42,7 +42,7 @@ outside it.
 
 `src/layouts/index.jsx`:
 
-1. Reads `auth_token` and `user_id` cookies.
+1. Reads `admin_auth_token` and `admin_id` cookies.
 2. Fetches profile details with `useGetProfileDetailsQuery(userId)`.
 3. Renders remote `AdminLayout`.
 4. Renders nested content through `Outlet`.

@@ -8,7 +8,7 @@ const axiosMain = createAxiosInstance({
   axios,
   baseURL: VITE_APP_API_URL,
   timeout: 10000,
-  getToken: () => cookies.getCookie("auth_token"),
+  getToken: () => cookies.getCookie("admin_auth_token"),
   onError: (apiError, originalError) => {
     console.error("Axios Error in axiosInstance:", originalError);
     errorHandler(apiError);

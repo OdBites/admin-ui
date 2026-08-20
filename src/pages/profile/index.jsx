@@ -30,7 +30,7 @@ import { Loader } from "../../assets";
 function Profile() {
   const { getCookie } = cookies;
 
-  const userId = getCookie("user_id");
+  const userId = getCookie("admin_id");
 
   const [isEditing, setIsEditing] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState({

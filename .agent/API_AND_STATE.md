@@ -8,30 +8,30 @@ Admin API code lives in `src/api`.
 
 - `baseURL`: `VITE_APP_API_URL`.
 - Timeout: `10000` ms.
-- Request interceptor reads `auth_token` and sends `Authorization: Bearer <token>`.
+- Request interceptor reads `admin_auth_token` and sends `Authorization: Bearer <token>`.
 - Response interceptor passes failures through `errorHandler`.
 
 `src/api/axiosBaseQuery.js` adapts Axios to RTK Query.
 
 ## RTK Query Services
 
-| Service | Main Endpoints |
-| --- | --- |
-| `authService` | `POST /admin/auth/login`, `POST /admin/auth/forgot-password`, `POST /admin/auth/change-password` |
-| `dashboardService` | `GET /admin/dashboard` |
-| `userService` | `/admin/users` customer management routes |
-| `productService` | `/admin/products` dish management routes |
-| `ordersService` | `/admin/orders` routes |
-| `paymentsService` | `/admin/payments` routes |
-| `profileService` | `/admin/profile/:id` routes |
+| Service            | Main Endpoints                                                                                   |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `authService`      | `POST /admin/auth/login`, `POST /admin/auth/forgot-password`, `POST /admin/auth/change-password` |
+| `dashboardService` | `GET /admin/dashboard`                                                                           |
+| `userService`      | `/admin/users` customer management routes                                                        |
+| `productService`   | `/admin/products` dish management routes                                                         |
+| `ordersService`    | `/admin/orders` routes                                                                           |
+| `paymentsService`  | `/admin/payments` routes                                                                         |
+| `profileService`   | `/admin/profile/:id` routes                                                                      |
 
 ## Auth Cookies
 
 Authentication is persisted in cookies:
 
 ```text
-auth_token
-user_id
+admin_auth_token
+admin_id
 user_theme
 ```
 

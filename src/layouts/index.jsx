@@ -12,8 +12,8 @@ import { useGetProfileDetailsQuery } from "../store/rtkServices";
 
 function Layout() {
   const { getCookie } = useCookies();
-  let isAuthenticated = !!getCookie("auth_token");
-  const userId = getCookie("user_id");
+  let isAuthenticated = !!getCookie("admin_auth_token");
+  const userId = getCookie("admin_id");
 
   // // rtk query
   const { data: profileDetails = {}, isFetching } = isAuthenticated
