@@ -6,8 +6,8 @@ import packageJson from "../../package.json";
 import { AdminLayout } from "OdBitesMfUI/layouts";
 import { useCookies } from "OdBitesMfUI/hooks";
 
-import { LogoutModal } from "../pages/profile/components";
-import SignIn from "../pages/auth/SignIn";
+import { LogoutModal } from "../view/profile/components";
+import SignIn from "../view/auth/pages/SignIn";
 import { useGetProfileDetailsQuery } from "../store/rtkServices";
 
 function Layout() {
