@@ -13,15 +13,23 @@ import { handleMutation, toaster } from "../../../utility";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 
 export function useProfile() {
+  /*
+    Hooks & Theme Configuration
+   */
   const { getCookie } = cookies;
   const userId = getCookie("admin_id");
 
+  /*
+    Local State Declarations
+   */
   const [isEditing, setIsEditing] = useState(false);
   const [updatePasswordModal, setUpdatePasswordModal] = useState({
     open: false,
   });
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data: profileDetails = {}, isFetching } =
     useGetProfileDetailsQuery(userId);
   const [updateProfileDetails, { isFetching: isUpdating }] =
@@ -34,6 +42,9 @@ export function useProfile() {
   const [updateProfilePhoto, { isFetching: isProfilePicUpdating }] =
     useUpdateProfilePhotoMutation();
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const {
     control,
     handleSubmit,
@@ -51,6 +62,11 @@ export function useProfile() {
     enableReinitialize: true,
   });
 
+  const avatarSrc = `${VITE_APP_ASSETS_PATH}${folderLocation}/${photo}`;
+
+  /*
+    Handlers & Callback Actions
+   */
   const onSubmit = async (updatedData) => {
     await handleMutation({
       mutationFn: updateProfileDetails,
@@ -75,8 +91,6 @@ export function useProfile() {
       },
     });
   };
-
-  const avatarSrc = `${VITE_APP_ASSETS_PATH}${folderLocation}/${photo}`;
 
   return {
     isEditing,

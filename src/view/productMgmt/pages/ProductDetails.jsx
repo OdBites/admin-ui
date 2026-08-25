@@ -1,14 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 
 import { PageHeader } from "../../../sharedComponents";
@@ -17,9 +10,23 @@ import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 import { useProductDetails } from "../hooks";
 
 function ProductDetails() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Theme & Layout
+     */
     id,
+
+    /*
+      RTK Query API State Indicators
+     */
     isLoading,
+
+    /*
+      Computed API Data & Memos
+     */
     productDetailsData,
     folderLocation,
     visualizeFormatDishDetails,

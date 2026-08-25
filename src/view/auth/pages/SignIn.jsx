@@ -1,12 +1,30 @@
 import React from "react";
-import { Box, Button, Container, Typography, Stack, Link } from "@mui/material";
+import { Box, Container, Typography, Stack, Link } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { FormInput } from "OdBitesMfUI/sharedComp";
+import { Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { useSignIn } from "../hooks";
 
 function SignIn() {
-  const { control, isSubmitting, handleSubmit } = useSignIn();
+  /*
+    Hook Configuration & Destructuring
+   */
+  const {
+    /*
+      Computed API Data & Memos
+     */
+    control,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isSubmitting,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleSubmit,
+  } = useSignIn();
 
   return (
     <Box

@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Card } from "@mui/material";
+import { Card } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 
 import {
   DataTable,
@@ -13,21 +14,39 @@ import { NavLink } from "react-router-dom";
 import { useProductManagement } from "../hooks";
 
 function ProductManagement() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Local State Accessors & Mutators
+     */
     page,
     rowsPerPage,
     setSearch,
     setSort,
     filters,
     setFilters,
-    isLoading,
-    total,
-    rows,
-    isExporting,
     confirmAlert,
     setConfirmAlert,
-    handleConfirm,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isLoading,
+    isExporting,
+
+    /*
+      Computed API Data & Memos
+     */
+    total,
+    rows,
     dialogContent,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleConfirm,
     handleChangePage,
     handleChangeRowsPerPage,
     handleExport,

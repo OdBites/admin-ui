@@ -19,7 +19,7 @@ export const supportService = createApi({
         url: `/admin/support/chats/${customerId}`,
         method: "GET",
       }),
-      transformResponse: (response) => response.data,
+      transformResponse: (response) => response,
       providesTags: ["ChatMessage"],
     }),
     sendMessage: builder.mutation({

@@ -76,7 +76,7 @@ const DataTable = ({
 
           {/* Show Skeleton Loader when loading */}
           {isLoading
-            ? [...new Array(4)].map((_, index) => (
+            ? [...new Array(10)].map((_, index) => (
                 <TableRow key={index + 1}>
                   {columns.map((col) => (
                     <TableCell key={col.id} sx={{ width: col.maxWidth }}>
@@ -121,7 +121,7 @@ const DataTable = ({
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[5, 15, 30, 50]}
+          rowsPerPageOptions={[10, 20, 50, 100]}
         />
       ) : (
         ""

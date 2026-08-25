@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Button,
   Card,
   Grid,
   Stack,
@@ -12,27 +11,45 @@ import {
 } from "@mui/material";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
-import { FormInput } from "OdBitesMfUI/sharedComp";
+import { Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import { useAddEditProduct } from "../hooks";
 import { dropDownOptions } from "../../../constant";
 
 function AddEditProduct() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Theme & Layout
+     */
     id,
     isEditMode,
     activeStep,
+
+    /*
+      RTK Query API State Indicators
+     */
     isFetchingProduct,
+    isSaving,
+
+    /*
+      Computed API Data & Memos
+     */
     stepsConfig,
     control,
-    handleSubmit,
     selectedCategory,
     subCategoryOptions,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleSubmit,
     onNext,
     onBack,
     handleStepClick,
-    isSaving,
   } = useAddEditProduct();
 
   if (isEditMode && isFetchingProduct) {

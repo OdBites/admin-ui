@@ -40,6 +40,13 @@ function TableActionHeader({
     setSort(value);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setSearch(searchTerm);
+    }
+  };
+
   return (
     <Grid
       container
@@ -57,6 +64,7 @@ function TableActionHeader({
           placeholder={searchPlaceholder}
           value={searchTerm}
           onChange={handleSearchChange}
+          onKeyDown={handleKeyDown}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">

@@ -33,25 +33,24 @@ const formatAmount = (value) =>
   Number.isFinite(Number(value)) ? Number(value).toFixed(2) : "0.00";
 
 export function useOrderDetails() {
+  /*
+    Hooks & Theme Configuration
+   */
   const { orderId } = useParams();
 
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data: order = {}, isFetching } = useGetOrderByIdQuery(orderId);
   const [updateOrderStatus, { isLoading: isUpdatingStatus }] =
     useUpdateOrderStatusMutation();
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const actions = getAvailableActions(order?.status);
   const priceSummary = order?.priceSummary || {};
   const deliveryAddress = order?.delivery?.address || {};
-
-  const handleStatusUpdate = async (status) => {
-    await handleMutation({
-      mutationFn: updateOrderStatus,
-      payload: { id: orderId, status },
-      onSuccess: (data) => {
-        toaster.success(data?.message || "Order status updated successfully");
-      },
-    });
-  };
 
   const visualizeOrderSummary = {
     "Order ID": order?.orderId,
@@ -78,6 +77,19 @@ export function useOrderDetails() {
     Tax: formatAmount(priceSummary.tax),
     Delivery: formatAmount(priceSummary.deliveryFee),
     "Grand Total": formatAmount(priceSummary.grandTotal || order?.totalAmount),
+  };
+
+  /*
+    Handlers & Callback Actions
+   */
+  const handleStatusUpdate = async (status) => {
+    await handleMutation({
+      mutationFn: updateOrderStatus,
+      payload: { id: orderId, status },
+      onSuccess: (data) => {
+        toaster.success(data?.message || "Order status updated successfully");
+      },
+    });
   };
 
   return {

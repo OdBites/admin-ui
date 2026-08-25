@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Card, Divider, Grid, Stack, Typography } from "@mui/material";
 
-import { FormInput, AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { Button, FormInput, AvatarUpload } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import { UpdatePasswordModal } from "../components";
@@ -17,20 +9,38 @@ import { Loader } from "../../../assets";
 import { useProfile } from "../hooks";
 
 function Profile() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Local State Accessors & Mutators
+     */
     isEditing,
     setIsEditing,
     updatePasswordModal,
     setUpdatePasswordModal,
-    profileDetails,
+
+    /*
+      RTK Query API State Indicators
+     */
     isFetching,
     isSaving,
     isProfilePicUpdating,
+
+    /*
+      Computed API Data & Memos
+     */
+    profileDetails,
     control,
+    avatarSrc,
+
+    /*
+      Event Handler Callbacks
+     */
     handleSubmit,
     reset,
     handelUpdateProfilePic,
-    avatarSrc,
   } = useProfile();
 
   return (
@@ -140,7 +150,7 @@ function Profile() {
                     variant="contained"
                     onClick={() => setIsEditing(true)}
                   >
-                    Update Profile
+                    Edit Profile
                   </Button>
                 ) : (
                   <Stack direction="row" spacing={2}>

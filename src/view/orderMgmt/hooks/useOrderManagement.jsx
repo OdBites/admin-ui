@@ -8,9 +8,11 @@ import { TableAction } from "../../../sharedComponents";
 import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function useOrderManagement() {
-  // local State
+  /*
+    Local State Declarations
+   */
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
 
@@ -25,6 +27,9 @@ export function useOrderManagement() {
     }
   );
 
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data, isFetching } = useGetOrdersQuery({
     search,
     sort,
@@ -33,9 +38,13 @@ export function useOrderManagement() {
     ...filters,
   });
 
-  const { data: ordersData = [], total = 0 } = data || {};
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportOrdersQuery();
+
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const { data: ordersData = [], total = 0 } = data || {};
 
   const rows = ordersData?.map((item, index) => {
     const actions = <TableAction view={`/order-management/${item.orderId}`} />;
@@ -44,6 +53,9 @@ export function useOrderManagement() {
     return { ...item, actions, sr_no, status };
   });
 
+  /*
+    Handlers & Callback Actions
+   */
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));

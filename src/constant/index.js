@@ -12,7 +12,7 @@ export const tableColumns = {
     { id: "actions", label: "Actions" },
   ],
   productMgmt: [
-    { id: "_id", label: "Item ID" },
+    { id: "sku", label: "Dish Code" },
     { id: "name", label: "Dish Name" },
     { id: "category", label: "Category" },
     { id: "subCategory", label: "Cuisine Type" },

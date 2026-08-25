@@ -4,9 +4,14 @@ import { orderColumns, userColumns } from "../../../data/dashboard";
 import { useFetchDashboardDataQuery } from "../../../store/rtkServices/dashboard";
 
 export function useDashboard() {
+  /*
+    Hooks & Theme Configuration
+   */
   const theme = useTheme();
 
-  // RTK Query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data: dashboardData, isLoading } = useFetchDashboardDataQuery();
   const {
     summary = {},
@@ -14,6 +19,9 @@ export function useDashboard() {
     tables: { recentOrders = [], newUsers = [] } = {},
   } = dashboardData || {};
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   // Custom cell renders for Recent Orders
   const customOrderColumns = useMemo(() => {
     return orderColumns.map((col) => {

@@ -1,4 +1,5 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 import React from "react";
 import PropTypes from "prop-types";
 import { FileDownload, ReplyAll } from "@mui/icons-material";

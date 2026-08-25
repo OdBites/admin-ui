@@ -4,12 +4,20 @@ import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt"
 import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function usePaymentDetails() {
+  /*
+    Hooks & Theme Configuration
+   */
   const { paymentId } = useParams();
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data: paymentDetailsData = {}, isFetching } =
     useGetPaymentByIdQuery(paymentId);
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   // Flatten customer address for easy display
   const customerAddress = paymentDetailsData?.customer?.address
     ? `${paymentDetailsData?.customer.address.line1}, ${paymentDetailsData?.customer.address.line2}, ${paymentDetailsData?.customer.address.city}, ${paymentDetailsData?.customer.address.state} - ${paymentDetailsData?.customer.address.postalCode}, ${paymentDetailsData?.customer.address.country}`
@@ -18,9 +26,7 @@ export function usePaymentDetails() {
   const visualizePaymentDetails = {
     "Payment ID": paymentDetailsData?.id,
     "Order ID": paymentDetailsData?.orderId,
-    Status: (
-      <StatusChip status={paymentDetailsData?.status} variant="outlined" />
-    ),
+    Status: <StatusChip status={paymentDetailsData?.status} />,
     Amount: `₹ ${paymentDetailsData?.amount?.toFixed(2)} ${
       paymentDetailsData?.currency
     }`,

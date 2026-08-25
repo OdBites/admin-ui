@@ -10,8 +10,14 @@ const forgotPasswordSchema = z.object({
 });
 
 export function useForgetPassword() {
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const {
     control,
     handleSubmit,
@@ -23,6 +29,9 @@ export function useForgetPassword() {
     },
   });
 
+  /*
+    Handlers & Callback Actions
+   */
   const onSubmit = async (payload) => {
     await handleMutation({
       mutationFn: forgotPassword,

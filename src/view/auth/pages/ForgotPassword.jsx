@@ -1,12 +1,30 @@
 import React from "react";
-import { Box, Button, Container, Typography, Stack, Link } from "@mui/material";
+import { Box, Container, Typography, Stack, Link } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { FormInput } from "OdBitesMfUI/sharedComp";
+import { Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { useForgetPassword } from "../hooks";
 
 function ForgotPassword() {
-  const { control, isLoading, handleSubmit } = useForgetPassword();
+  /*
+    Hook Configuration & Destructuring
+   */
+  const {
+    /*
+      Computed API Data & Memos
+     */
+    control,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isLoading,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleSubmit,
+  } = useForgetPassword();
 
   return (
     <Box

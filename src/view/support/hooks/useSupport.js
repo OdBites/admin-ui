@@ -11,19 +11,32 @@ import { cookies } from "OdBitesMfUI/utility";
 import { VITE_APP_API_URL } from "../../../config/env";
 
 export function useSupport() {
+  /*
+    Hooks & Theme Configuration
+   */
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
 
-  // State variables
+  /*
+    Local State Declarations
+   */
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [messageText, setMessageText] = useState("");
-  const [activeTab, setActiveTab] = useState("active"); // "active" | "resolved"
+  const [activeTab, setActiveTab] = useState("active");
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [socket, setSocket] = useState(null);
 
-  // Refs
+  /*
+    Refs
+   */
   const messagesEndRef = useRef(null);
+  const refetchSessionsRef = useRef(null);
+  const refetchMessagesRef = useRef(null);
 
-  // RTK Query endpoints
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const {
     data: sessions = [],
     isLoading: isSessionsLoading,
@@ -31,11 +44,11 @@ export function useSupport() {
   } = useFetchSupportSessionsQuery(null, {
     refetchOnFocus: false,
     refetchOnReconnect: false,
-    refetchOnMountOrArgChange: 30, // cache for 30s to prevent strict mode duplicate mounts
+    refetchOnMountOrArgChange: 30,
   });
 
   const {
-    data: messages = [],
+    data: chatPayload = {},
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
   } = useFetchChatMessagesQuery(selectedCustomerId, {
@@ -45,10 +58,64 @@ export function useSupport() {
     refetchOnMountOrArgChange: 30,
   });
 
-  // Keep latest refetch functions in refs to prevent socket hook recreation churn
-  const refetchSessionsRef = useRef(refetchSessions);
-  const refetchMessagesRef = useRef(refetchMessages);
+  const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
+  const [resolveSession] = useResolveSessionMutation();
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const messages = chatPayload?.data || [];
+  const recentOrders = chatPayload?.recentOrders || [];
+  const linkedOrder = chatPayload?.linkedOrder || null;
+  const linkedOrderId = linkedOrder?._id || linkedOrder?.id;
+
+  const selectedCustomerSession = useMemo(() => {
+    return sessions.find((s) => s.customer?._id === selectedCustomerId);
+  }, [sessions, selectedCustomerId]);
+
+  const filteredSessions = useMemo(() => {
+    return sessions.filter((s) => {
+      if (!s.customer) return false;
+      const fullName =
+        `${s.customer.firstName || ""} ${s.customer.lastName || ""}`.toLowerCase();
+      const email = (s.customer.email || "").toLowerCase();
+      const matchesSearch =
+        fullName.includes(searchQuery.toLowerCase()) ||
+        email.includes(searchQuery.toLowerCase());
+
+      const sessionStatus = s.status || "active";
+      if (activeTab === "resolved") {
+        return matchesSearch && sessionStatus === "resolved";
+      }
+      return matchesSearch && sessionStatus !== "resolved";
+    });
+  }, [sessions, searchQuery, activeTab]);
+
+  // Debounced query functions
+  const debouncedRefetchSessions = useMemo(() => {
+    let timer;
+    return () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        refetchSessionsRef.current?.();
+      }, 150);
+    };
+  }, []);
+
+  const debouncedRefetchMessages = useMemo(() => {
+    let timer;
+    return () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        refetchMessagesRef.current?.();
+      }, 150);
+    };
+  }, []);
+
+  /*
+    Lifecycles & Side Effects (useEffect)
+   */
+  // Keep query refetch handlers fresh
   useEffect(() => {
     refetchSessionsRef.current = refetchSessions;
   }, [refetchSessions]);
@@ -57,30 +124,7 @@ export function useSupport() {
     refetchMessagesRef.current = refetchMessages;
   }, [refetchMessages]);
 
-  // Debounced refetch helpers to prevent duplicate API calls from rapid event updates
-  const debouncedRefetchSessions = useMemo(() => {
-    let timer;
-    return () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        refetchSessionsRef.current();
-      }, 150);
-    };
-  }, []); // Empty dependency array -> stable reference
-
-  const debouncedRefetchMessages = useMemo(() => {
-    let timer;
-    return () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        refetchMessagesRef.current();
-      }, 150);
-    };
-  }, []); // Empty dependency array -> stable reference
-
-  // Socket state and connections
-  const [socket, setSocket] = useState(null);
-
+  // Initialize Socket.io Connection
   useEffect(() => {
     const token = cookies.getCookie("admin_auth_token");
     if (!token) return;
@@ -101,11 +145,11 @@ export function useSupport() {
       console.log("Admin support socket connected");
     });
 
-    socketInstance.on("message", (msg) => {
+    socketInstance.on("message", () => {
       debouncedRefetchMessages();
     });
 
-    socketInstance.on("session_updated", (session) => {
+    socketInstance.on("session_updated", () => {
       debouncedRefetchSessions();
     });
 
@@ -122,9 +166,9 @@ export function useSupport() {
         globalThis.adminSocket = null;
       }
     };
-  }, []); // Empty dependency array -> connect once on page mount
+  }, [debouncedRefetchMessages, debouncedRefetchSessions]);
 
-  // Handle joining customer rooms dynamically
+  // Join Room for Selected Customer Support Thread
   useEffect(() => {
     if (!socket || !selectedCustomerId) return;
 
@@ -135,54 +179,48 @@ export function useSupport() {
     };
   }, [socket, selectedCustomerId]);
 
-  const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
-  const [resolveSession] = useResolveSessionMutation();
-
-  // Find currently selected customer details from active sessions list
-  const selectedCustomerSession = useMemo(() => {
-    return sessions.find((s) => s.customer?._id === selectedCustomerId);
-  }, [sessions, selectedCustomerId]);
-
-  // Scroll to bottom on new messages
-  const scrollToBottom = (behavior = "smooth") => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
-  };
-
+  // Auto-Scroll to Bottom on New Messages
   useEffect(() => {
     if (messages.length > 0) {
       scrollToBottom("smooth");
     }
   }, [messages]);
 
-  // Filter sessions based on search query and active tab
-  const filteredSessions = useMemo(() => {
-    return sessions.filter((s) => {
-      if (!s.customer) return false;
-      const fullName =
-        `${s.customer.firstName || ""} ${s.customer.lastName || ""}`.toLowerCase();
-      const email = (s.customer.email || "").toLowerCase();
-      const matchesSearch =
-        fullName.includes(searchQuery.toLowerCase()) ||
-        email.includes(searchQuery.toLowerCase());
-
-      const sessionStatus = s.status || "active";
-      if (activeTab === "resolved") {
-        return matchesSearch && sessionStatus === "resolved";
-      } else {
-        // "active" includes active and pending status
-        return matchesSearch && sessionStatus !== "resolved";
-      }
-    });
-  }, [sessions, searchQuery, activeTab]);
-
-  // Select first chat session by default if none selected (only on desktop)
+  // Select First Active Customer Thread on Large Screens automatically
   useEffect(() => {
     if (!isMobile && !selectedCustomerId && filteredSessions.length > 0) {
       setSelectedCustomerId(filteredSessions[0].customer?._id);
     }
   }, [filteredSessions, selectedCustomerId, isMobile]);
 
-  // Send message handler
+  /*
+    Handlers & Callback Actions
+   */
+  const scrollToBottom = (behavior = "smooth") => {
+    messagesEndRef.current?.scrollIntoView({ behavior });
+  };
+
+  const handleSelectOrder = (order) => {
+    if (!order) return;
+
+    const itemsList =
+      order.items
+        ?.map((item) => `${item.name || "Item"} (x${item.quantity || 0})`)
+        .join(", ") || "N/A";
+
+    const template =
+      `Order Details:\n` +
+      `Order ID: ${order.orderId || "N/A"}\n` +
+      `Status: ${order.status || "N/A"}\n` +
+      `Amount: INR ${formatAmount(order.totalAmount)}\n` +
+      `Date: ${formatDate(order.orderDate)}\n` +
+      `Items: ${itemsList}\n\n` +
+      `Is this the order you need help with?`;
+
+    setMessageText(template);
+    setInfoOpen(false);
+  };
+
   const handleSend = async (e) => {
     if (e) e.preventDefault();
     if (!messageText.trim() || !selectedCustomerId || isSending) return;
@@ -199,7 +237,6 @@ export function useSupport() {
     }
   };
 
-  // Mark ticket as resolved
   const handleResolve = async () => {
     if (!selectedCustomerId) return;
     try {
@@ -209,7 +246,26 @@ export function useSupport() {
     }
   };
 
-  // Helper to format timestamps
+  /*
+    Formatting & Utility Helpers
+   */
+  const formatAmount = (value) => {
+    const amount = Number(value || 0);
+    return amount.toLocaleString("en-IN", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    return new Date(dateStr).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
     const date = new Date(dateStr);
@@ -219,6 +275,11 @@ export function useSupport() {
       hour12: true,
     });
   };
+
+  const formatStatus = (status) =>
+    status
+      ? status.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase())
+      : "N/A";
 
   return {
     theme,
@@ -235,11 +296,20 @@ export function useSupport() {
     isSessionsLoading,
     isMessagesLoading,
     messages,
+    recentOrders,
+    linkedOrder,
     isSending,
     selectedCustomerSession,
     filteredSessions,
     handleSend,
     handleResolve,
+    handleSelectOrder,
     formatTime,
+    formatAmount,
+    formatDate,
+    infoOpen,
+    setInfoOpen,
+    linkedOrderId,
+    formatStatus,
   };
 }

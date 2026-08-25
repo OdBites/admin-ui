@@ -11,17 +11,35 @@ import { tableColumns, dropDownOptions } from "../../../constant";
 import { usePaymentManagement } from "../hooks";
 
 function PaymentManagement() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Local State Accessors & Mutators
+     */
     page,
     rowsPerPage,
     setSearch,
     setSort,
     filters,
     setFilters,
+
+    /*
+      RTK Query API State Indicators
+     */
     isFetching,
+    isExporting,
+
+    /*
+      Computed API Data & Memos
+     */
     total,
     rows,
-    isExporting,
+
+    /*
+      Event Handler Callbacks
+     */
     handleChangePage,
     handleChangeRowsPerPage,
     handleExport,

@@ -10,7 +10,9 @@ import { StatusChip } from "OdBitesMfUI/sharedComp";
 import { dropDownOptions } from "../../../constant";
 
 export function useProductManagement() {
-  // local hooks
+  /*
+    Hooks & Theme Configuration
+   */
   const {
     confirmAlert,
     setConfirmAlert,
@@ -19,9 +21,11 @@ export function useProductManagement() {
     handleConfirm,
   } = useProductMgmtConfirmationAlert();
 
-  // local State
+  /*
+    Local State Declarations
+   */
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
 
@@ -37,7 +41,9 @@ export function useProductManagement() {
     }
   );
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data, isLoading } = useGetProductsQuery({
     search,
     sort,
@@ -45,34 +51,15 @@ export function useProductManagement() {
     limit: rowsPerPage,
     ...filters,
   });
-  const { data: productsData = [], total } = data || {};
+
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportProductsQuery();
 
-  const getCategoryLabel = (catValue) => {
-    const found = dropDownOptions.productMgmt.category.find(
-      (opt) => opt.value === catValue
-    );
-    return found ? found.label : catValue;
-  };
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const { data: productsData = [], total } = data || {};
 
-  const getSubCategoryLabel = (catValue, subCatValue) => {
-    if (catValue && dropDownOptions.productMgmt.subCategory[catValue]) {
-      const found = dropDownOptions.productMgmt.subCategory[catValue].find(
-        (opt) => opt.value === subCatValue
-      );
-      if (found) return found.label;
-    }
-    for (const cat of Object.keys(dropDownOptions.productMgmt.subCategory)) {
-      const found = dropDownOptions.productMgmt.subCategory[cat].find(
-        (opt) => opt.value === subCatValue
-      );
-      if (found) return found.label;
-    }
-    return subCatValue;
-  };
-
-  // insert data
   const rows = productsData?.products?.map((item, index) => {
     const actions = (
       <TableAction
@@ -94,6 +81,14 @@ export function useProductManagement() {
     return { ...item, actions, sr_no, status, category, subCategory };
   });
 
+  const dialogContent = getDialogContent(
+    confirmAlert.action,
+    confirmAlert.selectedProduct
+  );
+
+  /*
+    Handlers & Callback Actions
+   */
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -108,10 +103,31 @@ export function useProductManagement() {
     }
   };
 
-  const dialogContent = getDialogContent(
-    confirmAlert.action,
-    confirmAlert.selectedProduct
-  );
+  /*
+    Formatting & Utility Helpers
+   */
+  function getCategoryLabel(catValue) {
+    const found = dropDownOptions.productMgmt.category.find(
+      (opt) => opt.value === catValue
+    );
+    return found ? found.label : catValue;
+  }
+
+  function getSubCategoryLabel(catValue, subCatValue) {
+    if (catValue && dropDownOptions.productMgmt.subCategory[catValue]) {
+      const found = dropDownOptions.productMgmt.subCategory[catValue].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    for (const cat of Object.keys(dropDownOptions.productMgmt.subCategory)) {
+      const found = dropDownOptions.productMgmt.subCategory[cat].find(
+        (opt) => opt.value === subCatValue
+      );
+      if (found) return found.label;
+    }
+    return subCatValue;
+  }
 
   return {
     page,

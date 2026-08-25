@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Button,
   Card,
   Divider,
   Grid,
@@ -9,6 +8,7 @@ import {
   Typography,
   Avatar,
 } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 import { LocalShipping, Done, Replay, Cancel } from "@mui/icons-material";
 
 import { PageHeader } from "../../../sharedComponents";
@@ -68,17 +68,39 @@ const actionMap = {
 };
 
 function OrderDetails() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Theme & Layout
+     */
     orderId,
+
+    /*
+      Computed API Data & Memos
+     */
     order,
-    isFetching,
-    isUpdatingStatus,
     actions,
     deliveryAddress,
-    handleStatusUpdate,
     visualizeOrderSummary,
     visualizeTimeline,
     visualizePriceSummary,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isFetching,
+    isUpdatingStatus,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleStatusUpdate,
+
+    /*
+      Presentation Helpers
+     */
     formatAmount,
   } = useOrderDetails();
 

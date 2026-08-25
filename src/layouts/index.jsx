@@ -9,6 +9,7 @@ import { useCookies } from "OdBitesMfUI/hooks";
 import { LogoutModal } from "../view/profile/components";
 import SignIn from "../view/auth/pages/SignIn";
 import { useGetProfileDetailsQuery } from "../store/rtkServices";
+import { OrderQueueNotifier } from "../sharedComponents";
 
 function Layout() {
   const { getCookie } = useCookies();
@@ -32,6 +33,7 @@ function Layout() {
           >
             <Outlet />
           </AdminLayout>
+          <OrderQueueNotifier />
         </Suspense>
       ) : (
         <SignIn />

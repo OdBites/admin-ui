@@ -17,6 +17,9 @@ import { handleMutation, toaster } from "../../../utility";
 import { dropDownOptions } from "../../../constant";
 
 export function useAddEditProduct() {
+  /*
+    Hooks & Theme Configuration
+   */
   const location = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,21 +28,29 @@ export function useAddEditProduct() {
   const { editableProductData = {} } = state || {};
   const isEditMode = pathname.includes("edit");
 
-  // // local state
+  /*
+    Local State Declarations
+   */
   const [activeStep, setActiveStep] = useState(0);
 
-  // // RTK Query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data: fetchedData, isLoading: isFetchingProduct } =
     useGetProductByIdQuery(id, {
       skip: !isEditMode,
     });
-  const productDetails = editableProductData?.name
-    ? editableProductData
-    : fetchedData?.product;
 
   const [createProduct, { isFetching }] = useCreateProductMutation();
   const [updateProduct, { isFetching: isUpdating }] =
     useUpdateProductMutation();
+
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const productDetails = editableProductData?.name
+    ? editableProductData
+    : fetchedData?.product;
 
   const stepsConfig = [
     {
@@ -99,6 +110,9 @@ export function useAddEditProduct() {
     ? dropDownOptions.productMgmt.subCategory[selectedCategory] || []
     : [];
 
+  /*
+    Lifecycles & Side Effects (useEffect)
+   */
   useEffect(() => {
     const currentSubCategory = getValues("subCategory");
     const validOptions = selectedCategory
@@ -112,6 +126,9 @@ export function useAddEditProduct() {
     }
   }, [selectedCategory, setValue, getValues]);
 
+  /*
+    Handlers & Callback Actions
+   */
   const onNext = async () => {
     const currentStep = stepsConfig[activeStep];
     const formValues = getValues();
@@ -190,7 +207,6 @@ export function useAddEditProduct() {
       }
     });
 
-    // API logic here
     if (isEditMode) {
       await handleMutation({
         mutationFn: updateProduct,

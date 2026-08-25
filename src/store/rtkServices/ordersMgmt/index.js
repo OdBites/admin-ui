@@ -49,10 +49,10 @@ export const ordersService = createApi({
     }),
 
     updateOrderStatus: builder.mutation({
-      query: ({ id, status }) => ({
+      query: ({ id, status, reason }) => ({
         url: adminApiEndpoints.orderStatus(id),
         method: "PATCH",
-        body: { status },
+        body: { status, reason },
       }),
       invalidatesTags: (result, error, { id }) => [
         { type: "Order", id },

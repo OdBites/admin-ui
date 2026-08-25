@@ -8,9 +8,11 @@ import { TableAction } from "../../../sharedComponents";
 import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function usePaymentManagement() {
-  // local State
+  /*
+    Local State Declarations
+   */
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
 
@@ -25,7 +27,9 @@ export function usePaymentManagement() {
     }
   );
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data, isFetching } = useGetPaymentsQuery({
     search,
     sort,
@@ -33,11 +37,15 @@ export function usePaymentManagement() {
     limit: rowsPerPage,
     ...filters,
   });
-  const { data: paymentsData = [], total } = data || {};
+
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportPaymentsQuery();
 
-  // insert data
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const { data: paymentsData = [], total } = data || {};
+
   const rows = paymentsData?.map((item, index) => {
     const actions = <TableAction view={`/payment-management/${item._id}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
@@ -45,6 +53,9 @@ export function usePaymentManagement() {
     return { ...item, actions, sr_no, status };
   });
 
+  /*
+    Handlers & Callback Actions
+   */
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));

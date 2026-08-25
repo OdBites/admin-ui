@@ -9,7 +9,9 @@ import { TableAction } from "../../../sharedComponents";
 import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function useUserManagement() {
-  // local hooks
+  /*
+    Hooks & Theme Configuration
+   */
   const {
     confirmAlert,
     setConfirmAlert,
@@ -18,9 +20,11 @@ export function useUserManagement() {
     handleConfirm,
   } = useUserMgmtConfirmationAlert();
 
-  // local State
+  /*
+    Local State Declarations
+   */
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("");
   const [addEditUserModal, setAddEditUserModal] = useState({
@@ -41,7 +45,9 @@ export function useUserManagement() {
     }
   );
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data, isLoading } = useGetUsersQuery({
     search,
     sort,
@@ -49,11 +55,15 @@ export function useUserManagement() {
     limit: rowsPerPage,
     ...filters,
   });
-  const { data: usersData = [], total } = data || {};
+
   const [triggerExport, { isFetching: isExporting }] =
     useLazyExportUsersQuery();
 
-  // insert data
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
+  const { data: usersData = [], total } = data || {};
+
   const rows = usersData?.map((item, index) => {
     const actions = (
       <TableAction
@@ -87,6 +97,14 @@ export function useUserManagement() {
     return { ...item, actions, sr_no, name, status, createdBy };
   });
 
+  const dialogContent = getDialogContent(
+    confirmAlert.action,
+    confirmAlert.selectedUser
+  );
+
+  /*
+    Handlers & Callback Actions
+   */
   const handleChangePage = (_, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) =>
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -100,11 +118,6 @@ export function useUserManagement() {
       // Errors are handled globally
     }
   };
-
-  const dialogContent = getDialogContent(
-    confirmAlert.action,
-    confirmAlert.selectedUser
-  );
 
   return {
     page,

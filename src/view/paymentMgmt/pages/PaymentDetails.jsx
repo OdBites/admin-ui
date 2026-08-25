@@ -5,8 +5,18 @@ import { PageHeader } from "../../../sharedComponents";
 import { usePaymentDetails } from "../hooks";
 
 function PaymentDetails() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Theme & Layout
+     */
     paymentId,
+
+    /*
+      Computed API Data & Memos
+     */
     visualizePaymentDetails,
     visualizeCustomerDetails,
     visualizeRefundDetails,

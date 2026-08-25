@@ -13,11 +13,19 @@ const signInSchema = z.object({
 });
 
 export function useSignIn() {
+  /*
+    Hooks & Theme Configuration
+   */
   const dispatch = useDispatch();
 
-  // // RTK state
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const [adminSignIn] = useAdminSignInMutation();
 
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const {
     control,
     handleSubmit,
@@ -30,6 +38,9 @@ export function useSignIn() {
     },
   });
 
+  /*
+    Handlers & Callback Actions
+   */
   const onSubmit = async (userData) => {
     await handleMutation({
       mutationFn: adminSignIn,

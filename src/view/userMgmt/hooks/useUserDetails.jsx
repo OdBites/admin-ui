@@ -9,21 +9,34 @@ import { handleMutation, toaster } from "../../../utility";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 
 export function useUserDetails() {
+  /*
+    Hooks & Theme Configuration
+   */
   const { id } = useParams();
-  const { data: userDetails = {}, isFetching } = useGetUserByIdQuery(id);
-  const [updateProfilePicture, { isLoading: isUpdatingPhoto }] =
-    useUpdateProfilePictureMutation();
 
+  /*
+    Local State Declarations
+   */
   const [addEditUserModal, setAddEditUserModal] = useState({
     open: false,
     selectedUser: null,
     action: "",
   });
 
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
+  const { data: userDetails = {}, isFetching } = useGetUserByIdQuery(id);
+  const [updateProfilePicture, { isLoading: isUpdatingPhoto }] =
+    useUpdateProfilePictureMutation();
+
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const visualizeFormatUserDetails = {
     "First Name": userDetails?.firstName,
     "Last Name": userDetails?.lastName,
-    Status: <StatusChip status={userDetails?.status} variant="outlined" />,
+    Status: <StatusChip status={userDetails?.status} />,
     "Created At": userDetails?.createdAt,
     "Updated At": userDetails?.updatedAt,
     "Created By": userDetails?.createdBy
@@ -38,6 +51,9 @@ export function useUserDetails() {
     ? `${VITE_APP_ASSETS_PATH}${userDetails?.folderLocation}/${userDetails?.photo}`
     : "/static/images/avatar/1.jpg";
 
+  /*
+    Handlers & Callback Actions
+   */
   const handleProfilePictureSave = async (file) => {
     const formData = new FormData();
     formData.append("profilePicture", file);

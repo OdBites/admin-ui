@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Card } from "@mui/material";
+import { Card } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 
 // // static import
 import {
@@ -14,7 +15,13 @@ import AddEditUserModal from "../components/AddEditUserModal";
 import { useUserManagement } from "../hooks";
 
 function UserManagement() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Local State Accessors & Mutators
+     */
     page,
     rowsPerPage,
     setSearch,
@@ -23,14 +30,26 @@ function UserManagement() {
     setFilters,
     addEditUserModal,
     setAddEditUserModal,
-    isLoading,
-    total,
-    rows,
-    isExporting,
     confirmAlert,
     setConfirmAlert,
-    handleConfirm,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isLoading,
+    isExporting,
+
+    /*
+      Computed API Data & Memos
+     */
+    total,
+    rows,
     dialogContent,
+
+    /*
+      Event Handler Callbacks
+     */
+    handleConfirm,
     handleChangePage,
     handleChangeRowsPerPage,
     handleExport,

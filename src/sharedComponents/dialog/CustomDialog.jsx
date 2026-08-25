@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -8,6 +7,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
+import { Button } from "OdBitesMfUI/sharedComp";
 import { Close } from "@mui/icons-material";
 import PropTypes from "prop-types";
 

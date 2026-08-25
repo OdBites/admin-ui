@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Button,
   Card,
   Chip,
   Divider,
@@ -11,22 +10,44 @@ import {
 } from "@mui/material";
 import { DriveFileRenameOutline, LocationOn } from "@mui/icons-material";
 
-import { AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { Button, AvatarUpload } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import AddEditUserModal from "../components/AddEditUserModal";
 import { useUserDetails } from "../hooks";
 
 function UserDetails() {
+  /*
+    Hook Configuration & Destructuring
+   */
   const {
+    /*
+      Theme & Layout
+     */
     id,
-    userDetails,
-    isFetching,
-    isUpdatingPhoto,
+
+    /*
+      Local State Accessors & Mutators
+     */
     addEditUserModal,
     setAddEditUserModal,
+
+    /*
+      RTK Query API State Indicators
+     */
+    isFetching,
+    isUpdatingPhoto,
+
+    /*
+      Computed API Data & Memos
+     */
+    userDetails,
     visualizeFormatUserDetails,
     avatarSrc,
+
+    /*
+      Event Handler Callbacks
+     */
     handleProfilePictureSave,
   } = useUserDetails();
 

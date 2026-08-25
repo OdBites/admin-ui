@@ -5,20 +5,48 @@ import { dropDownOptions } from "../../../constant";
 import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function useProductDetails() {
+  /*
+    Hooks & Theme Configuration
+   */
   const { id } = useParams();
 
-  // // rtk query
+  /*
+    Redux API Queries & Mutations (RTK Query)
+   */
   const { data, isLoading } = useGetProductByIdQuery(id);
+
+  /*
+    Computed Values & Memos (State Aggregates)
+   */
   const { product: productDetailsData = {}, folderLocation = "" } = data || {};
 
-  const getCategoryLabel = (catValue) => {
+  const visualizeFormatDishDetails = {
+    "Dish Code": productDetailsData?.sku,
+    Category: getCategoryLabel(productDetailsData?.category),
+    "Cuisine Type": getSubCategoryLabel(
+      productDetailsData?.category,
+      productDetailsData?.subCategory
+    ),
+    Price: `₹${productDetailsData?.price}`,
+    Discount: `₹${productDetailsData?.discountPrice}`,
+    Stock: productDetailsData?.stock,
+    Status: <StatusChip status={productDetailsData?.status} />,
+    Rating: productDetailsData?.rating,
+    Created: productDetailsData?.createdAt,
+    Updated: productDetailsData?.updatedAt,
+  };
+
+  /*
+    Formatting & Utility Helpers
+   */
+  function getCategoryLabel(catValue) {
     const found = dropDownOptions.productMgmt.category.find(
       (opt) => opt.value === catValue
     );
     return found ? found.label : catValue;
-  };
+  }
 
-  const getSubCategoryLabel = (catValue, subCatValue) => {
+  function getSubCategoryLabel(catValue, subCatValue) {
     if (catValue && dropDownOptions.productMgmt.subCategory[catValue]) {
       const found = dropDownOptions.productMgmt.subCategory[catValue].find(
         (opt) => opt.value === subCatValue
@@ -32,25 +60,7 @@ export function useProductDetails() {
       if (found) return found.label;
     }
     return subCatValue;
-  };
-
-  const visualizeFormatDishDetails = {
-    "Dish Code": productDetailsData?.sku,
-    Category: getCategoryLabel(productDetailsData?.category),
-    "Cuisine Type": getSubCategoryLabel(
-      productDetailsData?.category,
-      productDetailsData?.subCategory
-    ),
-    Price: `₹${productDetailsData?.price}`,
-    Discount: `₹${productDetailsData?.discountPrice}`,
-    Stock: productDetailsData?.stock,
-    Status: (
-      <StatusChip status={productDetailsData?.status} variant="outlined" />
-    ),
-    Rating: productDetailsData?.rating,
-    Created: productDetailsData?.createdAt,
-    Updated: productDetailsData?.updatedAt,
-  };
+  }
 
   return {
     id,
