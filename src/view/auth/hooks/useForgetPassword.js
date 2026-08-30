@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -11,6 +12,12 @@ const forgotPasswordSchema = z.object({
 
 export function useForgetPassword() {
   /*
+    Local State Declarations
+   */
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+
+  /*
     Redux API Queries & Mutations (RTK Query)
    */
   const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
@@ -21,6 +28,7 @@ export function useForgetPassword() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { isSubmitting },
   } = useFormWithReinitialize({
     resolver: zodResolver(forgotPasswordSchema),
@@ -37,14 +45,27 @@ export function useForgetPassword() {
       mutationFn: forgotPassword,
       payload,
       onSuccess: (data) => {
-        toaster.success(data?.message || "Reset link request submitted");
+        setSubmittedEmail(payload.email);
+        setIsSubmitted(true);
+        toaster.success(
+          data?.message || "Password reset instructions have been sent."
+        );
+        reset();
       },
     });
   };
 
+  const handleResetForm = () => {
+    setIsSubmitted(false);
+    setSubmittedEmail("");
+  };
+
   return {
     control,
+    isSubmitted,
+    submittedEmail,
     isLoading: isSubmitting || isLoading,
     handleSubmit: handleSubmit(onSubmit),
+    handleResetForm,
   };
 }

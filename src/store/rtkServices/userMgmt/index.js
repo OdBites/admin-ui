@@ -33,7 +33,7 @@ export const userService = createApi({
         if (toDate) params.append("toDate", toDate);
 
         return {
-          url: `${adminApiEndpoints.users}?${params.toString()}`,
+          url: `${adminApiEndpoints.users.base}?${params.toString()}`,
           method: "GET",
         };
       },
@@ -43,7 +43,7 @@ export const userService = createApi({
 
     getUserById: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.user(id),
+        url: adminApiEndpoints.users.user(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -52,7 +52,7 @@ export const userService = createApi({
 
     createUser: builder.mutation({
       query: (payload) => ({
-        url: adminApiEndpoints.users,
+        url: adminApiEndpoints.users.base,
         method: "POST",
         body: payload,
       }),
@@ -61,7 +61,7 @@ export const userService = createApi({
 
     updateUser: builder.mutation({
       query: ({ id, payload }) => ({
-        url: adminApiEndpoints.user(id),
+        url: adminApiEndpoints.users.user(id),
         method: "PUT",
         body: payload,
       }),
@@ -73,7 +73,7 @@ export const userService = createApi({
 
     toggleUserStatus: builder.mutation({
       query: ({ id, status }) => ({
-        url: adminApiEndpoints.userStatus(id),
+        url: adminApiEndpoints.users.status(id),
         method: "PATCH",
         body: { status },
       }),
@@ -85,7 +85,7 @@ export const userService = createApi({
 
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: adminApiEndpoints.user(id),
+        url: adminApiEndpoints.users.user(id),
         method: "DELETE",
       }),
       invalidatesTags: ["User"],
@@ -93,7 +93,7 @@ export const userService = createApi({
 
     updateProfilePicture: builder.mutation({
       query: ({ id, formData }) => ({
-        url: adminApiEndpoints.userProfilePicture(id),
+        url: adminApiEndpoints.users.profilePicture(id),
         method: "PATCH",
         body: formData,
       }),
@@ -102,7 +102,7 @@ export const userService = createApi({
 
     getProfilePicture: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.userProfilePicture(id),
+        url: adminApiEndpoints.users.profilePicture(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -131,7 +131,7 @@ export const userService = createApi({
         if (toDate) params.append("toDate", toDate);
 
         return {
-          url: `${adminApiEndpoints.users}/export?${params.toString()}`,
+          url: `${adminApiEndpoints.users.export}?${params.toString()}`,
           method: "GET",
           responseHandler: (response) => response.blob(),
         };

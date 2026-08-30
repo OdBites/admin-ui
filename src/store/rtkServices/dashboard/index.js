@@ -8,7 +8,7 @@ export const dashboardService = createApi({
   endpoints: (builder) => ({
     fetchDashboardData: builder.query({
       query: () => ({
-        url: adminApiEndpoints.dashboard,
+        url: adminApiEndpoints.dashboard.base,
         method: "GET",
       }),
       transformResponse: (response) => response.data,

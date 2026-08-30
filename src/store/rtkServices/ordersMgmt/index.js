@@ -31,7 +31,7 @@ export const ordersService = createApi({
         if (toDate) params.set("toDate", toDate);
 
         return {
-          url: `${adminApiEndpoints.orders}?${params.toString()}`,
+          url: `${adminApiEndpoints.orders.base}?${params.toString()}`,
           method: "GET",
         };
       },
@@ -41,7 +41,7 @@ export const ordersService = createApi({
 
     getOrderById: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.order(id),
+        url: adminApiEndpoints.orders.order(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -50,7 +50,7 @@ export const ordersService = createApi({
 
     updateOrderStatus: builder.mutation({
       query: ({ id, status, reason }) => ({
-        url: adminApiEndpoints.orderStatus(id),
+        url: adminApiEndpoints.orders.status(id),
         method: "PATCH",
         body: { status, reason },
       }),
@@ -79,7 +79,7 @@ export const ordersService = createApi({
         if (fromDate) params.append("fromDate", fromDate);
         if (toDate) params.append("toDate", toDate);
         return {
-          url: `${adminApiEndpoints.orders}/export?${params.toString()}`,
+          url: `${adminApiEndpoints.orders.export}?${params.toString()}`,
           method: "GET",
           responseHandler: (response) => response.blob(),
         };

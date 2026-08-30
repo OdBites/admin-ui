@@ -35,7 +35,7 @@ export const paymentsService = createApi({
         if (toDate) params.set("toDate", toDate);
 
         return {
-          url: `${adminApiEndpoints.payments}?${params.toString()}`,
+          url: `${adminApiEndpoints.payments.base}?${params.toString()}`,
           method: "GET",
         };
       },
@@ -44,7 +44,7 @@ export const paymentsService = createApi({
 
     getPaymentById: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.payment(id),
+        url: adminApiEndpoints.payments.payment(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -69,7 +69,7 @@ export const paymentsService = createApi({
         if (fromDate) params.append("fromDate", fromDate);
         if (toDate) params.append("toDate", toDate);
         return {
-          url: `${adminApiEndpoints.payments}/export?${params.toString()}`,
+          url: `${adminApiEndpoints.payments.export}?${params.toString()}`,
           method: "GET",
           responseHandler: (response) => response.blob(),
         };

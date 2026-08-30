@@ -1,34 +1,30 @@
-import React, { Suspense, useState } from "react";
+import React, { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 import packageJson from "../../package.json";
 
-// // mf import
 import { AdminLayout } from "OdBitesMfUI/layouts";
 import { useCookies } from "OdBitesMfUI/hooks";
 
-import { LogoutModal } from "../view/profile/components";
-import SignIn from "../view/auth/pages/SignIn";
-import { useGetProfileDetailsQuery } from "../store/rtkServices";
 import { OrderQueueNotifier } from "../sharedComponents";
+import SignIn from "../view/auth/pages/SignIn";
+
+import { useGetProfileDetailsQuery } from "../store/rtkServices";
 
 function Layout() {
   const { getCookie } = useCookies();
-  let isAuthenticated = !!getCookie("admin_auth_token");
+  const isAuthenticated = !!getCookie("admin_auth_token");
   const userId = getCookie("admin_id");
 
-  // // rtk query
-  const { data: profileDetails = {}, isFetching } = isAuthenticated
+  const { data: profileDetails = {} } = isAuthenticated
     ? useGetProfileDetailsQuery(userId)
     : { data: {} };
 
-  const [logoutModal, setLogoutModal] = useState({ open: false });
   return (
     <>
       {isAuthenticated ? (
         <Suspense fallback={<div>Loading...</div>}>
           <AdminLayout
             version={packageJson.version}
-            openLogoutDialog={() => setLogoutModal({ open: true })}
             profileData={profileDetails}
           >
             <Outlet />
@@ -38,7 +34,6 @@ function Layout() {
       ) : (
         <SignIn />
       )}
-      <LogoutModal logoutModal={logoutModal} setLogoutModal={setLogoutModal} />
     </>
   );
 }

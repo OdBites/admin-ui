@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Box, Container, Typography, Stack, Link } from "@mui/material";
+import { Avatar, Box, Container, Link, Stack, Typography } from "@mui/material";
+import { MarkEmailReadTwoTone } from "@mui/icons-material";
 
 import { Button, FormInput } from "OdBitesMfUI/sharedComp";
 
@@ -15,6 +16,8 @@ function ForgotPassword() {
       Computed API Data & Memos
      */
     control,
+    isSubmitted,
+    submittedEmail,
 
     /*
       RTK Query API State Indicators
@@ -25,6 +28,7 @@ function ForgotPassword() {
       Event Handler Callbacks
      */
     handleSubmit,
+    handleResetForm,
   } = useForgetPassword();
 
   return (
@@ -47,56 +51,118 @@ function ForgotPassword() {
             backgroundColor: "background.paper",
           }}
         >
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            textAlign="center"
-            gutterBottom
-          >
-            Forgot Password
-          </Typography>
-
-          <Typography
-            variant="body2"
-            textAlign="center"
-            mb={3}
-            color="text.secondary"
-          >
-            Enter your email address and we’ll send you a link to reset your
-            password.
-          </Typography>
-
-          <form onSubmit={handleSubmit} noValidate>
-            <Stack spacing={2}>
-              <FormInput
-                name="email"
-                control={control}
-                label="Email Address"
-                inputType="email"
-                required
-              />
-
-              <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                disabled={isLoading}
+          {isSubmitted ? (
+            <Stack spacing={3} alignItems="center" textAlign="center">
+              <Avatar
+                sx={{
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(25, 118, 210, 0.25)"
+                      : "rgba(25, 118, 210, 0.12)",
+                  color: "primary.main",
+                  border: "2px solid",
+                  borderColor: "primary.main",
+                  width: 68,
+                  height: 68,
+                  boxShadow: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "0 0 24px rgba(25, 118, 210, 0.35)"
+                      : "0 0 16px rgba(25, 118, 210, 0.2)",
+                }}
               >
-                {isLoading ? "Sending..." : "Send Reset Link"}
-              </Button>
+                <MarkEmailReadTwoTone sx={{ fontSize: 38 }} />
+              </Avatar>
 
-              <Box textAlign="center">
-                <Link
+              <Box>
+                <Typography variant="h4" fontWeight={700} gutterBottom>
+                  Check Your Email
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  We have sent password reset instructions to:
+                </Typography>
+                <Typography
+                  variant="body1"
+                  fontWeight={600}
+                  color="primary.main"
+                  sx={{ mt: 0.5 }}
+                >
+                  {submittedEmail}
+                </Typography>
+              </Box>
+
+              <Typography variant="caption" color="text.disabled">
+                Didn't receive the email? Check your spam folder or try another
+                email address.
+              </Typography>
+
+              <Stack direction="row" spacing={2} width="100%">
+                <Button variant="outlined" fullWidth onClick={handleResetForm}>
+                  Try Another Email
+                </Button>
+                <Button
                   component={NavLink}
                   to="/signin"
-                  variant="body2"
-                  underline="hover"
+                  variant="contained"
+                  fullWidth
                 >
-                  Back to Login
-                </Link>
-              </Box>
+                  Back to Sign In
+                </Button>
+              </Stack>
             </Stack>
-          </form>
+          ) : (
+            <>
+              <Typography
+                variant="h4"
+                fontWeight={700}
+                textAlign="center"
+                gutterBottom
+              >
+                Forgot Password
+              </Typography>
+
+              <Typography
+                variant="body2"
+                textAlign="center"
+                mb={3}
+                color="text.secondary"
+              >
+                Enter your email address and we’ll send you a link to reset your
+                password.
+              </Typography>
+
+              <form onSubmit={handleSubmit} noValidate>
+                <Stack spacing={2}>
+                  <FormInput
+                    name="email"
+                    control={control}
+                    label="Email Address"
+                    inputType="email"
+                    required
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Sending..." : "Send Reset Link"}
+                  </Button>
+
+                  <Box textAlign="center">
+                    <Link
+                      component={NavLink}
+                      to="/signin"
+                      variant="body2"
+                      underline="hover"
+                    >
+                      Back to Login
+                    </Link>
+                  </Box>
+                </Stack>
+              </form>
+            </>
+          )}
         </Box>
       </Container>
     </Box>

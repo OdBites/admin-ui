@@ -22,6 +22,14 @@ export const authService = createApi({
       }),
     }),
 
+    resetPassword: builder.mutation({
+      query: (payload) => ({
+        url: adminApiEndpoints.auth.resetPassword,
+        method: "POST",
+        body: payload,
+      }),
+    }),
+
     changePassword: builder.mutation({
       query: (passwordData) => ({
         url: adminApiEndpoints.auth.changePassword,
@@ -35,5 +43,6 @@ export const authService = createApi({
 export const {
   useAdminSignInMutation,
   useForgotPasswordMutation,
+  useResetPasswordMutation,
   useChangePasswordMutation,
 } = authService;

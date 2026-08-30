@@ -7,7 +7,6 @@ export const productService = createApi({
   baseQuery: axiosBaseQuery(),
   tagTypes: ["Product"],
   endpoints: (builder) => ({
-    // GET /api/admin/products
     getProducts: builder.query({
       query: ({
         page = 1,
@@ -33,7 +32,7 @@ export const productService = createApi({
         if (fromDate) params.append("fromDate", fromDate);
         if (toDate) params.append("toDate", toDate);
         return {
-          url: `${adminApiEndpoints.products}?${params.toString()}`,
+          url: `${adminApiEndpoints.products.base}?${params.toString()}`,
           method: "GET",
         };
       },
@@ -41,32 +40,27 @@ export const productService = createApi({
       transformResponse: (response) => response,
     }),
 
-    // GET /api/admin/products/:id
     getProductById: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.product(id),
+        url: adminApiEndpoints.products.product(id),
         method: "GET",
       }),
       transformResponse: (response) => response.data,
       providesTags: (result, error, id) => [{ type: "Product", id }],
     }),
 
-    // POST /api/admin/products
     createProduct: builder.mutation({
-      query: (formData) => {
-        return {
-          url: adminApiEndpoints.products,
-          method: "POST",
-          body: formData,
-        };
-      },
+      query: (formData) => ({
+        url: adminApiEndpoints.products.base,
+        method: "POST",
+        body: formData,
+      }),
       invalidatesTags: ["Product"],
     }),
 
-    // PUT /api/admin/products/:id
     updateProduct: builder.mutation({
       query: ({ id, formData }) => ({
-        url: adminApiEndpoints.product(id),
+        url: adminApiEndpoints.products.product(id),
         method: "PUT",
         body: formData,
       }),
@@ -76,19 +70,17 @@ export const productService = createApi({
       ],
     }),
 
-    // DELETE /api/admin/products/:id
     deleteProduct: builder.mutation({
       query: (id) => ({
-        url: adminApiEndpoints.product(id),
+        url: adminApiEndpoints.products.product(id),
         method: "DELETE",
       }),
       invalidatesTags: ["Product"],
     }),
 
-    // PATCH /api/admin/products/:id/toggle-status
     toggleProductStatus: builder.mutation({
       query: (id) => ({
-        url: adminApiEndpoints.productToggleStatus(id),
+        url: adminApiEndpoints.products.toggleStatus(id),
         method: "PATCH",
       }),
       invalidatesTags: (result, error, id) => [
@@ -118,7 +110,7 @@ export const productService = createApi({
         if (fromDate) params.append("fromDate", fromDate);
         if (toDate) params.append("toDate", toDate);
         return {
-          url: `${adminApiEndpoints.products}/export?${params.toString()}`,
+          url: `${adminApiEndpoints.products.export}?${params.toString()}`,
           method: "GET",
           responseHandler: (response) => response.blob(),
         };

@@ -9,7 +9,7 @@ export const profileService = createApi({
   endpoints: (builder) => ({
     getProfileDetails: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.profile(id),
+        url: adminApiEndpoints.profile.base(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -18,7 +18,7 @@ export const profileService = createApi({
 
     updateProfileDetails: builder.mutation({
       query: ({ id, updatedData }) => ({
-        url: adminApiEndpoints.profile(id),
+        url: adminApiEndpoints.profile.base(id),
         method: "PUT",
         body: updatedData,
       }),
@@ -32,7 +32,7 @@ export const profileService = createApi({
 
     getProfilePhoto: builder.query({
       query: (id) => ({
-        url: adminApiEndpoints.profilePhoto(id),
+        url: adminApiEndpoints.profile.photo(id),
         method: "GET",
       }),
       transformResponse: (response) => response?.data ?? {},
@@ -41,7 +41,7 @@ export const profileService = createApi({
 
     updateProfilePhoto: builder.mutation({
       query: ({ id, imgData }) => ({
-        url: adminApiEndpoints.profilePhoto(id),
+        url: adminApiEndpoints.profile.photo(id),
         method: "PUT",
         body: imgData,
       }),

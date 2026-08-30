@@ -113,6 +113,14 @@ export const guestRoutes = [
     ),
   },
   {
+    path: "/reset-password",
+    name: "ResetPassword",
+    exact: true,
+    component: RestrictedToGuests(
+      React.lazy(() => import("../view/auth/pages/ResetPassword"))
+    ),
+  },
+  {
     redirectRoute: true,
     name: "ForgotPassword",
     path: "/forgot-password",
