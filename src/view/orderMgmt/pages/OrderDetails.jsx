@@ -1,17 +1,19 @@
 import React from "react";
 import {
+  Avatar,
   Box,
   Card,
   Divider,
   Grid,
   Stack,
   Typography,
-  Avatar,
 } from "@mui/material";
+import { Cancel, Done, LocalShipping, Replay } from "@mui/icons-material";
+
 import { Button } from "OdBitesMfUI/sharedComp";
-import { LocalShipping, Done, Replay, Cancel } from "@mui/icons-material";
 
 import { PageHeader } from "../../../sharedComponents";
+
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 import { useOrderDetails } from "../hooks";
 

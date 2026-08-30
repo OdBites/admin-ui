@@ -1,21 +1,20 @@
 import React, { memo } from "react";
-import PropTypes from "prop-types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import PropTypes from "prop-types";
 
-// // MfUI components
 import { FormInput } from "OdBitesMfUI/sharedComp";
 
-// // Custom components or static import
 import { CustomDialog } from "../../../sharedComponents/dialog";
-import { useFormWithReinitialize } from "../../../hooks";
-import { createUserSchema, editUserSchema } from "../validation";
+
 import {
   useCreateUserMutation,
   useUpdateUserMutation,
 } from "../../../store/rtkServices/userMgmt";
-import { handleMutation, toaster } from "../../../utility";
+import { createUserSchema, editUserSchema } from "../validation";
 import { dropDownOptions } from "../../../constant";
+import { handleMutation, toaster } from "../../../utility";
+import { useFormWithReinitialize } from "../../../hooks";
 
 function AddEditUserModal({ addEditUserModal, setAddEditUserModal }) {
   const navigate = useNavigate();

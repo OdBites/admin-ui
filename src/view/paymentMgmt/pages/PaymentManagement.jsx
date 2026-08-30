@@ -6,8 +6,9 @@ import {
   PageHeader,
   TableActionHeader,
 } from "../../../sharedComponents";
-import FilterModal from "../components/FilterModal";
-import { tableColumns, dropDownOptions } from "../../../constant";
+import { FilterModal } from "../components";
+
+import { dropDownOptions, tableColumns } from "../../../constant";
 import { usePaymentManagement } from "../hooks";
 
 function PaymentManagement() {

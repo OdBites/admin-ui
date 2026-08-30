@@ -1,17 +1,17 @@
 import React from "react";
 import { Card } from "@mui/material";
+
 import { Button } from "OdBitesMfUI/sharedComp";
 
-// // static import
 import {
   DataTable,
   PageHeader,
   TableActionHeader,
 } from "../../../sharedComponents";
-import { tableColumns, dropDownOptions } from "../../../constant";
 import { CustomAlertDialog } from "../../../sharedComponents/dialog";
-import FilterModal from "../components/FilterModal";
-import AddEditUserModal from "../components/AddEditUserModal";
+import { AddEditUserModal, FilterModal } from "../components";
+
+import { tableColumns, dropDownOptions } from "../../../constant";
 import { useUserManagement } from "../hooks";
 
 function UserManagement() {

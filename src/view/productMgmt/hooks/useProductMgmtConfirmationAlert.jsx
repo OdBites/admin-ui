@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Stack, Typography } from "@mui/material";
+
 import {
   useDeleteProductMutation,
   useToggleProductStatusMutation,
@@ -13,7 +14,7 @@ export function useProductMgmtConfirmationAlert() {
     selectedProduct: null,
   });
 
-  // // RTK Query
+  // RTK Query
   const [activeInActiveProduct] = useToggleProductStatusMutation();
   const [deleteProduct] = useDeleteProductMutation();
 

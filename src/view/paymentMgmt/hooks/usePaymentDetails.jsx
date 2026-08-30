@@ -1,7 +1,9 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt";
+
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+
+import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt";
 
 export function usePaymentDetails() {
   /*

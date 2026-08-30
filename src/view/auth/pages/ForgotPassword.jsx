@@ -1,6 +1,7 @@
 import React from "react";
-import { Box, Container, Typography, Stack, Link } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { Box, Container, Typography, Stack, Link } from "@mui/material";
+
 import { Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { useForgetPassword } from "../hooks";

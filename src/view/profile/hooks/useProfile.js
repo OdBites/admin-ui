@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { cookies } from "OdBitesMfUI/utility";
-import { useFormWithReinitialize } from "../../../hooks";
-import { profileSchema } from "../validation";
+
 import {
   useGetProfileDetailsQuery,
   useGetProfilePhotoQuery,
   useUpdateProfileDetailsMutation,
   useUpdateProfilePhotoMutation,
 } from "../../../store/rtkServices";
-import { handleMutation, toaster } from "../../../utility";
+import { profileSchema } from "../validation";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
+import { handleMutation, toaster } from "../../../utility";
+import { useFormWithReinitialize } from "../../../hooks";
 
 export function useProfile() {
   /*

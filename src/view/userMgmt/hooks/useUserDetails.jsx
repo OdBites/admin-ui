@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+
 import {
   useGetUserByIdQuery,
   useUpdateProfilePictureMutation,
 } from "../../../store/rtkServices/userMgmt";
-import { handleMutation, toaster } from "../../../utility";
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
+import { handleMutation, toaster } from "../../../utility";
 
 export function useUserDetails() {
   /*

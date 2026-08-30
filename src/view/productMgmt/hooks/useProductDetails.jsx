@@ -1,8 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+
+import { StatusChip } from "OdBitesMfUI/sharedComp";
+
 import { useGetProductByIdQuery } from "../../../store/rtkServices/productsMgmt";
 import { dropDownOptions } from "../../../constant";
-import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 export function useProductDetails() {
   /*

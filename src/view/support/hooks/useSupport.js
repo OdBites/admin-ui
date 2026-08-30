@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
+import { io } from "socket.io-client";
 import { useTheme, useMediaQuery } from "@mui/material";
+
+import { cookies } from "OdBitesMfUI/utility";
+
 import {
   useFetchSupportSessionsQuery,
   useFetchChatMessagesQuery,
   useSendMessageMutation,
   useResolveSessionMutation,
 } from "../../../store/rtkServices/support";
-import { io } from "socket.io-client";
-import { cookies } from "OdBitesMfUI/utility";
 import { VITE_APP_API_URL } from "../../../config/env";
 
 export function useSupport() {

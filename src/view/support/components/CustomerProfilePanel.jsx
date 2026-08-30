@@ -3,16 +3,17 @@ import { Link as RouterLink } from "react-router-dom";
 import {
   Avatar,
   Box,
-  Stack,
   Divider,
-  Typography,
   IconButton,
   Link,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { Email, Phone, Close } from "@mui/icons-material";
+import { Close, Email, Phone } from "@mui/icons-material";
+import PropTypes from "prop-types";
 
-import { Button, StatusChip } from "OdBitesMfUI/sharedComp";
 import { RenderIf } from "OdBitesMfUI/helpers";
+import { Button, StatusChip } from "OdBitesMfUI/sharedComp";
 
 export default function CustomerProfilePanel({
   theme,
@@ -288,3 +289,16 @@ export default function CustomerProfilePanel({
     </Box>
   );
 }
+
+CustomerProfilePanel.propTypes = {
+  theme: PropTypes.object.isRequired,
+  selectedCustomerSession: PropTypes.object,
+  setInfoOpen: PropTypes.func.isRequired,
+  linkedOrder: PropTypes.object,
+  linkedOrderId: PropTypes.string,
+  recentOrders: PropTypes.array.isRequired,
+  formatAmount: PropTypes.func.isRequired,
+  formatStatus: PropTypes.func.isRequired,
+  formatDate: PropTypes.func.isRequired,
+  handleSelectOrder: PropTypes.func.isRequired,
+};

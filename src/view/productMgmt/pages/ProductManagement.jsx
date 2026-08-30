@@ -1,5 +1,7 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import { Card } from "@mui/material";
+
 import { Button } from "OdBitesMfUI/sharedComp";
 
 import {
@@ -7,10 +9,10 @@ import {
   PageHeader,
   TableActionHeader,
 } from "../../../sharedComponents";
-import FilterModal from "../components/FilterModal";
 import { CustomAlertDialog } from "../../../sharedComponents/dialog";
+import { FilterModal } from "../components";
+
 import { dropDownOptions, tableColumns } from "../../../constant";
-import { NavLink } from "react-router-dom";
 import { useProductManagement } from "../hooks";
 
 function ProductManagement() {

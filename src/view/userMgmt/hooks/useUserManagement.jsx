@@ -1,12 +1,15 @@
 import React, { useReducer, useState } from "react";
-import { useUserMgmtConfirmationAlert } from "./useUserMgmtConfirmationAlert";
+
+import { StatusChip } from "OdBitesMfUI/sharedComp";
+
+import { TableAction } from "../../../sharedComponents";
+
 import {
   useGetUsersQuery,
   useLazyExportUsersQuery,
 } from "../../../store/rtkServices/userMgmt";
 import { downloadBlob, toaster } from "../../../utility";
-import { TableAction } from "../../../sharedComponents";
-import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { useUserMgmtConfirmationAlert } from "./useUserMgmtConfirmationAlert";
 
 export function useUserManagement() {
   /*

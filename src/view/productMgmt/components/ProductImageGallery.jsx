@@ -14,7 +14,6 @@ import PropTypes from "prop-types";
 
 const ProductImageGallery = ({ images = [], dirPath = "" }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (!images.length) {
@@ -181,7 +180,7 @@ const ProductImageGallery = ({ images = [], dirPath = "" }) => {
   );
 };
 
-// // props validation
+// props validation
 ProductImageGallery.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string),
   dirPath: PropTypes.string.isRequired,

@@ -1,26 +1,27 @@
 import React from "react";
 import {
-  Card,
-  Box,
-  IconButton,
   Avatar,
-  Typography,
-  Tooltip,
+  Box,
+  Card,
   CircularProgress,
-  TextField,
+  IconButton,
   Stack,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   ArrowBack,
-  InfoOutlined,
   CheckCircle,
-  SupportAgent,
-  Send,
+  InfoOutlined,
   Message,
+  Send,
+  SupportAgent,
 } from "@mui/icons-material";
+import PropTypes from "prop-types";
 
-import { Button } from "OdBitesMfUI/sharedComp";
 import { RenderIf } from "OdBitesMfUI/helpers";
+import { Button } from "OdBitesMfUI/sharedComp";
 
 const getDateLabel = (dateStr) => {
   if (!dateStr) return "";
@@ -463,3 +464,21 @@ export default function ChatWindow({
     </Card>
   );
 }
+
+ChatWindow.propTypes = {
+  theme: PropTypes.object.isRequired,
+  selectedCustomerSession: PropTypes.object,
+  setSelectedCustomerId: PropTypes.func.isRequired,
+  isMobile: PropTypes.bool,
+  infoOpen: PropTypes.bool.isRequired,
+  setInfoOpen: PropTypes.func.isRequired,
+  handleResolve: PropTypes.func.isRequired,
+  isMessagesLoading: PropTypes.bool.isRequired,
+  messages: PropTypes.array.isRequired,
+  formatTime: PropTypes.func.isRequired,
+  messagesEndRef: PropTypes.object.isRequired,
+  messageText: PropTypes.string.isRequired,
+  setMessageText: PropTypes.func.isRequired,
+  isSending: PropTypes.bool.isRequired,
+  handleSend: PropTypes.func.isRequired,
+};

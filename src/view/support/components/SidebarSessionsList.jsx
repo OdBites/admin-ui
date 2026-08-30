@@ -1,24 +1,25 @@
 import React from "react";
 import {
-  Card,
-  TextField,
-  Stack,
-  Divider,
-  Box,
-  CircularProgress,
-  List,
-  ListItemButton,
-  ListItemAvatar,
-  ListItemText,
-  Badge,
   Avatar,
-  Typography,
+  Badge,
+  Box,
+  Card,
   Chip,
+  CircularProgress,
+  Divider,
+  List,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Stack,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { Search, ShoppingBag, SupportAgent } from "@mui/icons-material";
+import PropTypes from "prop-types";
 
-import { Button } from "OdBitesMfUI/sharedComp";
 import { RenderIf } from "OdBitesMfUI/helpers";
+import { Button } from "OdBitesMfUI/sharedComp";
 
 export default function SidebarSessionsList({
   theme,
@@ -275,3 +276,16 @@ export default function SidebarSessionsList({
     </Card>
   );
 }
+
+SidebarSessionsList.propTypes = {
+  theme: PropTypes.object.isRequired,
+  searchQuery: PropTypes.string.isRequired,
+  setSearchQuery: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
+  isSessionsLoading: PropTypes.bool.isRequired,
+  filteredSessions: PropTypes.array.isRequired,
+  selectedCustomerId: PropTypes.string,
+  setSelectedCustomerId: PropTypes.func.isRequired,
+  formatTime: PropTypes.func.isRequired,
+};

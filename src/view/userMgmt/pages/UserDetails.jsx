@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import { DriveFileRenameOutline, LocationOn } from "@mui/icons-material";
 
-import { Button, AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { AvatarUpload, Button } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
-import AddEditUserModal from "../components/AddEditUserModal";
+import { AddEditUserModal } from "../components";
+
 import { useUserDetails } from "../hooks";
 
 function UserDetails() {

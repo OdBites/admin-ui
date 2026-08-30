@@ -6,7 +6,8 @@ import {
   PageHeader,
   TableActionHeader,
 } from "../../../sharedComponents";
-import FilterModal from "../components/FilterModal";
+import { FilterModal } from "../components";
+
 import { tableColumns, dropDownOptions } from "../../../constant";
 import { useOrderManagement } from "../hooks";
 

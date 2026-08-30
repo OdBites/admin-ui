@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-import { useFormWithReinitialize } from "../../../hooks";
 import { useForgotPasswordMutation } from "../../../store/rtkServices/auth";
 import { handleMutation, toaster } from "../../../utility";
+import { useFormWithReinitialize } from "../../../hooks";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Enter a valid email address"),

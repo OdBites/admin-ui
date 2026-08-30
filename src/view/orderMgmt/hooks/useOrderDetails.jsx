@@ -1,11 +1,13 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+
+import { StatusChip } from "OdBitesMfUI/sharedComp";
+
 import {
   useGetOrderByIdQuery,
   useUpdateOrderStatusMutation,
 } from "../../../store/rtkServices/ordersMgmt";
 import { handleMutation, toaster } from "../../../utility";
-import { StatusChip } from "OdBitesMfUI/sharedComp";
 
 const getAvailableActions = (status) => {
   switch (status) {

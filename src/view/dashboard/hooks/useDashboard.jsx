@@ -1,7 +1,8 @@
 import React, { useMemo } from "react";
-import { useTheme, Typography, Avatar, Box } from "@mui/material";
-import { orderColumns, userColumns } from "../../../data/dashboard";
+import { Avatar, Box, Typography, useTheme } from "@mui/material";
+
 import { useFetchDashboardDataQuery } from "../../../store/rtkServices/dashboard";
+import { orderColumns, userColumns } from "../../../data/dashboard";
 
 export function useDashboard() {
   /*

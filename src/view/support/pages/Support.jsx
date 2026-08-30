@@ -1,12 +1,14 @@
 import React from "react";
-import { Grid, Drawer } from "@mui/material";
+import { Drawer, Grid } from "@mui/material";
+
 import { PageHeader } from "../../../sharedComponents";
-import { useSupport } from "../hooks";
 import {
+  ChatWindow,
   CustomerProfilePanel,
   SidebarSessionsList,
-  ChatWindow,
 } from "../components";
+
+import { useSupport } from "../hooks";
 
 function Support() {
   const {

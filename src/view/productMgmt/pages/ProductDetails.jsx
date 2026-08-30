@@ -1,11 +1,13 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Box, Card, Divider, Grid, Stack, Typography } from "@mui/material";
-import { Button } from "OdBitesMfUI/sharedComp";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 
+import { Button } from "OdBitesMfUI/sharedComp";
+
 import { PageHeader } from "../../../sharedComponents";
-import ProductImageGallery from "../components/ProductImageGallery";
+import { ProductImageGallery } from "../components";
+
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 import { useProductDetails } from "../hooks";
 

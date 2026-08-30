@@ -1,11 +1,12 @@
 import React from "react";
 import { Box, Card, Divider, Grid, Stack, Typography } from "@mui/material";
+import { Loader } from "../../../assets";
 
-import { Button, FormInput, AvatarUpload } from "OdBitesMfUI/sharedComp";
+import { AvatarUpload, Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
 import { UpdatePasswordModal } from "../components";
-import { Loader } from "../../../assets";
+
 import { useProfile } from "../hooks";
 
 function Profile() {

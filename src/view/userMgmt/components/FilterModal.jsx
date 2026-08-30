@@ -8,7 +8,9 @@ import {
   TextField,
 } from "@mui/material";
 import PropTypes from "prop-types";
+
 import { FilterWrapper } from "OdBitesMfUI/sharedComp";
+
 import { dropDownOptions } from "../../../constant";
 
 function FilterModal({ filters, setFilters }) {

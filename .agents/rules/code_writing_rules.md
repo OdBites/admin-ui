@@ -1,7 +1,6 @@
 ---
-name: code-writing-rules
+trigger: always_on
 description: Guidelines for code structure, UI-hook separation, code splitting, and import statement ordering.
-always_on: true
 ---
 
 # Code Writing Rules
@@ -27,7 +26,7 @@ All import statements in Javascript/React files must be sorted and grouped stric
 ### Group 1: Core React & Frameworks
 
 1. **React core** imports (e.g. `import React, { useState } from "react"`)
-2. **Router & State Management** imports (e.g. `react-router-dom`, `redux`, `@reduxjs/toolkit`, RTK Query hook imports)
+2. **Router , State Management , any other libray like validation, socket or any 3rd part libray etc** imports (e.g. `react-router-dom`, `redux`, `@reduxjs/toolkit`, RTK Query hook imports)
 3. **UI Component Library** imports (e.g. `@mui/material` elements)
 4. **Icons & Assets** imports (e.g. `@mui/icons-material`)
 
@@ -47,6 +46,6 @@ _Insert exactly one blank line before the next group._
 
 ### Group 4: Logic, Utilities & Hooks
 
-7. **Redux actions / state actions** (e.g. Redux dispatch actions)
+7. **Redux actions / state actions / store** (e.g. Redux dispatch actions)
 8. **Utilities & Custom helpers** (e.g. formatters, API endpoints, configurations, custom helper functions)
 9. **Custom React hooks** (e.g. local custom hooks `useSupport`, `useCookies`, etc.)

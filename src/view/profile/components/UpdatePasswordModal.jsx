@@ -1,15 +1,17 @@
 import React, { memo } from "react";
-import PropTypes from "prop-types";
+import { useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Typography } from "@mui/material";
-import { useWatch } from "react-hook-form";
+import PropTypes from "prop-types";
 
 import { FormInput } from "OdBitesMfUI/sharedComp";
+
 import { CustomDialog } from "../../../sharedComponents/dialog";
-import { useFormWithReinitialize } from "../../../hooks";
-import { passwordSchema } from "../validation";
+
 import { useChangePasswordMutation } from "../../../store/rtkServices";
+import { passwordSchema } from "../validation";
 import { handleMutation, toaster } from "../../../utility";
+import { useFormWithReinitialize } from "../../../hooks";
 
 const passwordChecks = [
   { label: "At least 8 characters", test: (p) => p.length >= 8 },
@@ -25,7 +27,7 @@ const passwordChecks = [
 function UpdatePasswordModal({ updatePasswordModal, setUpdatePasswordModal }) {
   const { open = false } = updatePasswordModal;
 
-  // // RTK state
+  // RTK state
   const [changePassword, { isFetching }] = useChangePasswordMutation();
 
   const {
@@ -51,8 +53,6 @@ function UpdatePasswordModal({ updatePasswordModal, setUpdatePasswordModal }) {
   };
 
   const handleFormSubmit = async (passwordData) => {
-    console.log("Password updated:", passwordData);
-    // TODO: Call API to update password
     await handleMutation({
       mutationFn: changePassword,
       payload: passwordData,
