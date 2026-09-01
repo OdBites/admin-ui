@@ -14,6 +14,7 @@ import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button, StatusChip } from "OdBitesMfUI/sharedComp";
+import { getInitials } from "OdBitesMfUI/utility";
 
 export default function CustomerProfilePanel({
   theme,
@@ -30,12 +31,8 @@ export default function CustomerProfilePanel({
   const cust = selectedCustomerSession?.customer;
   if (!cust) return null;
 
-  const initials =
-    `${cust.firstName || ""}${cust.lastName || ""}`
-      .split("")
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "C";
+  const fullName = `${cust.firstName || ""} ${cust.lastName || ""}`.trim();
+  const initials = getInitials(fullName) || "C";
 
   return (
     <Box

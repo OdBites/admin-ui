@@ -20,6 +20,7 @@ import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button } from "OdBitesMfUI/sharedComp";
+import { getInitials } from "OdBitesMfUI/utility";
 
 export default function SidebarSessionsList({
   theme,
@@ -134,12 +135,9 @@ export default function SidebarSessionsList({
             {filteredSessions.map((session) => {
               const cust = session.customer;
               const isSelected = cust._id === selectedCustomerId;
-              const initials =
-                `${cust.firstName || ""}${cust.lastName || ""}`
-                  .split("")
-                  .slice(0, 2)
-                  .join("")
-                  .toUpperCase() || "C";
+              const fullName =
+                `${cust.firstName || ""} ${cust.lastName || ""}`.trim();
+              const initials = getInitials(fullName) || "C";
               const isPending = session.status === "pending";
 
               return (

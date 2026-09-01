@@ -51,7 +51,7 @@ export function useUserDetails() {
 
   const avatarSrc = userDetails?.photo
     ? `${VITE_APP_ASSETS_PATH}${userDetails?.folderLocation}/${userDetails?.photo}`
-    : "/static/images/avatar/1.jpg";
+    : "";
 
   /*
     Handlers & Callback Actions

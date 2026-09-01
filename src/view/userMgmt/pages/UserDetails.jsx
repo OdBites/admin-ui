@@ -73,17 +73,21 @@ function UserDetails() {
           <Box sx={{ display: "flex", alignItems: "center", columnGap: 4 }}>
             <AvatarUpload
               avatar={avatarSrc}
+              name={`${userDetails?.firstName || ""} ${
+                userDetails?.lastName || ""
+              }`.trim()}
+              alt={`${userDetails?.firstName || ""} ${
+                userDetails?.lastName || ""
+              }`.trim()}
               loading={isUpdatingPhoto}
               viewOnly={
                 isFetching ||
                 isUpdatingPhoto ||
                 userDetails?.createdBy !== "admin"
               }
-              alt={`${userDetails?.firstName || ""} ${
-                userDetails?.lastName || ""
-              }`}
               onSave={handleProfilePictureSave}
             />
+
             <Box>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
                 {`${userDetails?.firstName || "N/A"} ${

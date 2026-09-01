@@ -69,10 +69,16 @@ function Profile() {
             <Stack spacing={2} alignItems="center">
               <AvatarUpload
                 avatar={avatarSrc}
-                alt={`${profileDetails.firstName} ${profileDetails.lastName}`}
+                name={`${profileDetails.firstName || ""} ${
+                  profileDetails.lastName || ""
+                }`.trim()}
+                alt={`${profileDetails.firstName || ""} ${
+                  profileDetails.lastName || ""
+                }`.trim()}
                 loading={isProfilePicUpdating}
                 onSave={handelUpdateProfilePic}
               />
+
               <Typography variant="h5" fontWeight="bold" gutterBottom>
                 {`${profileDetails.firstName || "N/A"} ${
                   profileDetails.lastName || "N/A"

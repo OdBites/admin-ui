@@ -9,26 +9,43 @@ import {
   useMediaQuery,
   GlobalStyles,
 } from "@mui/material";
-import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
+import {
+  ArrowBackIosNew,
+  ArrowForwardIos,
+  Restaurant,
+} from "@mui/icons-material";
 import PropTypes from "prop-types";
 
 const ProductImageGallery = ({ images = [], dirPath = "" }) => {
   const theme = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
+  const [brokenImages, setBrokenImages] = useState({});
 
   if (!images.length) {
     return (
       <Box
         sx={{
-          height: 300,
+          height: 280,
           display: "flex",
+          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor: theme.palette.grey[100],
+          bgcolor:
+            theme.palette.mode === "dark"
+              ? "rgba(250, 140, 22, 0.08)"
+              : "rgba(250, 140, 22, 0.04)",
+          border: "1px dashed",
+          borderColor: "divider",
           borderRadius: 2,
+          gap: 1.5,
         }}
       >
-        <Typography>No Images Available</Typography>
+        <Restaurant
+          sx={{ fontSize: 52, color: "primary.main", opacity: 0.8 }}
+        />
+        <Typography variant="body2" color="text.secondary" fontWeight={600}>
+          No Images Available
+        </Typography>
       </Box>
     );
   }
@@ -121,25 +138,64 @@ const ProductImageGallery = ({ images = [], dirPath = "" }) => {
           sx={{
             width: "100%",
             maxWidth: 500,
+            minHeight: 220,
             maxHeight: 300,
             mx: "auto",
             mb: 2,
             borderRadius: 2,
             overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Zoom>
-            <img
-              src={`${dirPath}${images[activeIndex]}`}
-              alt={`Product ${activeIndex + 1}`}
-              style={{
+          {brokenImages[activeIndex] ? (
+            <Box
+              sx={{
                 width: "100%",
-                height: "auto",
-                borderRadius: 8,
-                objectFit: "contain",
+                height: 260,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor:
+                  theme.palette.mode === "dark"
+                    ? "rgba(250, 140, 22, 0.08)"
+                    : "rgba(250, 140, 22, 0.04)",
+                border: "1px dashed",
+                borderColor: "divider",
+                borderRadius: 2,
+                gap: 1.5,
               }}
-            />
-          </Zoom>
+            >
+              <Restaurant
+                sx={{ fontSize: 52, color: "primary.main", opacity: 0.8 }}
+              />
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                fontWeight={600}
+              >
+                Image unavailable
+              </Typography>
+            </Box>
+          ) : (
+            <Zoom>
+              <img
+                src={`${dirPath}${images[activeIndex]}`}
+                alt={`Product ${activeIndex + 1}`}
+                onError={() =>
+                  setBrokenImages((prev) => ({ ...prev, [activeIndex]: true }))
+                }
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  borderRadius: 8,
+                  objectFit: "contain",
+                }}
+              />
+            </Zoom>
+          )}
         </Box>
 
         {/* Carousel or Skip if One Image */}
@@ -152,24 +208,53 @@ const ProductImageGallery = ({ images = [], dirPath = "" }) => {
                   sx={{ px: 1, cursor: "pointer" }}
                   onClick={() => setActiveIndex(idx)}
                 >
-                  <Box
-                    component="img"
-                    src={`${dirPath}${img}`}
-                    alt={`Product thumbnail ${idx + 1}`}
-                    sx={{
-                      width: "100%",
-                      height: 70,
-                      objectFit: "cover",
-                      borderRadius: 2,
-                      border:
-                        idx === activeIndex
-                          ? `2px solid ${theme.palette.primary.main}`
-                          : `2px solid transparent`,
-                      boxShadow:
-                        idx === activeIndex ? theme.shadows[2] : "none",
-                      transition: "border 0.3s",
-                    }}
-                  />
+                  {brokenImages[idx] ? (
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: 70,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        bgcolor: "action.hover",
+                        borderRadius: 2,
+                        border:
+                          idx === activeIndex
+                            ? `2px solid ${theme.palette.primary.main}`
+                            : `2px solid transparent`,
+                      }}
+                    >
+                      <Restaurant
+                        sx={{
+                          fontSize: 24,
+                          color: "primary.main",
+                          opacity: 0.7,
+                        }}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      component="img"
+                      src={`${dirPath}${img}`}
+                      alt={`Product thumbnail ${idx + 1}`}
+                      onError={() =>
+                        setBrokenImages((prev) => ({ ...prev, [idx]: true }))
+                      }
+                      sx={{
+                        width: "100%",
+                        height: 70,
+                        objectFit: "cover",
+                        borderRadius: 2,
+                        border:
+                          idx === activeIndex
+                            ? `2px solid ${theme.palette.primary.main}`
+                            : `2px solid transparent`,
+                        boxShadow:
+                          idx === activeIndex ? theme.shadows[2] : "none",
+                        transition: "border 0.3s",
+                      }}
+                    />
+                  )}
                 </Box>
               ))}
             </Slider>

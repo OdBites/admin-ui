@@ -22,6 +22,7 @@ import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button } from "OdBitesMfUI/sharedComp";
+import { getInitials } from "OdBitesMfUI/utility";
 
 const getDateLabel = (dateStr) => {
   if (!dateStr) return "";
@@ -174,12 +175,11 @@ export default function ChatWindow({
               color: "primary.contrastText",
             }}
           >
-            {`${selectedCustomerSession.customer.firstName || ""}${selectedCustomerSession.customer.lastName || ""}`
-              .split("")
-              .slice(0, 2)
-              .join("")
-              .toUpperCase() || "C"}
+            {getInitials(
+              `${selectedCustomerSession.customer.firstName || ""} ${selectedCustomerSession.customer.lastName || ""}`
+            ) || "C"}
           </Avatar>
+
           <Box sx={{ minWidth: 0 }}>
             <Typography variant="body1" fontWeight={700} noWrap>
               {selectedCustomerSession.customer.firstName}{" "}

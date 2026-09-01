@@ -8,7 +8,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Cancel, Done, LocalShipping, Replay } from "@mui/icons-material";
+import {
+  Cancel,
+  Done,
+  LocalShipping,
+  Replay,
+  Restaurant,
+} from "@mui/icons-material";
 
 import { Button } from "OdBitesMfUI/sharedComp";
 
@@ -228,8 +234,22 @@ function OrderDetails() {
                     : undefined
                 }
                 variant="rounded"
-                sx={{ width: 64, height: 64 }}
-              />
+                sx={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 2,
+                  bgcolor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(250, 140, 22, 0.12)"
+                      : "rgba(250, 140, 22, 0.08)",
+                  color: "primary.main",
+                  border: "1px solid",
+                  borderColor: "divider",
+                }}
+              >
+                <Restaurant sx={{ fontSize: 30 }} />
+              </Avatar>
+
               <Box sx={{ flexGrow: 1 }}>
                 <Typography>{item.name || "N/A"}</Typography>
                 <Typography variant="body2" color="text.secondary">
