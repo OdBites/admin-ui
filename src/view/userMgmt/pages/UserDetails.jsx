@@ -8,7 +8,12 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { DriveFileRenameOutline, LocationOn } from "@mui/icons-material";
+import {
+  DriveFileRenameOutline,
+  LocationOn,
+  Phone,
+  PhoneAndroid,
+} from "@mui/icons-material";
 
 import { AvatarUpload, Button } from "OdBitesMfUI/sharedComp";
 
@@ -229,6 +234,42 @@ function UserDetails() {
                     <Typography variant="body2" color="text.secondary">
                       {addr.country}
                     </Typography>
+                    {(addr.phone || addr.alternatePhone) && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 0.8,
+                          mt: 1.2,
+                        }}
+                      >
+                        {addr.phone && (
+                          <Chip
+                            icon={
+                              <Phone sx={{ fontSize: "14px !important" }} />
+                            }
+                            label={addr.phone}
+                            size="small"
+                            variant="outlined"
+                            color="primary"
+                            sx={{ fontSize: "0.75rem", fontWeight: 600 }}
+                          />
+                        )}
+                        {addr.alternatePhone && (
+                          <Chip
+                            icon={
+                              <PhoneAndroid
+                                sx={{ fontSize: "14px !important" }}
+                              />
+                            }
+                            label={`Alt: ${addr.alternatePhone}`}
+                            size="small"
+                            variant="outlined"
+                            sx={{ fontSize: "0.75rem", fontWeight: 500 }}
+                          />
+                        )}
+                      </Box>
+                    )}
                   </Box>
                 </Grid>
               ))}

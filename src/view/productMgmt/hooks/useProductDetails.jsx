@@ -32,7 +32,18 @@ export function useProductDetails() {
     Price: `₹${productDetailsData?.price}`,
     Discount: `₹${productDetailsData?.discountPrice}`,
     Stock: productDetailsData?.stock,
-    Status: <StatusChip status={productDetailsData?.status} />,
+    Status: (
+      <StatusChip
+        status={
+          productDetailsData?.status === "inActive" ||
+          productDetailsData?.status === "blocked"
+            ? "inActive"
+            : Number(productDetailsData?.stock || 0) <= 0
+              ? "outOfStock"
+              : "active"
+        }
+      />
+    ),
     Rating: productDetailsData?.rating,
     Created: productDetailsData?.createdAt,
     Updated: productDetailsData?.updatedAt,

@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogActions,
   Button,
+  Chip,
   Typography,
   Box,
   Stack,
@@ -25,6 +26,8 @@ import {
   NotificationImportant,
   CheckCircle,
   Cancel,
+  Phone,
+  PhoneAndroid,
   VolumeUp,
   VolumeOff,
   ShoppingBag,
@@ -367,6 +370,34 @@ export default function OrderQueueNotifier() {
                     .filter(Boolean)
                     .join(", ")}
                 </Typography>
+                {(activeOrder.delivery.address.phone ||
+                  activeOrder.delivery.address.alternatePhone) && (
+                  <Box
+                    sx={{ display: "flex", flexWrap: "wrap", gap: 0.8, mt: 1 }}
+                  >
+                    {activeOrder.delivery.address.phone && (
+                      <Chip
+                        icon={<Phone sx={{ fontSize: "14px !important" }} />}
+                        label={activeOrder.delivery.address.phone}
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        sx={{ fontSize: "0.75rem", fontWeight: 600 }}
+                      />
+                    )}
+                    {activeOrder.delivery.address.alternatePhone && (
+                      <Chip
+                        icon={
+                          <PhoneAndroid sx={{ fontSize: "14px !important" }} />
+                        }
+                        label={`Alt: ${activeOrder.delivery.address.alternatePhone}`}
+                        size="small"
+                        variant="outlined"
+                        sx={{ fontSize: "0.75rem", fontWeight: 500 }}
+                      />
+                    )}
+                  </Box>
+                )}
                 {activeOrder.delivery.instructions && (
                   <Box mt={1.5} p={1} bgcolor="action.hover" borderRadius={1.5}>
                     <Typography

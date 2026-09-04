@@ -3,6 +3,7 @@ import {
   Avatar,
   Box,
   Card,
+  Chip,
   Divider,
   Grid,
   Stack,
@@ -12,6 +13,8 @@ import {
   Cancel,
   Done,
   LocalShipping,
+  Phone,
+  PhoneAndroid,
   Replay,
   Restaurant,
 } from "@mui/icons-material";
@@ -299,7 +302,30 @@ function OrderDetails() {
               : ""}
           </Typography>
           <Typography>{deliveryAddress.country || "N/A"}</Typography>
-          <Typography color="text.secondary" mt={1}>
+          {(deliveryAddress.phone || deliveryAddress.alternatePhone) && (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1.5 }}>
+              {deliveryAddress.phone && (
+                <Chip
+                  icon={<Phone sx={{ fontSize: "14px !important" }} />}
+                  label={`Contact: ${deliveryAddress.phone}`}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  sx={{ fontWeight: 600 }}
+                />
+              )}
+              {deliveryAddress.alternatePhone && (
+                <Chip
+                  icon={<PhoneAndroid sx={{ fontSize: "14px !important" }} />}
+                  label={`Alt: ${deliveryAddress.alternatePhone}`}
+                  size="small"
+                  variant="outlined"
+                  sx={{ fontWeight: 500 }}
+                />
+              )}
+            </Box>
+          )}
+          <Typography color="text.secondary" mt={1.5}>
             Method: {order?.delivery?.method || "N/A"}
           </Typography>
           <Typography color="text.secondary">

@@ -93,7 +93,7 @@ export function useAddEditProduct() {
     defaultValues: {
       name: productDetails?.name || "",
       description: productDetails?.description || "",
-      status: productDetails?.status || "active",
+      status: productDetails?.status === "inActive" ? "inActive" : "active",
       price: productDetails?.price?.toString() || "",
       discountPrice: productDetails?.discountPrice?.toString() || "",
       stock: productDetails?.stock?.toString() || "",

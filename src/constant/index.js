@@ -91,6 +91,10 @@ export const dropDownOptions = {
       { value: "inActive", label: "Inactive" },
       { value: "outOfStock", label: "Out of Stock" },
     ],
+    formStatus: [
+      { value: "active", label: "Active" },
+      { value: "inActive", label: "Inactive" },
+    ],
     category: [
       { value: "", label: "All Categories" },
       { value: "mainCourse", label: "Main Course" },

@@ -109,9 +109,7 @@ function AddEditProduct() {
                   label="Status"
                   inputType="select"
                   control={control}
-                  options={dropDownOptions.productMgmt.status.filter(
-                    (opt) => opt.value !== ""
-                  )}
+                  options={dropDownOptions.productMgmt.formStatus}
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>

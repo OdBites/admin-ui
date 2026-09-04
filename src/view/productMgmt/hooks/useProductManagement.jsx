@@ -64,21 +64,24 @@ export function useProductManagement() {
   const { data: productsData = [], total } = data || {};
 
   const rows = productsData?.products?.map((item, index) => {
+    const isDeactivated =
+      item.status === "inActive" || item.status === "blocked";
     const actions = (
       <TableAction
         view={`/dish-management/${item._id}`}
-        block={
-          item.status === "active" ? () => handleAction("inActive", item) : null
-        }
-        unBlock={
-          item.status === "inActive" ? () => handleAction("active", item) : null
-        }
+        block={!isDeactivated ? () => handleAction("inActive", item) : null}
+        unBlock={isDeactivated ? () => handleAction("active", item) : null}
         remove={() => handleAction("delete", item)}
-        isBlocked={item.status === "inActive"}
+        isBlocked={isDeactivated}
       />
     );
     const sr_no = index + 1 + page * rowsPerPage;
-    const status = <StatusChip status={item.status} />;
+    const computedStatus = isDeactivated
+      ? "inActive"
+      : Number(item.stock || 0) <= 0
+        ? "outOfStock"
+        : "active";
+    const status = <StatusChip status={computedStatus} />;
     const category = getCategoryLabel(item.category);
     const subCategory = getSubCategoryLabel(item.category, item.subCategory);
     return { ...item, actions, sr_no, status, category, subCategory };
