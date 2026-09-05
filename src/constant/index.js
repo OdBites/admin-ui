@@ -44,6 +44,15 @@ export const tableColumns = {
     { id: "paidAt", label: "Paid At" },
     { id: "actions", label: "Actions" },
   ],
+  inquiriesMgmt: [
+    { id: "customer", label: "Customer" },
+    { id: "contact", label: "Contact Info" },
+    { id: "subject", label: "Inquiry Reason / Message" },
+    { id: "adminNotes", label: "Internal Notes" },
+    { id: "status", label: "Status" },
+    { id: "createdAt", label: "Submitted At" },
+    { id: "actions", label: "Actions" },
+  ],
 };
 
 export const dropDownOptions = {

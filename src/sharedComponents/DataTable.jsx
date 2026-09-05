@@ -70,53 +70,60 @@ const DataTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* Show NoData when no rows & not loading */}
-          <RenderIf render={!isLoading && rows.length === 0}>
-            <NoData />
-          </RenderIf>
-
           {/* Show Skeleton Loader when loading */}
-          {isLoading
-            ? [...new Array(Math.min(rowsPerPage || 8, 10))].map((_, index) => (
-                <TableRow key={index + 1}>
-                  {columns.map((col, colIdx) => (
-                    <TableCell key={col.id} sx={{ width: col.maxWidth, py: 2 }}>
-                      <Skeleton
-                        variant="rounded"
-                        height={22}
-                        width={
-                          col.id === "actions" || col.id === "action"
-                            ? 70
-                            : colIdx === 0
-                              ? "55%"
-                              : colIdx % 2 === 0
-                                ? "75%"
-                                : "85%"
-                        }
-                        sx={{ borderRadius: "6px" }}
-                      />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            : rows.map((row, rowIndex) => (
-                <TableRow key={rowIndex + 1}>
-                  {columns.map((col) => (
-                    <TableCell
-                      key={col.id}
-                      sx={{
-                        width: col.maxWidth,
-                        textAlign: col.align || "left",
-                        textTransform: col.textTransform || "none",
-                      }}
-                    >
-                      {col.render
-                        ? col.render(row[col.id], row)
-                        : row[col.id] || "-N/A-"}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
+          {isLoading ? (
+            [...new Array(Math.min(rowsPerPage || 8, 10))].map((_, index) => (
+              <TableRow key={index + 1}>
+                {columns.map((col, colIdx) => (
+                  <TableCell key={col.id} sx={{ width: col.maxWidth, py: 2 }}>
+                    <Skeleton
+                      variant="rounded"
+                      height={22}
+                      width={
+                        col.id === "actions" || col.id === "action"
+                          ? 70
+                          : colIdx === 0
+                            ? "55%"
+                            : colIdx % 2 === 0
+                              ? "75%"
+                              : "85%"
+                      }
+                      sx={{ borderRadius: "6px" }}
+                    />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : (rows || []).length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                align="center"
+                sx={{ py: 6, border: 0 }}
+              >
+                <NoData />
+              </TableCell>
+            </TableRow>
+          ) : (
+            (rows || []).map((row, rowIndex) => (
+              <TableRow key={row?._id || row?.id || rowIndex + 1}>
+                {columns.map((col) => (
+                  <TableCell
+                    key={col.id}
+                    sx={{
+                      width: col.maxWidth,
+                      textAlign: col.align || "left",
+                      textTransform: col.textTransform || "none",
+                    }}
+                  >
+                    {col.render
+                      ? col.render(row[col.id], row)
+                      : row[col.id] || "-N/A-"}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
 

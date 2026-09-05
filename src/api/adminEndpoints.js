@@ -38,4 +38,10 @@ export const adminApiEndpoints = {
     base: (id) => adminPath(`/profile/${id}`),
     photo: (id) => adminPath(`/profile/${id}/photo`),
   },
+  contact: {
+    base: adminPath("/contact"),
+    inquiry: (id) => adminPath(`/contact/${id}`),
+    status: (id) => adminPath(`/contact/${id}/status`),
+    notes: (id) => adminPath(`/contact/${id}/notes`),
+  },
 };

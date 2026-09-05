@@ -91,6 +91,14 @@ export const userRoutes = [
     component: React.lazy(() => import("../view/support/pages/Support")),
   },
   {
+    path: "/inquiries",
+    name: "ContactInquiries",
+    exact: true,
+    component: React.lazy(
+      () => import("../view/inquiriesMgmt/pages/InquiriesMgmt")
+    ),
+  },
+  {
     path: "/profile",
     name: "Profile",
     exact: true,

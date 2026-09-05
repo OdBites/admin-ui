@@ -6,3 +6,4 @@ export * from "./ordersMgmt";
 export * from "./paymentsMgmt";
 export * from "./profile";
 export * from "./support";
+export * from "./inquiries";
