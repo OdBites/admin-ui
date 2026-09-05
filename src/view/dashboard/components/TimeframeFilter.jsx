@@ -8,7 +8,7 @@ import {
   ListItemIcon,
   ListItemText,
   useTheme,
-  CircularProgress,
+  alpha,
 } from "@mui/material";
 import {
   CalendarToday,
@@ -19,7 +19,7 @@ import {
   QueryBuilder,
 } from "@mui/icons-material";
 
-export const TIMEFRAME_OPTIONS = [
+const TIMEFRAME_OPTIONS = [
   { value: "lifetime", label: "Life Time", icon: <History fontSize="small" /> },
   {
     value: "last1Year",
@@ -49,12 +49,11 @@ export const TIMEFRAME_OPTIONS = [
   { value: "today", label: "Today", icon: <Today fontSize="small" /> },
 ];
 
-function TimeframeFilter({ value, onChange, isFetching = false }) {
+function TimeframeFilter({ value, onChange }) {
   const theme = useTheme();
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-      {isFetching && <CircularProgress size={18} color="primary" />}
+    <Box sx={{ display: "flex", alignItems: "center" }}>
       <FormControl size="small" sx={{ minWidth: 170 }}>
         <Select
           value={value}
@@ -62,15 +61,8 @@ function TimeframeFilter({ value, onChange, isFetching = false }) {
           displayEmpty
           sx={{
             borderRadius: "12px",
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? "rgba(255, 255, 255, 0.9)"
-                : "rgba(32, 26, 22, 0.9)",
-            border: `1px solid ${
-              theme.palette.mode === "light"
-                ? "rgba(226, 88, 34, 0.2)"
-                : "rgba(226, 88, 34, 0.3)"
-            }`,
+            backgroundColor: theme.palette.background.paper,
+            border: `1px solid ${alpha(theme.palette.primary.main, theme.palette.mode === "light" ? 0.2 : 0.3)}`,
             fontSize: "0.875rem",
             fontWeight: 600,
             "& .MuiSelect-select": {
@@ -85,7 +77,7 @@ function TimeframeFilter({ value, onChange, isFetching = false }) {
             },
             "&.Mui-focused": {
               borderColor: "primary.main",
-              boxShadow: `0 0 0 2px ${theme.palette.primary.main}30`,
+              boxShadow: `0 0 0 2px ${alpha(theme.palette.primary.main, 0.25)}`,
             },
           }}
           MenuProps={{
@@ -93,10 +85,7 @@ function TimeframeFilter({ value, onChange, isFetching = false }) {
               sx: {
                 borderRadius: "14px",
                 mt: 1,
-                boxShadow:
-                  theme.palette.mode === "light"
-                    ? "0 10px 30px rgba(0,0,0,0.1)"
-                    : "0 10px 30px rgba(0,0,0,0.5)",
+                boxShadow: theme.shadows[4] || "0 10px 30px rgba(0,0,0,0.15)",
                 border: `1px solid ${theme.palette.divider}`,
               },
             },
@@ -113,10 +102,10 @@ function TimeframeFilter({ value, onChange, isFetching = false }) {
                 mx: 0.5,
                 my: 0.2,
                 "&.Mui-selected": {
-                  backgroundColor: `${theme.palette.primary.main}1A`,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.12),
                   color: "primary.main",
                   "&:hover": {
-                    backgroundColor: `${theme.palette.primary.main}2A`,
+                    backgroundColor: alpha(theme.palette.primary.main, 0.2),
                   },
                 },
               }}

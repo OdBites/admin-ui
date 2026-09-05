@@ -22,12 +22,7 @@ export const profileService = createApi({
         method: "PUT",
         body: updatedData,
       }),
-      async onQueryStarted({ id, updatedData }, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(profileService.util.invalidateTags(["Profile"]));
-        } catch (err) {}
-      },
+      invalidatesTags: ["Profile"],
     }),
 
     getProfilePhoto: builder.query({
@@ -45,12 +40,7 @@ export const profileService = createApi({
         method: "PUT",
         body: imgData,
       }),
-      async onQueryStarted({ id, imgData }, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(profileService.util.invalidateTags(["Profile_Picture"]));
-        } catch (err) {}
-      },
+      invalidatesTags: ["Profile_Picture"],
     }),
   }),
 });

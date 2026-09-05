@@ -6,8 +6,8 @@ import {
   useTheme,
   IconButton,
   Typography,
-  useMediaQuery,
   GlobalStyles,
+  alpha,
 } from "@mui/material";
 import {
   ArrowBackIosNew,
@@ -30,10 +30,10 @@ const ProductImageGallery = ({ images = [], dirPath = "" }) => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          bgcolor:
-            theme.palette.mode === "dark"
-              ? "rgba(250, 140, 22, 0.08)"
-              : "rgba(250, 140, 22, 0.04)",
+          bgcolor: alpha(
+            theme.palette.primary.main,
+            theme.palette.mode === "dark" ? 0.08 : 0.04
+          ),
           border: "1px dashed",
           borderColor: "divider",
           borderRadius: 2,
@@ -158,10 +158,10 @@ const ProductImageGallery = ({ images = [], dirPath = "" }) => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                bgcolor:
-                  theme.palette.mode === "dark"
-                    ? "rgba(250, 140, 22, 0.08)"
-                    : "rgba(250, 140, 22, 0.04)",
+                bgcolor: alpha(
+                  theme.palette.primary.main,
+                  theme.palette.mode === "dark" ? 0.08 : 0.04
+                ),
                 border: "1px dashed",
                 borderColor: "divider",
                 borderRadius: 2,

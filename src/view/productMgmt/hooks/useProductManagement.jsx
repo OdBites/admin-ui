@@ -104,7 +104,7 @@ export function useProductManagement() {
       const blob = await triggerExport({ search, sort, ...filters }).unwrap();
       downloadBlob(blob, "dishes");
       toaster.success("Data exported successfully!");
-    } catch (err) {
+    } catch {
       // Errors are handled globally
     }
   };

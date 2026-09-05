@@ -92,61 +92,59 @@ function InquiriesMgmt() {
 
       {/* Summary KPI Cards */}
       <Grid container spacing={2.5}>
-        {KPI_CARDS(stats).map(
-          ({ label, value, color, mutedColor, icon: Icon }) => (
-            <Grid key={label} size={{ xs: 12, sm: 6, md: 3 }}>
-              <Card
-                sx={{
-                  borderRadius: 3,
-                  p: 0.5,
-                  borderLeft: `4px solid ${color}`,
-                  boxShadow: isDark
-                    ? "0 4px 20px rgba(0,0,0,0.4)"
-                    : "0 4px 20px rgba(0,0,0,0.05)",
-                }}
-              >
-                <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-                  <Stack
-                    direction="row"
-                    justifyContent="space-between"
-                    alignItems="center"
-                  >
-                    <Box>
-                      <Typography
-                        variant="caption"
-                        fontWeight={700}
-                        noWrap
-                        sx={{ color, display: "block" }}
-                      >
-                        {label}
-                      </Typography>
-                      <Typography
-                        variant="h5"
-                        fontWeight={800}
-                        sx={{ mt: 0.5, color }}
-                      >
-                        {value}
-                      </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        p: 1.25,
-                        borderRadius: "14px",
-                        backgroundColor: mutedColor,
-                        color,
-                      }}
+        {KPI_CARDS(stats).map((card) => (
+          <Grid key={card.label} size={{ xs: 12, sm: 6, md: 3 }}>
+            <Card
+              sx={{
+                borderRadius: 3,
+                p: 0.5,
+                borderLeft: `4px solid ${card.color}`,
+                boxShadow: isDark
+                  ? "0 4px 20px rgba(0,0,0,0.4)"
+                  : "0 4px 20px rgba(0,0,0,0.05)",
+              }}
+            >
+              <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      fontWeight={700}
+                      noWrap
+                      sx={{ color: card.color, display: "block" }}
                     >
-                      <Icon sx={{ fontSize: 26 }} />
-                    </Box>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          )
-        )}
+                      {card.label}
+                    </Typography>
+                    <Typography
+                      variant="h5"
+                      fontWeight={800}
+                      sx={{ mt: 0.5, color: card.color }}
+                    >
+                      {card.value}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      p: 1.25,
+                      borderRadius: "14px",
+                      backgroundColor: card.mutedColor,
+                      color: card.color,
+                    }}
+                  >
+                    <card.icon sx={{ fontSize: 26 }} />
+                  </Box>
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
 
       {/* Main Content Area with Reusable DataTable */}

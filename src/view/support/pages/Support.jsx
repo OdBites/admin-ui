@@ -40,7 +40,6 @@ function Support() {
     formatTime,
     formatAmount,
     formatDate,
-    formatStatus,
   } = useSupport();
 
   return (
@@ -118,7 +117,6 @@ function Support() {
           linkedOrderId={linkedOrderId}
           recentOrders={recentOrders}
           formatAmount={formatAmount}
-          formatStatus={formatStatus}
           formatDate={formatDate}
           handleSelectOrder={handleSelectOrder}
         />

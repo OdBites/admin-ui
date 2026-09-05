@@ -13,7 +13,7 @@ import {
   useTheme,
 } from "@mui/material";
 
-import { RenderIf, NoData } from "OdBitesMfUI/helpers";
+import { NoData } from "OdBitesMfUI/helpers";
 
 const DataTable = ({
   columns = [],

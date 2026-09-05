@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
-import { Avatar, Box, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Typography, useTheme, alpha } from "@mui/material";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { useFetchDashboardDataQuery } from "../../../store/rtkServices/dashboard";
 import { orderColumns, userColumns } from "../../../data/dashboard";
@@ -41,20 +42,20 @@ export function useDashboard() {
               fontWeight={700}
               sx={{
                 color: "primary.main",
-                background:
-                  theme.palette.mode === "light"
-                    ? "rgba(214,140,94,0.06)"
-                    : "rgba(214,140,94,0.15)",
+                background: alpha(
+                  theme.palette.primary.main,
+                  theme.palette.mode === "light" ? 0.08 : 0.18
+                ),
                 px: 1.2,
                 py: 0.4,
                 borderRadius: 1.5,
                 display: "inline-block",
                 fontSize: "0.8rem",
                 border: "1px solid",
-                borderColor:
-                  theme.palette.mode === "light"
-                    ? "rgba(214,140,94,0.15)"
-                    : "rgba(214,140,94,0.3)",
+                borderColor: alpha(
+                  theme.palette.primary.main,
+                  theme.palette.mode === "light" ? 0.18 : 0.35
+                ),
               }}
             >
               {val}
@@ -101,18 +102,14 @@ export function useDashboard() {
           ...col,
           render: (val) => (
             <Typography variant="body2" fontWeight={700} color="text.primary">
-              ₹
-              {Number(val).toLocaleString("en-IN", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {formatCurrency(val)}
             </Typography>
           ),
         };
       }
       return col;
     });
-  }, [theme.palette.mode]);
+  }, [theme.palette.mode, theme.palette.primary.main]);
 
   // Custom cell renders for Newly Registered Users
   const customUserColumns = useMemo(() => {

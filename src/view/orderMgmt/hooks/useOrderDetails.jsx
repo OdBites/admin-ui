@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import {
   useGetOrderByIdQuery,
@@ -31,8 +32,7 @@ const getAvailableActions = (status) => {
   }
 };
 
-const formatAmount = (value) =>
-  Number.isFinite(Number(value)) ? Number(value).toFixed(2) : "0.00";
+const formatAmount = (value) => formatCurrency(value, { showSymbol: false });
 
 export function useOrderDetails() {
   /*

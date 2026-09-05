@@ -24,7 +24,6 @@ export default function CustomerProfilePanel({
   linkedOrderId,
   recentOrders,
   formatAmount,
-  formatStatus,
   formatDate,
   handleSelectOrder,
 }) {
@@ -295,7 +294,6 @@ CustomerProfilePanel.propTypes = {
   linkedOrderId: PropTypes.string,
   recentOrders: PropTypes.array.isRequired,
   formatAmount: PropTypes.func.isRequired,
-  formatStatus: PropTypes.func.isRequired,
   formatDate: PropTypes.func.isRequired,
   handleSelectOrder: PropTypes.func.isRequired,
 };

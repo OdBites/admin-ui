@@ -16,6 +16,7 @@ import {
 } from "@mui/icons-material";
 
 import { AvatarUpload, Button } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { PageHeader } from "../../../sharedComponents";
 import { AddEditUserModal, UserDetailsSkeleton } from "../components";
@@ -112,11 +113,7 @@ function UserDetails() {
                   Total Order: {userDetails?.orders || 0}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Total Spent: ₹
-                  {Number(userDetails?.totalSpent || 0).toLocaleString(
-                    "en-IN",
-                    { maximumFractionDigits: 2 }
-                  )}
+                  Total Spent: {formatCurrency(userDetails?.totalSpent)}
                 </Typography>
               </Box>
             </Box>

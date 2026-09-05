@@ -52,11 +52,7 @@ function Dashboard() {
   return (
     <>
       <PageHeader pageTitle="Dashboard" hideExportBtn>
-        <TimeframeFilter
-          value={timeframe}
-          onChange={setTimeframe}
-          isFetching={isFetching}
-        />
+        <TimeframeFilter value={timeframe} onChange={setTimeframe} />
       </PageHeader>
       {showSkeleton ? (
         <DashboardSkeleton />

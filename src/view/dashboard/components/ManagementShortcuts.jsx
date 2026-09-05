@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Box, Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Grid, Typography, alpha } from "@mui/material";
 import { Group, Inventory, LocalDining } from "@mui/icons-material";
 import PropTypes from "prop-types";
 
@@ -27,16 +27,12 @@ function ManagementShortcuts({ theme }) {
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               background:
                 theme.palette.mode === "light"
-                  ? "linear-gradient(135deg, rgba(214, 140, 94, 0.03) 0%, rgba(214, 140, 94, 0.005) 100%)"
-                  : "linear-gradient(135deg, rgba(214, 140, 94, 0.08) 0%, rgba(214, 140, 94, 0.015) 100%)",
-              border:
-                "1px solid " +
-                (theme.palette.mode === "light"
-                  ? "rgba(214, 140, 94, 0.12)"
-                  : "rgba(214, 140, 94, 0.2)"),
+                  ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.03)} 0%, ${alpha(theme.palette.primary.main, 0.005)} 100%)`
+                  : `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)} 0%, ${alpha(theme.palette.primary.main, 0.015)} 100%)`,
+              border: `1px solid ${alpha(theme.palette.primary.main, theme.palette.mode === "light" ? 0.12 : 0.2)}`,
               "&:hover": {
                 transform: "translateY(-6px)",
-                boxShadow: "0 12px 30px rgba(214, 140, 94, 0.12)",
+                boxShadow: `0 12px 30px ${alpha(theme.palette.primary.main, 0.12)}`,
               },
             }}
           >
@@ -45,10 +41,10 @@ function ManagementShortcuts({ theme }) {
                 sx={{
                   p: 1.5,
                   borderRadius: "16px",
-                  backgroundColor:
-                    theme.palette.mode === "light"
-                      ? "rgba(214, 140, 94, 0.08)"
-                      : "rgba(214, 140, 94, 0.18)",
+                  backgroundColor: alpha(
+                    theme.palette.primary.main,
+                    theme.palette.mode === "light" ? 0.08 : 0.18
+                  ),
                   color: "primary.main",
                   display: "inline-flex",
                   mb: 2.5,
@@ -78,9 +74,9 @@ function ManagementShortcuts({ theme }) {
                 borderRadius: "50px",
                 py: 1.2,
                 fontWeight: 700,
-                boxShadow: "0 4px 14px rgba(214,140,94,0.3)",
+                boxShadow: `0 4px 14px ${alpha(theme.palette.primary.main, 0.3)}`,
                 "&:hover": {
-                  boxShadow: "0 6px 20px rgba(214,140,94,0.5)",
+                  boxShadow: `0 6px 20px ${alpha(theme.palette.primary.main, 0.5)}`,
                 },
               }}
             >
@@ -103,16 +99,12 @@ function ManagementShortcuts({ theme }) {
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               background:
                 theme.palette.mode === "light"
-                  ? "linear-gradient(135deg, rgba(93, 99, 69, 0.03) 0%, rgba(93, 99, 69, 0.005) 100%)"
-                  : "linear-gradient(135deg, rgba(93, 99, 69, 0.08) 0%, rgba(93, 99, 69, 0.015) 100%)",
-              border:
-                "1px solid " +
-                (theme.palette.mode === "light"
-                  ? "rgba(93, 99, 69, 0.12)"
-                  : "rgba(93, 99, 69, 0.2)"),
+                  ? `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.03)} 0%, ${alpha(theme.palette.secondary.main, 0.005)} 100%)`
+                  : `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.08)} 0%, ${alpha(theme.palette.secondary.main, 0.015)} 100%)`,
+              border: `1px solid ${alpha(theme.palette.secondary.main, theme.palette.mode === "light" ? 0.12 : 0.2)}`,
               "&:hover": {
                 transform: "translateY(-6px)",
-                boxShadow: "0 12px 30px rgba(93, 99, 69, 0.12)",
+                boxShadow: `0 12px 30px ${alpha(theme.palette.secondary.main, 0.12)}`,
               },
             }}
           >
@@ -121,10 +113,10 @@ function ManagementShortcuts({ theme }) {
                 sx={{
                   p: 1.5,
                   borderRadius: "16px",
-                  backgroundColor:
-                    theme.palette.mode === "light"
-                      ? "rgba(93, 99, 69, 0.08)"
-                      : "rgba(93, 99, 69, 0.18)",
+                  backgroundColor: alpha(
+                    theme.palette.secondary.main,
+                    theme.palette.mode === "light" ? 0.08 : 0.18
+                  ),
                   color: "secondary.main",
                   display: "inline-flex",
                   mb: 2.5,
@@ -155,9 +147,9 @@ function ManagementShortcuts({ theme }) {
                 borderRadius: "50px",
                 py: 1.2,
                 fontWeight: 700,
-                boxShadow: "0 4px 14px rgba(93,99,69,0.3)",
+                boxShadow: `0 4px 14px ${alpha(theme.palette.secondary.main, 0.3)}`,
                 "&:hover": {
-                  boxShadow: "0 6px 20px rgba(93,99,69,0.5)",
+                  boxShadow: `0 6px 20px ${alpha(theme.palette.secondary.main, 0.5)}`,
                 },
               }}
             >
@@ -180,16 +172,12 @@ function ManagementShortcuts({ theme }) {
               transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
               background:
                 theme.palette.mode === "light"
-                  ? "linear-gradient(135deg, rgba(76, 175, 80, 0.02) 0%, rgba(76, 175, 80, 0.005) 100%)"
-                  : "linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(76, 175, 80, 0.015) 100%)",
-              border:
-                "1px solid " +
-                (theme.palette.mode === "light"
-                  ? "rgba(76, 175, 80, 0.12)"
-                  : "rgba(76, 175, 80, 0.2)"),
+                  ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.02)} 0%, ${alpha(theme.palette.success.main, 0.005)} 100%)`
+                  : `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.08)} 0%, ${alpha(theme.palette.success.main, 0.015)} 100%)`,
+              border: `1px solid ${alpha(theme.palette.success.main, theme.palette.mode === "light" ? 0.12 : 0.2)}`,
               "&:hover": {
                 transform: "translateY(-6px)",
-                boxShadow: "0 12px 30px rgba(76, 175, 80, 0.12)",
+                boxShadow: `0 12px 30px ${alpha(theme.palette.success.main, 0.12)}`,
               },
             }}
           >
@@ -198,10 +186,10 @@ function ManagementShortcuts({ theme }) {
                 sx={{
                   p: 1.5,
                   borderRadius: "16px",
-                  backgroundColor:
-                    theme.palette.mode === "light"
-                      ? "rgba(45, 138, 78, 0.08)"
-                      : "rgba(45, 138, 78, 0.18)",
+                  backgroundColor: alpha(
+                    theme.palette.success.main,
+                    theme.palette.mode === "light" ? 0.08 : 0.18
+                  ),
                   color: theme.palette.success.main,
                   display: "inline-flex",
                   mb: 2.5,
@@ -234,10 +222,10 @@ function ManagementShortcuts({ theme }) {
                 fontWeight: 700,
                 backgroundColor: theme.palette.success.main,
                 color: "#fff",
-                boxShadow: "0 4px 14px rgba(45,138,78,0.3)",
+                boxShadow: `0 4px 14px ${alpha(theme.palette.success.main, 0.3)}`,
                 "&:hover": {
                   backgroundColor: "success.dark",
-                  boxShadow: "0 6px 20px rgba(45,138,78,0.5)",
+                  boxShadow: `0 6px 20px ${alpha(theme.palette.success.main, 0.5)}`,
                 },
               }}
             >

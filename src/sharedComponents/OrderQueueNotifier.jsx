@@ -1,10 +1,8 @@
 import React from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Chip,
   Typography,
   Box,
@@ -19,7 +17,6 @@ import {
   TableRow,
   Alert,
   Slide,
-  IconButton,
   TextField,
 } from "@mui/material";
 import {
@@ -32,6 +29,10 @@ import {
   VolumeOff,
   ShoppingBag,
 } from "@mui/icons-material";
+
+import { Button, IconButton } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
+
 import { useOrderQueueNotifier } from "./hooks";
 
 // Dialog slide-up transition
@@ -312,7 +313,7 @@ export default function OrderQueueNotifier() {
                           fontSize: "1.1rem",
                         }}
                       >
-                        ₹{activeOrder.totalAmount?.toFixed(2)}
+                        {formatCurrency(activeOrder.totalAmount)}
                       </TableCell>
                     </TableRow>
                   </TableBody>

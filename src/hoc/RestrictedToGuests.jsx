@@ -2,7 +2,7 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useCookies } from "OdBitesMfUI/hooks";
 
-const RestrictedToGuests = (Component) => {
+const RestrictedToGuests = (WrappedComponent) => {
   const Wrapped = (props) => {
     const { getCookie } = useCookies();
     const isAuthenticated = !!getCookie("admin_auth_token");
@@ -11,7 +11,7 @@ const RestrictedToGuests = (Component) => {
       return <Navigate to="/" replace />;
     }
 
-    return <Component {...props} />;
+    return <WrappedComponent {...props} />;
   };
 
   return Wrapped;

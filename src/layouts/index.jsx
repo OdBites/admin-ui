@@ -16,9 +16,9 @@ function Layout() {
   const isAuthenticated = !!getCookie("admin_auth_token");
   const userId = getCookie("admin_id");
 
-  const { data: profileDetails = {} } = isAuthenticated
-    ? useGetProfileDetailsQuery(userId)
-    : { data: {} };
+  const { data: profileDetails = {} } = useGetProfileDetailsQuery(userId, {
+    skip: !isAuthenticated || !userId,
+  });
 
   return (
     <>

@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { useGetPaymentByIdQuery } from "../../../store/rtkServices/paymentsMgmt";
 
@@ -32,9 +33,7 @@ export function usePaymentDetails() {
     "Payment ID": paymentDetailsData?.id,
     "Order ID": paymentDetailsData?.orderId,
     Status: <StatusChip status={paymentDetailsData?.status} />,
-    Amount: `₹ ${paymentDetailsData?.amount?.toFixed(2)} ${
-      paymentDetailsData?.currency
-    }`,
+    Amount: formatCurrency(paymentDetailsData?.amount),
     "Payment Method": paymentDetailsData?.method,
     "Payment Gateway": paymentDetailsData?.paymentGateway,
     "Transaction ID": paymentDetailsData?.transactionId,
@@ -51,9 +50,9 @@ export function usePaymentDetails() {
 
   const visualizeRefundDetails = {
     "Is Refunded": paymentDetailsData?.refund?.isRefunded ? "Yes" : "No",
-    "Refund Amount": `₹ ${
-      paymentDetailsData?.refund?.refundAmount?.toFixed(2) || "0.00"
-    }`,
+    "Refund Amount": formatCurrency(
+      paymentDetailsData?.refund?.refundAmount || 0
+    ),
     "Refunded At": paymentDetailsData?.refund?.refundedAt,
   };
 

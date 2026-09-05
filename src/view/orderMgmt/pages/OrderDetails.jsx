@@ -8,6 +8,7 @@ import {
   Grid,
   Stack,
   Typography,
+  alpha,
 } from "@mui/material";
 import {
   Cancel,
@@ -251,9 +252,10 @@ function OrderDetails() {
                     height: 64,
                     borderRadius: 2,
                     bgcolor: (theme) =>
-                      theme.palette.mode === "dark"
-                        ? "rgba(250, 140, 22, 0.12)"
-                        : "rgba(250, 140, 22, 0.08)",
+                      alpha(
+                        theme.palette.primary.main,
+                        theme.palette.mode === "dark" ? 0.12 : 0.08
+                      ),
                     color: "primary.main",
                     border: "1px solid",
                     borderColor: "divider",

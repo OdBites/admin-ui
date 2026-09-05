@@ -1,5 +1,13 @@
 import React from "react";
-import { Grid, Card, Typography, Box, Divider, Chip } from "@mui/material";
+import {
+  Grid,
+  Card,
+  Typography,
+  Box,
+  Divider,
+  Chip,
+  alpha,
+} from "@mui/material";
 import {
   AddShoppingCart,
   AttachMoney,
@@ -31,20 +39,16 @@ function SummaryCards({ theme, summary }) {
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             background:
               theme.palette.mode === "light"
-                ? "linear-gradient(135deg, rgba(45, 138, 78, 0.06) 0%, rgba(45, 138, 78, 0.01) 100%)"
-                : "linear-gradient(135deg, rgba(45, 138, 78, 0.14) 0%, rgba(45, 138, 78, 0.02) 100%)",
-            border:
-              "1px solid " +
-              (theme.palette.mode === "light"
-                ? "rgba(45, 138, 78, 0.18)"
-                : "rgba(45, 138, 78, 0.28)"),
+                ? `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.06)} 0%, ${alpha(theme.palette.success.main, 0.01)} 100%)`
+                : `linear-gradient(135deg, ${alpha(theme.palette.success.main, 0.14)} 0%, ${alpha(theme.palette.success.main, 0.02)} 100%)`,
+            border: `1px solid ${alpha(theme.palette.success.main, theme.palette.mode === "light" ? 0.18 : 0.28)}`,
             boxShadow:
               theme.palette.mode === "light"
-                ? "0 4px 20px rgba(45, 138, 78, 0.06)"
+                ? `0 4px 20px ${alpha(theme.palette.success.main, 0.06)}`
                 : "0 4px 20px rgba(0, 0, 0, 0.15)",
             "&:hover": {
               transform: "translateY(-6px)",
-              boxShadow: "0 12px 32px rgba(45, 138, 78, 0.2)",
+              boxShadow: `0 12px 32px ${alpha(theme.palette.success.main, 0.2)}`,
             },
           }}
         >
@@ -56,10 +60,10 @@ function SummaryCards({ theme, summary }) {
                 justifyContent: "center",
                 p: 1.5,
                 borderRadius: "16px",
-                backgroundColor:
-                  theme.palette.mode === "light"
-                    ? "rgba(45, 138, 78, 0.1)"
-                    : "rgba(45, 138, 78, 0.2)",
+                backgroundColor: alpha(
+                  theme.palette.success.main,
+                  theme.palette.mode === "light" ? 0.1 : 0.2
+                ),
                 color: COLORS.SUCCESS,
                 mr: 2,
               }}
@@ -139,20 +143,16 @@ function SummaryCards({ theme, summary }) {
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             background:
               theme.palette.mode === "light"
-                ? "linear-gradient(135deg, rgba(226, 88, 34, 0.06) 0%, rgba(226, 88, 34, 0.01) 100%)"
-                : "linear-gradient(135deg, rgba(226, 88, 34, 0.14) 0%, rgba(226, 88, 34, 0.02) 100%)",
-            border:
-              "1px solid " +
-              (theme.palette.mode === "light"
-                ? "rgba(226, 88, 34, 0.18)"
-                : "rgba(226, 88, 34, 0.28)"),
+                ? `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.06)} 0%, ${alpha(theme.palette.primary.main, 0.01)} 100%)`
+                : `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.14)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+            border: `1px solid ${alpha(theme.palette.primary.main, theme.palette.mode === "light" ? 0.18 : 0.28)}`,
             boxShadow:
               theme.palette.mode === "light"
-                ? "0 4px 20px rgba(226, 88, 34, 0.06)"
+                ? `0 4px 20px ${alpha(theme.palette.primary.main, 0.06)}`
                 : "0 4px 20px rgba(0, 0, 0, 0.15)",
             "&:hover": {
               transform: "translateY(-6px)",
-              boxShadow: "0 12px 32px rgba(226, 88, 34, 0.2)",
+              boxShadow: `0 12px 32px ${alpha(theme.palette.primary.main, 0.2)}`,
             },
           }}
         >
@@ -164,10 +164,10 @@ function SummaryCards({ theme, summary }) {
                 justifyContent: "center",
                 p: 1.5,
                 borderRadius: "16px",
-                backgroundColor:
-                  theme.palette.mode === "light"
-                    ? "rgba(226, 88, 34, 0.1)"
-                    : "rgba(226, 88, 34, 0.2)",
+                backgroundColor: alpha(
+                  theme.palette.primary.main,
+                  theme.palette.mode === "light" ? 0.1 : 0.2
+                ),
                 color: COLORS.PRIMARY,
                 mr: 2,
               }}
@@ -273,20 +273,16 @@ function SummaryCards({ theme, summary }) {
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
             background:
               theme.palette.mode === "light"
-                ? "linear-gradient(135deg, rgba(93, 99, 69, 0.05) 0%, rgba(93, 99, 69, 0.01) 100%)"
-                : "linear-gradient(135deg, rgba(93, 99, 69, 0.12) 0%, rgba(93, 99, 69, 0.02) 100%)",
-            border:
-              "1px solid " +
-              (theme.palette.mode === "light"
-                ? "rgba(93, 99, 69, 0.15)"
-                : "rgba(93, 99, 69, 0.25)"),
+                ? `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.05)} 0%, ${alpha(theme.palette.secondary.main, 0.01)} 100%)`
+                : `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.12)} 0%, ${alpha(theme.palette.secondary.main, 0.02)} 100%)`,
+            border: `1px solid ${alpha(theme.palette.secondary.main, theme.palette.mode === "light" ? 0.15 : 0.25)}`,
             boxShadow:
               theme.palette.mode === "light"
-                ? "0 4px 20px rgba(93, 99, 69, 0.05)"
+                ? `0 4px 20px ${alpha(theme.palette.secondary.main, 0.05)}`
                 : "0 4px 20px rgba(0, 0, 0, 0.15)",
             "&:hover": {
               transform: "translateY(-6px)",
-              boxShadow: "0 12px 32px rgba(93, 99, 69, 0.18)",
+              boxShadow: `0 12px 32px ${alpha(theme.palette.secondary.main, 0.18)}`,
             },
           }}
         >
@@ -298,10 +294,10 @@ function SummaryCards({ theme, summary }) {
                 justifyContent: "center",
                 p: 1.5,
                 borderRadius: "16px",
-                backgroundColor:
-                  theme.palette.mode === "light"
-                    ? "rgba(93, 99, 69, 0.08)"
-                    : "rgba(93, 99, 69, 0.18)",
+                backgroundColor: alpha(
+                  theme.palette.secondary.main,
+                  theme.palette.mode === "light" ? 0.08 : 0.18
+                ),
                 color: "secondary.main",
                 mr: 2,
               }}

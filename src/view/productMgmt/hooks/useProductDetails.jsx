@@ -2,6 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { useGetProductByIdQuery } from "../../../store/rtkServices/productsMgmt";
 import { dropDownOptions } from "../../../constant";
@@ -30,8 +31,8 @@ export function useProductDetails() {
       productDetailsData?.category,
       productDetailsData?.subCategory
     ),
-    Price: `₹${productDetailsData?.price}`,
-    Discount: `₹${productDetailsData?.discountPrice}`,
+    Price: formatCurrency(productDetailsData?.price),
+    Discount: formatCurrency(productDetailsData?.discountPrice),
     Stock: productDetailsData?.stock,
     Status: (
       <StatusChip

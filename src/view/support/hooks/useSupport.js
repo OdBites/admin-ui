@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { io } from "socket.io-client";
 import { useTheme, useMediaQuery } from "@mui/material";
 
-import { cookies } from "OdBitesMfUI/utility";
+import { cookies, formatCurrency, formatDate } from "OdBitesMfUI/utility";
 
 import {
   useFetchSupportSessionsQuery,
@@ -66,8 +66,11 @@ export function useSupport() {
   /*
     Computed Values & Memos (State Aggregates)
    */
-  const messages = chatPayload?.data || [];
-  const recentOrders = chatPayload?.recentOrders || [];
+  const messages = useMemo(() => chatPayload?.data || [], [chatPayload?.data]);
+  const recentOrders = useMemo(
+    () => chatPayload?.recentOrders || [],
+    [chatPayload?.recentOrders]
+  );
   const linkedOrder = chatPayload?.linkedOrder || null;
   const linkedOrderId = linkedOrder?._id || linkedOrder?.id;
 
@@ -251,22 +254,7 @@ export function useSupport() {
   /*
     Formatting & Utility Helpers
    */
-  const formatAmount = (value) => {
-    const amount = Number(value || 0);
-    return amount.toLocaleString("en-IN", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "N/A";
-    return new Date(dateStr).toLocaleDateString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
-  };
+  const formatAmount = (value) => formatCurrency(value, { showSymbol: false });
 
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
@@ -277,11 +265,6 @@ export function useSupport() {
       hour12: true,
     });
   };
-
-  const formatStatus = (status) =>
-    status
-      ? status.replace(/([A-Z])/g, " $1").replace(/^./, (c) => c.toUpperCase())
-      : "N/A";
 
   return {
     theme,
@@ -312,6 +295,5 @@ export function useSupport() {
     infoOpen,
     setInfoOpen,
     linkedOrderId,
-    formatStatus,
   };
 }
