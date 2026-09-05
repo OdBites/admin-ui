@@ -1,3 +1,5 @@
+export { adminMenuItems } from "./navigation";
+
 export const tableColumns = {
   userMgmt: [
     { id: "id", label: "ID" },

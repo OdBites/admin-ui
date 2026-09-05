@@ -5,6 +5,7 @@ import packageJson from "../../package.json";
 import { AdminLayout } from "OdBitesMfUI/layouts";
 import { useCookies } from "OdBitesMfUI/hooks";
 
+import { adminMenuItems } from "../constant";
 import { OrderQueueNotifier } from "../sharedComponents";
 import SignIn from "../view/auth/pages/SignIn";
 
@@ -26,6 +27,7 @@ function Layout() {
           <AdminLayout
             version={packageJson.version}
             profileData={profileDetails}
+            menuItems={adminMenuItems}
           >
             <Outlet />
           </AdminLayout>
