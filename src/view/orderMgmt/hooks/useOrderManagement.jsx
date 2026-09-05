@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from "react";
 
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { TableAction } from "../../../sharedComponents";
 
@@ -53,7 +54,8 @@ export function useOrderManagement() {
     const actions = <TableAction view={`/order-management/${item.orderId}`} />;
     const sr_no = index + 1 + page * rowsPerPage;
     const status = <StatusChip status={item.status} />;
-    return { ...item, actions, sr_no, status };
+    const totalAmount = formatCurrency(item.totalAmount, { showSymbol: false });
+    return { ...item, actions, sr_no, status, totalAmount };
   });
 
   /*

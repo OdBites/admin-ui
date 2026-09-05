@@ -112,7 +112,11 @@ function UserDetails() {
                   Total Order: {userDetails?.orders || 0}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Total Spent: {userDetails?.totalSpent || 0}
+                  Total Spent: ₹
+                  {Number(userDetails?.totalSpent || 0).toLocaleString(
+                    "en-IN",
+                    { maximumFractionDigits: 2 }
+                  )}
                 </Typography>
               </Box>
             </Box>

@@ -1,6 +1,7 @@
 import React, { useReducer, useState } from "react";
 
 import { StatusChip } from "OdBitesMfUI/sharedComp";
+import { formatCurrency } from "OdBitesMfUI/utility";
 
 import { TableAction } from "../../../sharedComponents";
 
@@ -97,7 +98,8 @@ export function useUserManagement() {
     const createdBy = item.createdBy
       ? item.createdBy.charAt(0).toUpperCase() + item.createdBy.slice(1)
       : item.createdBy;
-    return { ...item, actions, sr_no, name, status, createdBy };
+    const totalSpent = formatCurrency(item.totalSpent, { showSymbol: false });
+    return { ...item, actions, sr_no, name, status, createdBy, totalSpent };
   });
 
   const dialogContent = getDialogContent(
