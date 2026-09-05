@@ -12,6 +12,7 @@ import {
   Skeleton,
   useTheme,
 } from "@mui/material";
+
 import { RenderIf, NoData } from "OdBitesMfUI/helpers";
 
 const DataTable = ({
@@ -76,11 +77,24 @@ const DataTable = ({
 
           {/* Show Skeleton Loader when loading */}
           {isLoading
-            ? [...new Array(10)].map((_, index) => (
+            ? [...new Array(Math.min(rowsPerPage || 8, 10))].map((_, index) => (
                 <TableRow key={index + 1}>
-                  {columns.map((col) => (
-                    <TableCell key={col.id} sx={{ width: col.maxWidth }}>
-                      <Skeleton variant="rectangular" height={20} />
+                  {columns.map((col, colIdx) => (
+                    <TableCell key={col.id} sx={{ width: col.maxWidth, py: 2 }}>
+                      <Skeleton
+                        variant="rounded"
+                        height={22}
+                        width={
+                          col.id === "actions" || col.id === "action"
+                            ? 70
+                            : colIdx === 0
+                              ? "55%"
+                              : colIdx % 2 === 0
+                                ? "75%"
+                                : "85%"
+                        }
+                        sx={{ borderRadius: "6px" }}
+                      />
                     </TableCell>
                   ))}
                 </TableRow>

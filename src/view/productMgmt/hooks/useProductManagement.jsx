@@ -47,7 +47,7 @@ export function useProductManagement() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data, isLoading } = useGetProductsQuery({
+  const { data, isLoading, isFetching } = useGetProductsQuery({
     search,
     sort,
     page: page + 1,
@@ -142,7 +142,8 @@ export function useProductManagement() {
     setSort,
     filters,
     setFilters,
-    isLoading,
+    isLoading: isLoading || isFetching,
+    isFetching,
     total,
     rows,
     isExporting,

@@ -200,9 +200,9 @@ function ManagementShortcuts({ theme }) {
                   borderRadius: "16px",
                   backgroundColor:
                     theme.palette.mode === "light"
-                      ? "rgba(76, 175, 80, 0.08)"
-                      : "rgba(76, 175, 80, 0.18)",
-                  color: "#4CAF50",
+                      ? "rgba(45, 138, 78, 0.08)"
+                      : "rgba(45, 138, 78, 0.18)",
+                  color: theme.palette.success.main,
                   display: "inline-flex",
                   mb: 2.5,
                 }}
@@ -232,12 +232,12 @@ function ManagementShortcuts({ theme }) {
                 borderRadius: "50px",
                 py: 1.2,
                 fontWeight: 700,
-                backgroundColor: "#4CAF50",
+                backgroundColor: theme.palette.success.main,
                 color: "#fff",
-                boxShadow: "0 4px 14px rgba(76,175,80,0.3)",
+                boxShadow: "0 4px 14px rgba(45,138,78,0.3)",
                 "&:hover": {
-                  backgroundColor: "#43A047",
-                  boxShadow: "0 6px 20px rgba(76,175,80,0.5)",
+                  backgroundColor: "success.dark",
+                  boxShadow: "0 6px 20px rgba(45,138,78,0.5)",
                 },
               }}
             >

@@ -6,7 +6,7 @@ import { DriveFileRenameOutline } from "@mui/icons-material";
 import { Button } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
-import { ProductImageGallery } from "../components";
+import { ProductDetailsSkeleton, ProductImageGallery } from "../components";
 
 import { VITE_APP_ASSETS_PATH } from "../../../config/env";
 import { useProductDetails } from "../hooks";
@@ -34,19 +34,6 @@ function ProductDetails() {
     visualizeFormatDishDetails,
   } = useProductDetails();
 
-  if (isLoading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="400px"
-      >
-        <Typography>Loading dish details...</Typography>
-      </Box>
-    );
-  }
-
   return (
     <>
       <PageHeader
@@ -69,70 +56,79 @@ function ProductDetails() {
           to={`/dish-management/edit-dish/${id}`}
           state={{ editableProductData: productDetailsData }}
           endIcon={<DriveFileRenameOutline />}
+          disabled={isLoading || !productDetailsData}
         >
           Edit Dish
         </Button>
       </PageHeader>
-      <Stack spacing={3}>
-        {/* Dish Image & Basic Info */}
-        <Card>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", lg: "row" },
-              gap: 4,
-            }}
-          >
+      {isLoading || !productDetailsData?._id ? (
+        <ProductDetailsSkeleton />
+      ) : (
+        <Stack spacing={3}>
+          {/* Dish Image & Basic Info */}
+          <Card>
             <Box
-              sx={{ width: { xs: "100%", lg: 400 }, order: { xs: 2, lg: 1 } }}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", lg: "row" },
+                gap: 4,
+              }}
             >
-              <ProductImageGallery
-                images={productDetailsData?.images}
-                dirPath={`${VITE_APP_ASSETS_PATH}${folderLocation}/`}
-              />
-            </Box>
+              <Box
+                sx={{ width: { xs: "100%", lg: 400 }, order: { xs: 2, lg: 1 } }}
+              >
+                <ProductImageGallery
+                  images={productDetailsData?.images}
+                  dirPath={`${VITE_APP_ASSETS_PATH}${folderLocation}/`}
+                />
+              </Box>
 
-            <Box sx={{ flex: 1, order: { xs: 1, lg: 2 } }}>
-              <Typography variant="h5" fontWeight="bold">
-                {productDetailsData?.name}
-              </Typography>
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {productDetailsData?.description}
-              </Typography>
-              <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
-                Variants:{" "}
-                {productDetailsData?.variants
-                  ?.map((v) => `${v.size} (Stock: ${v.stock})`)
-                  .join(", ")}
-              </Typography>
+              <Box sx={{ flex: 1, order: { xs: 1, lg: 2 } }}>
+                <Typography variant="h5" fontWeight="bold">
+                  {productDetailsData?.name}
+                </Typography>
+                <Typography variant="body1" sx={{ mt: 1 }}>
+                  {productDetailsData?.description}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ mt: 1 }}
+                  color="text.secondary"
+                >
+                  Variants:{" "}
+                  {productDetailsData?.variants
+                    ?.map((v) => `${v.size} (Stock: ${v.stock})`)
+                    .join(", ")}
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </Card>
+          </Card>
 
-        {/* Dish Metadata */}
-        <Card>
-          <Typography variant="h6" gutterBottom>
-            Dish Information
-          </Typography>
-          <Divider sx={{ my: 2 }} />
-          <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
-            {Object.entries(visualizeFormatDishDetails).map(
-              ([label, value]) => (
-                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={label}>
-                  <Typography
-                    variant="body2"
-                    gutterBottom={3}
-                    color="text.secondary"
-                  >
-                    {label}
-                  </Typography>
-                  <Typography variant="body1">{value || "N/A"}</Typography>
-                </Grid>
-              )
-            )}
-          </Grid>
-        </Card>
-      </Stack>
+          {/* Dish Metadata */}
+          <Card>
+            <Typography variant="h6" gutterBottom>
+              Dish Information
+            </Typography>
+            <Divider sx={{ my: 2 }} />
+            <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
+              {Object.entries(visualizeFormatDishDetails).map(
+                ([label, value]) => (
+                  <Grid size={{ xs: 12, sm: 6, md: 4 }} key={label}>
+                    <Typography
+                      variant="body2"
+                      gutterBottom={3}
+                      color="text.secondary"
+                    >
+                      {label}
+                    </Typography>
+                    <Typography variant="body1">{value || "N/A"}</Typography>
+                  </Grid>
+                )
+              )}
+            </Grid>
+          </Card>
+        </Stack>
+      )}
     </>
   );
 }

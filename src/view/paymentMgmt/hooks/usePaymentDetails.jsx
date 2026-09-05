@@ -14,8 +14,11 @@ export function usePaymentDetails() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data: paymentDetailsData = {}, isFetching } =
-    useGetPaymentByIdQuery(paymentId);
+  const {
+    data: paymentDetailsData = null,
+    isLoading,
+    isFetching,
+  } = useGetPaymentByIdQuery(paymentId);
 
   /*
     Computed Values & Memos (State Aggregates)
@@ -56,6 +59,7 @@ export function usePaymentDetails() {
 
   return {
     paymentId,
+    isLoading: isLoading || isFetching,
     isFetching,
     paymentDetailsData,
     visualizePaymentDetails,

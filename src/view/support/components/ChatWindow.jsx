@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
   Card,
-  CircularProgress,
   IconButton,
+  Skeleton,
   Stack,
   TextField,
   Tooltip,
@@ -18,7 +19,6 @@ import {
   Send,
   SupportAgent,
 } from "@mui/icons-material";
-import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button } from "OdBitesMfUI/sharedComp";
@@ -274,22 +274,53 @@ export default function ChatWindow({
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          backgroundColor:
-            theme.palette.mode === "light" ? "#faf9f6" : "#0b0c10",
+          backgroundColor: theme.palette.background.default,
         }}
       >
         <RenderIf render={isMessagesLoading && messages.length === 0}>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-          >
-            <CircularProgress size={24} />
+          <Box display="flex" flexDirection="column" gap={2} p={1}>
+            {/* Left bubble skeleton */}
+            <Box display="flex" gap={1.5} alignItems="flex-end">
+              <Skeleton variant="circular" width={32} height={32} />
+              <Skeleton
+                variant="rounded"
+                width={220}
+                height={48}
+                sx={{ borderRadius: "16px 16px 16px 4px" }}
+              />
+            </Box>
+            {/* Right bubble skeleton */}
+            <Box display="flex" justifyContent="flex-end">
+              <Skeleton
+                variant="rounded"
+                width={260}
+                height={56}
+                sx={{ borderRadius: "16px 16px 4px 16px" }}
+              />
+            </Box>
+            {/* Left bubble skeleton */}
+            <Box display="flex" gap={1.5} alignItems="flex-end">
+              <Skeleton variant="circular" width={32} height={32} />
+              <Skeleton
+                variant="rounded"
+                width={180}
+                height={40}
+                sx={{ borderRadius: "16px 16px 16px 4px" }}
+              />
+            </Box>
+            {/* Right bubble skeleton */}
+            <Box display="flex" justifyContent="flex-end">
+              <Skeleton
+                variant="rounded"
+                width={200}
+                height={44}
+                sx={{ borderRadius: "16px 16px 4px 16px" }}
+              />
+            </Box>
           </Box>
         </RenderIf>
 
-        <RenderIf render={messages.length === 0}>
+        <RenderIf render={!isMessagesLoading && messages.length === 0}>
           <Box
             display="flex"
             flexDirection="column"

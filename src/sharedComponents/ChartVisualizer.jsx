@@ -23,47 +23,42 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Typography, useTheme, Box } from "@mui/material";
-
-// App-themed slice colors
-const COLORS = [
-  "#D68C5E", // Primary Terracotta
-  "#5D6345", // Sage Green
-  "#FFB703", // Warning Amber
-  "#E63946", // Error Red
-  "#2196F3", // Info Blue
-  "#6E6259", // Warm Slate Brown
-  "#A0522D", // Sienna
-  "#3A3026", // Dark Muted Brown
-];
+import { CHART_PALETTE, COLORS } from "OdBitesMfUI/theme";
 
 // Custom tooltip card
 const CustomPieTooltip = ({ active, payload }) => {
+  const theme = useTheme();
+
   if (active && payload && payload.length) {
     const { name, value, payload: slicePayload } = payload[0];
-    const total = slicePayload?.total || 1;
-    const pct = ((value / total) * 100).toFixed(1);
+    const numVal = Number(value) || 0;
+    const total = Number(slicePayload?.total) || (numVal > 0 ? numVal : 1);
+    const pct = total > 0 ? ((numVal / total) * 100).toFixed(1) : "0.0";
     return (
       <Box
         sx={{
-          background: "rgba(30,24,18,0.97)",
-          border: "2px solid #D68C5E",
+          background: theme.palette.background.paper,
+          border: `2px solid ${theme.palette.primary.main}`,
           borderRadius: "10px",
           px: 2,
           py: 1.2,
-          boxShadow: "0 4px 18px rgba(214,140,94,0.18)",
+          boxShadow: "0 4px 18px rgba(0,0,0,0.25)",
           minWidth: 140,
         }}
       >
         <Typography
           variant="body2"
           fontWeight={700}
-          sx={{ color: "#D68C5E", mb: 0.5 }}
+          sx={{ color: theme.palette.primary.main, mb: 0.5 }}
         >
           {name}
         </Typography>
-        <Typography variant="caption" sx={{ color: "#fff" }}>
-          {value} orders&nbsp;&nbsp;
-          <Box component="span" sx={{ color: "#FFB703", fontWeight: 700 }}>
+        <Typography
+          variant="caption"
+          sx={{ color: theme.palette.text.primary }}
+        >
+          {numVal} orders&nbsp;&nbsp;
+          <Box component="span" sx={{ color: COLORS.WARNING, fontWeight: 700 }}>
             {pct}%
           </Box>
         </Typography>
@@ -220,7 +215,8 @@ const ChartVisualizer = ({
                       width: 10,
                       height: 10,
                       borderRadius: "2px",
-                      backgroundColor: COLORS[index % COLORS.length],
+                      backgroundColor:
+                        CHART_PALETTE[index % CHART_PALETTE.length],
                       flexShrink: 0,
                       mr: 1,
                     }}
@@ -268,7 +264,7 @@ const ChartVisualizer = ({
                     {enriched.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
+                        fill={CHART_PALETTE[index % CHART_PALETTE.length]}
                       />
                     ))}
                   </Pie>

@@ -28,7 +28,11 @@ export function useUserDetails() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data: userDetails = {}, isFetching } = useGetUserByIdQuery(id);
+  const {
+    data: userDetails = null,
+    isLoading,
+    isFetching,
+  } = useGetUserByIdQuery(id);
   const [updateProfilePicture, { isLoading: isUpdatingPhoto }] =
     useUpdateProfilePictureMutation();
 
@@ -74,6 +78,7 @@ export function useUserDetails() {
   return {
     id,
     userDetails,
+    isLoading: isLoading || isFetching,
     isFetching,
     isUpdatingPhoto,
     addEditUserModal,

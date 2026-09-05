@@ -15,12 +15,13 @@ export function useProductDetails() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data, isLoading } = useGetProductByIdQuery(id);
+  const { data, isLoading, isFetching } = useGetProductByIdQuery(id);
 
   /*
     Computed Values & Memos (State Aggregates)
    */
-  const { product: productDetailsData = {}, folderLocation = "" } = data || {};
+  const { product: productDetailsData = null, folderLocation = "" } =
+    data || {};
 
   const visualizeFormatDishDetails = {
     "Dish Code": productDetailsData?.sku,
@@ -77,7 +78,8 @@ export function useProductDetails() {
 
   return {
     id,
-    isLoading,
+    isLoading: isLoading || isFetching,
+    isFetching,
     productDetailsData,
     folderLocation,
     visualizeFormatDishDetails,

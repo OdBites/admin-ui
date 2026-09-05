@@ -1,22 +1,22 @@
 import React from "react";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Badge,
   Box,
   Card,
   Chip,
-  CircularProgress,
   Divider,
   List,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Skeleton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { Search, ShoppingBag, SupportAgent } from "@mui/icons-material";
-import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button } from "OdBitesMfUI/sharedComp";
@@ -103,9 +103,40 @@ export default function SidebarSessionsList({
       {/* Conversations list */}
       <Box sx={{ flexGrow: 1, overflowY: "auto", mt: 2 }}>
         <RenderIf render={isSessionsLoading}>
-          <Box display="flex" justifyContent="center" py={4}>
-            <CircularProgress size={24} />
-          </Box>
+          <List disablePadding>
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Box
+                key={i}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  p: 1.5,
+                  mb: 1,
+                  borderRadius: 3,
+                  gap: 1.5,
+                }}
+              >
+                <Skeleton
+                  variant="circular"
+                  width={40}
+                  height={40}
+                  sx={{ flexShrink: 0 }}
+                />
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                  <Box
+                    display="flex"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    mb={0.5}
+                  >
+                    <Skeleton width="50%" height={18} />
+                    <Skeleton width="20%" height={14} />
+                  </Box>
+                  <Skeleton width="75%" height={14} />
+                </Box>
+              </Box>
+            ))}
+          </List>
         </RenderIf>
 
         <RenderIf render={!isSessionsLoading && filteredSessions.length === 0}>

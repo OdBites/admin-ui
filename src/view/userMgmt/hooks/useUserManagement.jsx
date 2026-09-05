@@ -51,7 +51,7 @@ export function useUserManagement() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data, isLoading } = useGetUsersQuery({
+  const { data, isLoading, isFetching } = useGetUsersQuery({
     search,
     sort,
     page: page + 1,
@@ -133,7 +133,8 @@ export function useUserManagement() {
     setFilters,
     addEditUserModal,
     setAddEditUserModal,
-    isLoading,
+    isLoading: isLoading || isFetching,
+    isFetching,
     total,
     rows,
     isExporting,

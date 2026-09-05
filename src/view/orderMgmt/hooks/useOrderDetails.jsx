@@ -43,7 +43,11 @@ export function useOrderDetails() {
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data: order = {}, isFetching } = useGetOrderByIdQuery(orderId);
+  const {
+    data: order = null,
+    isLoading,
+    isFetching,
+  } = useGetOrderByIdQuery(orderId);
   const [updateOrderStatus, { isLoading: isUpdatingStatus }] =
     useUpdateOrderStatusMutation();
 
@@ -97,6 +101,7 @@ export function useOrderDetails() {
   return {
     orderId,
     order,
+    isLoading: isLoading || isFetching,
     isFetching,
     isUpdatingStatus,
     actions,

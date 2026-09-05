@@ -7,9 +7,10 @@ export const dashboardService = createApi({
   baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({
     fetchDashboardData: builder.query({
-      query: () => ({
+      query: (params) => ({
         url: adminApiEndpoints.dashboard.base,
         method: "GET",
+        params: typeof params === "string" ? { timeframe: params } : params,
       }),
       transformResponse: (response) => response.data,
     }),

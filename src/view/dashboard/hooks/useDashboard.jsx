@@ -9,11 +9,16 @@ export function useDashboard() {
     Hooks & Theme Configuration
    */
   const theme = useTheme();
+  const [timeframe, setTimeframe] = React.useState("lifetime");
 
   /*
     Redux API Queries & Mutations (RTK Query)
    */
-  const { data: dashboardData, isLoading } = useFetchDashboardDataQuery();
+  const {
+    data: dashboardData,
+    isLoading,
+    isFetching,
+  } = useFetchDashboardDataQuery({ timeframe });
   const {
     summary = {},
     chartData: { salesOverview = [], productDemandAnalytics = [] } = {},
@@ -191,12 +196,15 @@ export function useDashboard() {
 
   return {
     theme,
+    timeframe,
+    setTimeframe,
     summary,
     salesOverview,
     productDemandAnalytics,
     recentOrders,
     newUsers,
     isLoading,
+    isFetching,
     customOrderColumns,
     customUserColumns,
   };

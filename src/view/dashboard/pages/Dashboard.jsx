@@ -1,12 +1,14 @@
 import React from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { PageHeader } from "../../../sharedComponents";
 import {
   AnalyticsCharts,
+  DashboardSkeleton,
   ManagementShortcuts,
   RecentActivityTables,
   SummaryCards,
+  TimeframeFilter,
 } from "../components";
 
 import { useDashboard } from "../hooks";
@@ -20,6 +22,12 @@ function Dashboard() {
       Theme & Layout
      */
     theme,
+
+    /*
+      Timeframe State
+     */
+    timeframe,
+    setTimeframe,
 
     /*
       Computed API Data & Memos
@@ -36,22 +44,22 @@ function Dashboard() {
       RTK Query API State Indicators
      */
     isLoading,
+    isFetching,
   } = useDashboard();
+
+  const showSkeleton = isLoading || isFetching;
 
   return (
     <>
-      <PageHeader pageTitle="Dashboard" hideExportBtn />
-      {isLoading ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="400px"
-        >
-          <Typography color="text.secondary">
-            Loading dashboard analytics...
-          </Typography>
-        </Box>
+      <PageHeader pageTitle="Dashboard" hideExportBtn>
+        <TimeframeFilter
+          value={timeframe}
+          onChange={setTimeframe}
+          isFetching={isFetching}
+        />
+      </PageHeader>
+      {showSkeleton ? (
+        <DashboardSkeleton />
       ) : (
         <Stack spacing={4}>
           {/* Top Summary Metric Cards */}

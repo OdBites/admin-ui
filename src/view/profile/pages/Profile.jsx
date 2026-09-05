@@ -1,11 +1,10 @@
 import React from "react";
 import { Box, Card, Divider, Grid, Stack, Typography } from "@mui/material";
-import { Loader } from "../../../assets";
 
 import { AvatarUpload, Button, FormInput } from "OdBitesMfUI/sharedComp";
 
 import { PageHeader } from "../../../sharedComponents";
-import { UpdatePasswordModal } from "../components";
+import { ProfileSkeleton, UpdatePasswordModal } from "../components";
 
 import { useProfile } from "../hooks";
 
@@ -48,14 +47,7 @@ function Profile() {
     <>
       <PageHeader pageTitle="Profile" hideExportBtn showBackBtn />
       {isFetching ? (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          height="70vh"
-        >
-          <Box component="img" src={Loader} sx={{ width: 150 }} />
-        </Box>
+        <ProfileSkeleton />
       ) : (
         <Box
           sx={{

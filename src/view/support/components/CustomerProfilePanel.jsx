@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Avatar,
@@ -10,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import { Close, Email, Phone } from "@mui/icons-material";
-import PropTypes from "prop-types";
 
 import { RenderIf } from "OdBitesMfUI/helpers";
 import { Button, StatusChip } from "OdBitesMfUI/sharedComp";
